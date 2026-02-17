@@ -1,14 +1,18 @@
 import { useState } from "react";
 import "./App.css";
-
+import HeroSection from "./components/home/HeroSection";
+import Navbar from "./components/navbar/Navbar";
+import AIFeatures from "./components/home/AIFeatures";
+ 
 function App() {
   return (
     <>
-      <div>
-        <h1 className="text-4xl text-red-500">Welcome to VizAcademy.com</h1>
-      </div>
+    <main className="w-full">
+      <HeroSection />   {/* ← pehle */}
+      <AIFeatures/>
+    </main>
     </>
   );
 }
-
+ 
 export default App;
