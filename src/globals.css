@@ -1,0 +1,46 @@
+/* globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #00ffff;
+  --gradient-bg: linear-gradient(
+    90deg,
+    rgba(108, 200, 183, 0) 0%,
+    #6cc8b7 13%,
+    #f66a3a 36%,
+    #ffc357 68%,
+    #00ffff 89%,
+    rgba(0, 255, 255, 0) 100%
+  );
+  --button-bg: linear-gradient(
+    90deg,
+    rgba(9, 49, 49, 0.2) 0%,
+    rgba(0, 255, 255, 0.2) 100%
+  );
+  --anchor-color: linear-gradient(
+    135deg,
+    #093131 0%,
+    #049b9b 50%,
+    #00ffff 100%
+  );
+  --text-color: #ffffff;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgb(3, 6, 18);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
