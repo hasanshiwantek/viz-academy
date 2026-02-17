@@ -1,9 +1,11 @@
 /* globals.css */
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 * {
   margin: 0;
   padding: 0;
@@ -14,12 +16,10 @@
   --primary-color: #00ffff;
   --gradient-bg: linear-gradient(
     90deg,
-    rgba(108, 200, 183, 0) 0%,
-    #6cc8b7 13%,
-    #f66a3a 36%,
-    #ffc357 68%,
-    #00ffff 89%,
-    rgba(0, 255, 255, 0) 100%
+    #00ffff 0%,
+    #ff7e57 32%,
+    #ffc457 60%,
+    #00b2b2 100%
   );
   --button-bg: linear-gradient(
     90deg,
@@ -36,11 +36,35 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
   background-color: rgb(3, 6, 18);
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+@keyframes gradient-rotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Alternative: For a circular rotating effect */
+@keyframes gradient-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
