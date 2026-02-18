@@ -6,6 +6,7 @@ import AIFeatures from "./components/home/AIFeatures";
 import AIEngines from "./components/home/AIEngines";
 import PricingPlan from "./components/home/PricingPlan";
 import FavoriteApp from "./components/home/FavoriteApp";
+import GetStarted from "./components/home/GetStarted";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <AIFeatures />
         <AIEngines />
         <FavoriteApp />
+        <GetStarted />
         <PricingPlan />
       </main>
     </>
