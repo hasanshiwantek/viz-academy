@@ -227,7 +227,7 @@ const AIEngines = () => {
         </div>
 
         {/* 4x2 Grid */}
-        <div className="grid grid-cols-4 gap-8 mb-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-6">
           {engines.map((engine) => (
             <EngineCard key={engine.id} engine={engine} />
           ))}

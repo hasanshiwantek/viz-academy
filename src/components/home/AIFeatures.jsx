@@ -219,15 +219,16 @@ const FeatureCard = ({ feature }) => {
 
   return (
     <div
-      className="relative rounded-2xl cursor-pointer transition-all md:w-[380px] w-full duration-300 overflow-hidden"
+      className="relative rounded-2xl cursor-pointer transition-all md:w-[90%] xl:w-[380px] w-full h-full duration-300 overflow-hidden"
       style={{
         transform: hovered ? "translateY(-5px) scale(1.02)" : "translateY(0) scale(1)",
-        padding: hovered ? "2px" : "2px",
+        padding: "2px",
+        minHeight: "450px",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* ✅ ROTATING ANIMATED GRADIENT BORDER */}
+      {/* ROTATING ANIMATED GRADIENT BORDER */}
       <div
         className="absolute inset-0 rounded-2xl flex items-center justify-center pointer-events-none"
         style={{
@@ -235,7 +236,6 @@ const FeatureCard = ({ feature }) => {
           transition: "opacity 0.3s ease",
         }}
       >
-        {/* Spinning gradient beam */}
         <div
           className="absolute"
           style={{
@@ -264,12 +264,12 @@ const FeatureCard = ({ feature }) => {
 
       {/* CARD CONTENT */}
       <div
-        className="relative rounded-2xl overflow-hidden p-6 h-full z-20"
+        className="relative rounded-2xl overflow-hidden p-6 h-full z-20 flex flex-col"
         style={{
           background: hovered
             ? "linear-gradient(180deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 100%)"
             : "linear-gradient(180deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 100%)",
-          backgroundColor: "rgb(3,6,18)", // Base dark color underneath
+          backgroundColor: "rgb(3,6,18)",
           border: hovered ? "none" : "1px solid rgba(255,255,255,0.08)",
           boxShadow: hovered
             ? "0 20px 60px rgba(0,0,0,0.5)"
@@ -278,7 +278,7 @@ const FeatureCard = ({ feature }) => {
         }}
       >
         {/* Image */}
-        <div className="relative overflow-hidden h-40 mb-4">
+        <div className="relative overflow-hidden h-40 mb-4 flex-shrink-0">
           <img
             src={feature.image}
             alt={feature.title}
@@ -286,10 +286,8 @@ const FeatureCard = ({ feature }) => {
             style={{ transform: hovered ? "scale(1)" : "scale(1)" }}
           />
 
-          {/* Bottom fade */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
 
-          {/* Cyan glow on hover */}
           <div
             className="absolute inset-0 transition-opacity duration-300"
             style={{
@@ -302,7 +300,7 @@ const FeatureCard = ({ feature }) => {
 
         {/* Icon badge */}
         <div
-          className="flex items-center justify-center w-8 h-8 rounded-lg mb-3 transition-all duration-300"
+          className="flex items-center justify-center w-8 h-8 rounded-lg mb-3 transition-all duration-300 flex-shrink-0"
           style={{
             background: hovered ? "var(--button-bg)" : "rgba(0,255,255,0.06)",
             border: "1px solid rgba(0,255,255,0.2)",
@@ -314,7 +312,7 @@ const FeatureCard = ({ feature }) => {
 
         {/* Title */}
         <h3
-          className="font-bold mb-2 leading-snug"
+          className="font-bold mb-2 leading-snug flex-shrink-0"
           style={{
             fontSize: "24px",
             letterSpacing: "-0.01em",
@@ -326,7 +324,7 @@ const FeatureCard = ({ feature }) => {
 
         {/* Description */}
         <p
-          className="leading-relaxed text-[16px]"
+          className="leading-relaxed text-[16px] flex-grow"
           style={{
             color: "#98A2B3",
           }}
@@ -380,7 +378,7 @@ const AIFeatures = () => {
       </div>
 
       {/* 3×3 Grid */}
-      <div className="grid 2xl:grid-cols-3 xl:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 w-[1200px] max-w-full mx-auto">
+      <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 w-[1200px] max-w-full mx-auto place-items-center auto-rows-fr">
         {features.map((feature) => (
           <FeatureCard key={feature.id} feature={feature} />
         ))}
