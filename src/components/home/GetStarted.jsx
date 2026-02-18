@@ -27,6 +27,8 @@ const steps = [
   },
 ]
 
+const LINE_BG = 'linear-gradient(90deg, rgba(9, 49, 49, 0.7) 0%, rgba(0, 255, 255, 0.7) 122.41%)'
+
 const StepCard = ({ title, desc, width, height }) => (
   <div
     className="flex flex-col gap-2 px-5 py-4 rounded-2xl"
@@ -63,11 +65,6 @@ const NumberBadge = ({ number }) => (
 )
 
 const GetStarted = () => {
-  // Total width = max card width (438) + connector (40) + badge (44) + connector (40) + max card width (438) = 1000
-  // But we only show one card per row, other side is empty space
-  // Center column = badge (44px), side connectors = 40px each
-  // Left col = 438px, Right col = 438px
-
   const BADGE = 44
   const CONNECTOR = 40
   const LEFT_COL = 438
@@ -78,15 +75,15 @@ const GetStarted = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#060e18] px-6 py-16">
       <div className="relative flex flex-col" style={{ width: TOTAL }}>
 
-        {/* Vertical line — sits behind everything */}
+        {/* Vertical line — 24px wide */}
         <div
           style={{
             position: 'absolute',
             top: 0,
             bottom: 0,
-            left: LEFT_COL + CONNECTOR + BADGE / 2,
-            width: 2,
-            background: 'linear-gradient(to bottom, transparent 0%, #00b2b2 5%, #00b2b2 95%, transparent 100%)',
+            left: LEFT_COL + CONNECTOR + BADGE / 2 - 12,
+            width: 24,
+            background: LINE_BG,
             zIndex: 0,
           }}
         />
@@ -104,7 +101,7 @@ const GetStarted = () => {
               }}
             >
               {/* Left card area */}
-              <div style={{ width: LEFT_COL, display: 'flex', justifyContent: 'flex-end' }}>
+              <div style={{ width: LEFT_COL, display: 'flex', justifyContent: 'flex-end' ,rotate: '-13.47deg'}}>
                 {!isRight && (
                   <StepCard title={step.title} desc={step.desc} width={step.width} height={step.height} />
                 )}
@@ -113,8 +110,8 @@ const GetStarted = () => {
               {/* Left connector */}
               <div style={{
                 width: CONNECTOR,
-                height: 2,
-                background: !isRight ? '#00b2b2' : 'transparent',
+                height: 24,
+                background: !isRight ? LINE_BG : 'transparent',
                 flexShrink: 0,
               }} />
 
@@ -124,13 +121,13 @@ const GetStarted = () => {
               {/* Right connector */}
               <div style={{
                 width: CONNECTOR,
-                height: 2,
-                background: isRight ? '#00b2b2' : 'transparent',
+                height: 24,
+                background: isRight ? LINE_BG : 'transparent',
                 flexShrink: 0,
               }} />
 
               {/* Right card area */}
-              <div style={{ width: RIGHT_COL, display: 'flex', justifyContent: 'flex-start' }}>
+              <div style={{ width: RIGHT_COL, display: 'flex', justifyContent: 'flex-start' ,rotate: '13.47deg'}}>
                 {isRight && (
                   <StepCard title={step.title} desc={step.desc} width={step.width} height={step.height} />
                 )}
