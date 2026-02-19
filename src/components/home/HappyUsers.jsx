@@ -288,9 +288,9 @@ const HappyUsers = () => {
       <div
         className="flex items-center px-5 py-3 rounded-full relative z-20"
         style={{
-          background: "rgba(255,255,255,0.06)",
+          background: "rgba(255, 255, 255, 0.3)",
           border: "1px solid rgba(255,255,255,0.1)",
-          backdropFilter: "blur(10px)",
+          // backdropFilter: "blur(10px)",
         }}
       >
         <div className="flex">
@@ -302,7 +302,7 @@ const HappyUsers = () => {
               className="w-9 h-9 rounded-full object-cover"
               style={{
                 marginLeft: i === 0 ? 0 : "-10px",
-                border: "2px solid rgb(3,6,18)",
+                border: "1px solid rgba(255, 255, 255, 1)",
                 zIndex: avatars.length - i,
                 position: "relative",
               }}
@@ -314,7 +314,7 @@ const HappyUsers = () => {
               marginLeft: "-10px",
               background: "linear-gradient(135deg, #00ffff, #00b2b2)",
               color: "rgb(3,6,18)",
-              border: "2px solid rgb(3,6,18)",
+              border: "1px solid rgb(3,6,18)",
               position: "relative",
               zIndex: 0,
             }}
