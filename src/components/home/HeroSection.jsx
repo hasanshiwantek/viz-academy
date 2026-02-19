@@ -241,15 +241,15 @@
 //   )
 // }
 
-// export default HeroSection
-
-import { motion } from "framer-motion";
+// export default HeroSectionimport { motion } from "framer-motion";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import heroBg from "../../assets/hero section.png";
 import card1 from "../../assets/card1.png";
 import card2 from "../../assets/card2.png";
 import card3 from "../../assets/card3.png";
 import Navbar from "../navbar/Navbar";
+
 const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
   const [hovered, setHovered] = useState(false);
 
@@ -266,32 +266,23 @@ const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* 🔥 Outer Border Container */}
+      {/* ✅ Border div — overflow:hidden wale div ke BAHAR hai */}
       <div
-        className="relative w-full h-full rounded-[32px] overflow-hidden"
+        className="absolute inset-0 pointer-events-none phone-card-border"
+        style={{ borderRadius: "32px" }}
+      />
+
+      {/* Outer container — overflow:hidden andar ke content ke liye */}
+      <div
+        className="absolute inset-0 rounded-[32px] overflow-hidden"
         style={{
           padding: "10px",
-          background: hovered
-            ? "transparent"
-            : isCenter
-              ? "rgba(34, 211, 238, 0.6)"
-              : "rgba(34, 211, 238, 0.3)",
-          transition: "background 0.3s ease",
+          background: isCenter
+            ? "rgba(34, 211, 238, 0.6)"
+            : "rgba(34, 211, 238, 0.3)",
         }}
       >
-        {/* 🔥 ANIMATED GRADIENT BACKGROUND - Only shows on hover */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            opacity: hovered ? 1 : 0,
-            transition: "opacity 0.3s ease",
-            background:
-              "conic-gradient(from 0deg, #00ffff, #8ef5e8, #ff9b7a, #ffdc7a, #00ffff)",
-            animation: hovered ? "gradient-spin 3s linear infinite" : "none",
-          }}
-        />
-
-        {/* 🔥 Card Content - Sits on top of gradient */}
+        {/* Card Content */}
         <div
           className="relative rounded-[24px] shadow-2xl overflow-hidden h-full z-10"
           style={{
@@ -301,12 +292,7 @@ const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
               : "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <img
-            src={image}
-            alt="render"
-            className="w-full h-full object-cover"
-          />
-
+          <img src={image} alt="render" className="w-full h-full object-cover" />
           <div className="absolute inset-0 flex items-center justify-center">
             <div
               className="rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 transition-all duration-300"
@@ -334,6 +320,42 @@ const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
 const HeroSection = () => {
   return (
     <section className="relative w-full min-h-screen overflow-hidden">
+      {/* ✅ ONLY THIS STYLE TAG ADDED */}
+      <style>{`
+        @property --angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+
+        @keyframes phoneCardSpin {
+          from { --angle: 0deg; }
+          to   { --angle: 360deg; }
+        }
+
+        .phone-card-border {
+          padding: 2px;
+          background: conic-gradient(
+            from var(--angle),
+            transparent 0%,
+            transparent 30%,
+            #8ef5e8 38%,
+            #00ffff 44%,
+            #ff9b7a 50%,
+            #ffdc7a 56%,
+            transparent 64%,
+            transparent 100%
+          );
+          border:10px
+          -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          animation: phoneCardSpin 3s linear infinite;
+        }
+      `}</style>
+
       {/* Animated Background */}
       <motion.div
         className="absolute inset-0 -z-10"

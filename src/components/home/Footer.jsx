@@ -1,13 +1,12 @@
 import React from 'react'
 import logo from '../../assets/nav-logo.png'
-import bgimg from '../../assets/footerBg.png'
-
+import bgimg1 from '../../assets/footer2.png'
 const Footer = () => {
   return (
     <footer
       className="relative w-full"
       style={{
-        backgroundImage: `url(${bgimg})`,
+        backgroundImage: `url(${bgimg1})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         fontFamily: 'Inter, sans-serif',

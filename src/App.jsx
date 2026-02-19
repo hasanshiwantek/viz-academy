@@ -10,13 +10,14 @@ import HappyUsers from "./components/home/HappyUsers";
 import GetStarted from "./components/home/GetStarted";
 import ModelCarousel from "./components/home/ModelCarousel";
 import ArrowCard from "./components/home/ArrowCard";
+import FAQ from "./components/home/FAQ";
 import Workflow from "./components/home/Workflow";
 import Footer from "./components/home/Footer";
 
 function App() {
   return (
     <>
-      <main className="w-full">
+      <main className="w-full ">
         <HeroSection /> {/* ← pehle */}
         <AIFeatures />
         <AIEngines />
@@ -26,6 +27,7 @@ function App() {
         <ArrowCard />
         <PricingPlan />
         <HappyUsers />
+        <FAQ/>
         <Workflow />
         <Footer />
       </main>
