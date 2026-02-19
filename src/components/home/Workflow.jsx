@@ -4,14 +4,62 @@ import bgimage from '../../assets/2ndlastImg.png'
 const Workflow = () => {
   return (
     <section className="flex items-center justify-center py-20 px-6" style={{ background: 'rgb(3,6,18)' }}>
+      <style>{`
+        @property --angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+
+        @keyframes workflowBorderSpin {
+          from { --angle: 0deg; }
+          to   { --angle: 360deg; }
+        }
+
+        .workflow-border {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          padding: 2px;
+          border-radius: 28px;
+          background: conic-gradient(
+            from var(--angle),
+            transparent 0%,
+            transparent 30%,
+            #8ef5e8 38%,
+            #00ffff 44%,
+            #ff9b7a 50%,
+            #ffdc7a 56%,
+            transparent 64%,
+            transparent 100%
+          );
+          -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          animation: workflowBorderSpin 3s linear infinite;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          z-index: 10;
+        }
+
+        .workflow-card:hover .workflow-border {
+          opacity: 1;
+        }
+      `}</style>
+
       {/* Outer card with gradient border */}
       <div
-        className="relative w-full max-w-[1100px] rounded-[28px] overflow-hidden"
+        className="workflow-card relative w-full max-w-[1100px] rounded-[28px] overflow-hidden"
         style={{
           padding: '2px',
           background: 'linear-gradient(135deg, rgba(0,255,255,0.6) 0%, rgba(255,120,80,0.5) 40%, rgba(0,255,255,0.1) 100%)',
         }}
       >
+        {/* ✅ ONLY THIS DIV ADDED — animated hover border */}
+        <div className="workflow-border" />
+
         {/* Inner card with bg image */}
         <div
           className="relative rounded-[26px] overflow-hidden flex flex-col items-center justify-center text-center px-8 py-20"
@@ -75,82 +123,54 @@ const Workflow = () => {
             {/* Buttons */}
             <div className="flex items-center gap-4 mt-2 flex-wrap justify-center">
               {/* Primary - Download */}
-<button
-  className="flex items-center gap-2 px-6 py-3 rounded-full
-             font-semibold text-[15px] text-white
-             border-2 border-transparent
-             transition-all duration-300 hover:brightness-110"
-  style={{
-    fontFamily: "Inter, sans-serif",
-    background: `
-      linear-gradient(89.69deg, #00FFFF -1.81%, #003131 95.62%) padding-box,
-      linear-gradient(171.77deg, rgba(255,255,255,0) -5.76%, rgba(255,255,255,0.2) 32.96%, rgba(255,255,255,0.7) 78.14%) border-box
-    `,
-    boxShadow: "0 0 24px rgba(0,255,255,0.35)",
-    cursor: "pointer",
-  }}
->
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-    <polyline points="7 10 12 15 17 10" />
-    <line x1="12" y1="15" x2="12" y2="3" />
-  </svg>
-
-  Download VizMaker
-</button>
-
+              <button
+                className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-[15px] text-white border-2 border-transparent transition-all duration-300 hover:brightness-110"
+                style={{
+                  fontFamily: "Inter, sans-serif",
+                  background: `
+                    linear-gradient(89.69deg, #00FFFF -1.81%, #003131 95.62%) padding-box,
+                    linear-gradient(171.77deg, rgba(255,255,255,0) -5.76%, rgba(255,255,255,0.2) 32.96%, rgba(255,255,255,0.7) 78.14%) border-box
+                  `,
+                  boxShadow: "0 0 24px rgba(0,255,255,0.35)",
+                  cursor: "pointer",
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Download VizMaker
+              </button>
 
               {/* Secondary - Watch Demo */}
-          <button
-  className="flex items-center gap-2 px-6 py-3 rounded-full
-             font-medium text-[15px] text-[#00FFFF]
-             border-2 border-transparent
-             transition-all duration-200"
-  style={{
-    fontFamily: "Inter, sans-serif",
-    background: `
-      linear-gradient(90deg, rgba(9, 49, 49, 0.2) 0%, rgba(0, 255, 255, 0.2) 122.41%) padding-box,
-      linear-gradient(171.77deg, rgba(255, 255, 255, 0.7) -5.76%, rgba(255, 255, 255, 0.2) 39.41%, rgba(255, 255, 255, 0) 78.14%) border-box
-    `,
-    backdropFilter: "blur(8px)",
-    cursor: "pointer",
-  }}
-  onMouseEnter={(e) => (e.currentTarget.style.background =
-    `linear-gradient(90deg, rgba(9,49,49,0.3) 0%, rgba(0,255,255,0.3) 122.41%) padding-box,
-     linear-gradient(171.77deg, rgba(255,255,255,0.7) -5.76%, rgba(255,255,255,0.2) 39.41%, rgba(255,255,255,0) 78.14%) border-box`
-  )}
-  onMouseLeave={(e) => (e.currentTarget.style.background =
-    `linear-gradient(90deg, rgba(9,49,49,0.2) 0%, rgba(0,255,255,0.2) 122.41%) padding-box,
-     linear-gradient(171.77deg, rgba(255,255,255,0.7) -5.76%, rgba(255,255,255,0.2) 39.41%, rgba(255,255,255,0) 78.14%) border-box`
-  )}
->
-  {/* Monitor icon */}
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="2" y="3" width="20" height="14" rx="2" />
-    <line x1="8" y1="21" x2="16" y2="21" />
-    <line x1="12" y1="17" x2="12" y2="21" />
-  </svg>
-  Watch Demo
-</button>
-
+              <button
+                className="flex items-center gap-2 px-6 py-3 rounded-full font-medium text-[15px] text-[#00FFFF] border-2 border-transparent transition-all duration-200"
+                style={{
+                  fontFamily: "Inter, sans-serif",
+                  background: `
+                    linear-gradient(90deg, rgba(9, 49, 49, 0.2) 0%, rgba(0, 255, 255, 0.2) 122.41%) padding-box,
+                    linear-gradient(171.77deg, rgba(255, 255, 255, 0.7) -5.76%, rgba(255, 255, 255, 0.2) 39.41%, rgba(255, 255, 255, 0) 78.14%) border-box
+                  `,
+                  backdropFilter: "blur(8px)",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background =
+                  `linear-gradient(90deg, rgba(9,49,49,0.3) 0%, rgba(0,255,255,0.3) 122.41%) padding-box,
+                   linear-gradient(171.77deg, rgba(255,255,255,0.7) -5.76%, rgba(255,255,255,0.2) 39.41%, rgba(255,255,255,0) 78.14%) border-box`
+                )}
+                onMouseLeave={(e) => (e.currentTarget.style.background =
+                  `linear-gradient(90deg, rgba(9,49,49,0.2) 0%, rgba(0,255,255,0.2) 122.41%) padding-box,
+                   linear-gradient(171.77deg, rgba(255,255,255,0.7) -5.76%, rgba(255,255,255,0.2) 39.41%, rgba(255,255,255,0) 78.14%) border-box`
+                )}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                Watch Demo
+              </button>
             </div>
 
             {/* Trust badges */}
