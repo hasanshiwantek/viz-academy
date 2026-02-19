@@ -83,13 +83,14 @@ const LogoIcon = ({ active }) => (
   </div>
 );
 
-const PricingCard = ({ plan, isActive, billing, onClick }) => {
+const PricingCard = ({ plan, isActive, billing, setActivePlan }) => {
   const price = billing === "monthly" ? plan.price.monthly : plan.price.yearly;
 
   return (
     /* Outer wrapper — clips the spinning beam to a rounded rect */
     <div
-      onClick={() => onClick(plan.id)}
+      onMouseEnter={() => setActivePlan(plan.id)}
+      onMouseLeave={() => setActivePlan(null)}
       className="relative flex-1 rounded-2xl cursor-pointer"
       style={{
         padding: "2px",
@@ -235,8 +236,11 @@ const PricingPlan = () => {
   const [billing, setBilling] = useState("monthly");
   const [activePlan, setActivePlan] = useState(null);
 
-  const handleClick = (id) =>
-    setActivePlan((prev) => (prev === id ? null : id));
+  const handleClick = (id) => setActivePlan(id);
+
+  // Mouse leave pe null
+  // PricingCard onMouseLeave mein:
+  // onMouseLeave={() => setActivePlan(null)}
 
   return (
     <section
@@ -328,7 +332,7 @@ const PricingPlan = () => {
             plan={plan}
             isActive={activePlan === plan.id}
             billing={billing}
-            onClick={handleClick}
+            setActivePlan={setActivePlan} // pass karo
           />
         ))}
       </div>

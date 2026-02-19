@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
 import sketchup from '../../assets/sketchuo.svg'
 import ds from '../../assets/3ds.svg'
 import revit from '../../assets/revit.svg'
@@ -9,45 +8,71 @@ import frame2 from '../../assets/frame2.png'
 import frame3 from '../../assets/frame3.png'
 import frame4 from '../../assets/frame4.png'
 
-const icons = ['▶','⏸','⏹','⏺','R','⚙']
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 50, rotateX: 15, scale: 0.96 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    scale: 1,
-    transition: {
-      delay: i * 0.1,
-      duration: 0.65,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  }),
-}
+// App Icons
+const icons = ['▶','⏸','⏹','⏺','R','⚙'];
 
 const FavoriteApp = () => {
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState(0);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5 py-10">
+      <style>{`
+        @property --angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+
+        @keyframes favCardSpin {
+          from { --angle: 0deg; }
+          to   { --angle: 360deg; }
+        }
+
+        .fav-card-border {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          padding: 2px;
+          background: conic-gradient(
+            from var(--angle),
+            transparent 0%,
+            transparent 30%,
+            #8ef5e8 38%,
+            #00ffff 44%,
+            #ff9b7a 50%,
+            #ffdc7a 56%,
+            transparent 64%,
+            transparent 100%
+          );
+          -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          animation: favCardSpin 3s linear infinite;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          border-radius: inherit;
+          z-index: 20;
+        }
+
+        .fav-card:hover .fav-card-border {
+          opacity: 1;
+        }
+      `}</style>
+
       <div className="w-full max-w-[1200px] flex flex-col items-center gap-[30px]">
 
         {/* Header */}
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div className="text-center">
           <h2 className="text-white font-bold text-[3.5rem] tracking-[-1px]">
             Works Inside Your
           </h2>
           <h2
             className="font-bold text-[3.5rem] tracking-[-1px] mb-4 bg-clip-text text-transparent"
             style={{
-              backgroundImage: 'linear-gradient(89.43deg, #00FFFF 10.3%, #FF7E57 37.33%, #FFC457 61.09%, #00B2B2 95.49%)',
+              backgroundImage:
+                "linear-gradient(89.43deg, #00FFFF 10.3%, #FF7E57 37.33%, #FFC457 61.09%, #00B2B2 95.49%)",
             }}
           >
             Favorite Apps
@@ -56,21 +81,17 @@ const FavoriteApp = () => {
             Install VizMaker once, use it everywhere. Direct integration<br />
             means no export/import hassles.
           </p>
-        </motion.div>
+        </div>
 
         {/* Row 1 */}
-        <div className="flex gap-[30px] w-full" style={{ perspective: 1200 }}>
+        <div className="flex gap-[30px] w-full">
 
           {/* SketchUp */}
-          <motion.div
-            custom={0}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            variants={cardVariants}
-            className="relative flex flex-col overflow-hidden shrink-0 rounded-[32px] border-[3px] border-[rgba(80,140,255,0.22)] bg-cover bg-center"
+          <div
+            className="fav-card relative flex flex-col overflow-hidden shrink-0 rounded-[32px] border-[3px] border-[rgba(80,140,255,0.22)] bg-cover bg-center"
             style={{ width: 483, height: 430, backgroundImage: `url(${frame1})` }}
           >
+            <div className="fav-card-border" />
             <div className="relative z-10 p-7 flex flex-col gap-2">
               <h3 className="text-white font-bold text-[32px] leading-[120%] m-0 mb-1">SketchUp</h3>
               <p className="text-[16px] font-normal leading-[150%] m-0 max-w-[85%] text-[rgba(180,200,220,0.65)]">
@@ -80,18 +101,14 @@ const FavoriteApp = () => {
             <div className="flex-1 flex items-end justify-center">
               <img src={sketchup} alt="SketchUp" className="w-full max-w-[85%] object-contain" />
             </div>
-          </motion.div>
+          </div>
 
           {/* 3DS Max */}
-          <motion.div
-            custom={1}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            variants={cardVariants}
-            className="relative flex flex-col justify-end overflow-hidden flex-1 rounded-[32px] border-[2px] border-[rgba(80,140,255,0.18)] bg-cover bg-center"
+          <div
+            className="fav-card relative flex flex-col justify-end overflow-hidden flex-1 rounded-[32px] border-[2px] border-[rgba(80,140,255,0.18)] bg-cover bg-center"
             style={{ height: 430, backgroundImage: `url(${frame2})` }}
           >
+            <div className="fav-card-border" />
             <div className="absolute top-5 left-5 z-10 flex items-center gap-2">
               <div className="rounded-xl w-10 h-[22px] bg-[rgba(25,40,65,0.9)] border border-[rgba(100,150,255,0.2)]"/>
               <div className="rounded-lg w-[30px] h-[30px] flex items-center justify-center text-white font-bold text-lg bg-[rgba(0,180,255,0.85)]">+</div>
@@ -105,22 +122,18 @@ const FavoriteApp = () => {
                 AI rendering plugin for 3ds Max, built for professional visual quality.
               </p>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Row 2 */}
-        <div className="flex gap-[30px] w-full" style={{ perspective: 1200 }}>
+        <div className="flex gap-[30px] w-full">
 
           {/* Revit */}
-          <motion.div
-            custom={2}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            variants={cardVariants}
-            className="relative flex flex-col justify-end overflow-hidden flex-1 rounded-[32px] border-[2px] border-[rgba(80,140,255,0.18)] bg-cover bg-center"
+          <div
+            className="fav-card relative flex flex-col justify-end overflow-hidden flex-1 rounded-[32px] border-[2px] border-[rgba(80,140,255,0.18)] bg-cover bg-center"
             style={{ height: 430, backgroundImage: `url(${frame3})` }}
           >
+            <div className="fav-card-border" />
             <div className="absolute right-0 top-2">
               <img src={revit} alt="Revit" />
             </div>
@@ -130,18 +143,14 @@ const FavoriteApp = () => {
                 Generate realistic AI renders directly inside Revit without exporting models.
               </p>
             </div>
-          </motion.div>
+          </div>
 
           {/* Blender */}
-          <motion.div
-            custom={3}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            variants={cardVariants}
-            className="relative flex flex-col overflow-hidden shrink-0 rounded-[32px] border-[3px] border-[rgba(80,140,255,0.22)] bg-cover bg-center"
+          <div
+            className="fav-card relative flex flex-col overflow-hidden shrink-0 rounded-[32px] border-[3px] border-[rgba(80,140,255,0.22)] bg-cover bg-center"
             style={{ width: 483, height: 430, backgroundImage: `url(${frame4})` }}
           >
+            <div className="fav-card-border" />
             <div className="relative z-10 p-7">
               <h3 className="text-white font-bold text-[32px] leading-[120%] m-0 mb-1">Blender</h3>
               <p className="text-[16px] font-normal leading-[150%] m-0 max-w-[65%] text-[rgba(180,200,220,0.65)]">
@@ -160,8 +169,8 @@ const FavoriteApp = () => {
                     flex items-center justify-center rounded-md text-[12px] cursor-pointer
                     w-[36px] h-[36px] transition-all duration-300
                     ${active === i
-                      ? 'bg-cyan-400/20 text-cyan-300 border border-cyan-400 shadow-[0_0_15px_rgba(0,255,255,0.7)]'
-                      : 'bg-[rgba(25,40,65,0.85)] text-[rgba(180,210,255,0.8)] border border-[rgba(100,150,255,0.2)]'
+                      ? "bg-cyan-400/20 text-cyan-300 border border-cyan-400 shadow-[0_0_15px_rgba(0,255,255,0.7)]"
+                      : "bg-[rgba(25,40,65,0.85)] text-[rgba(180,210,255,0.8)] border border-[rgba(100,150,255,0.2)]"
                     }
                   `}
                 >
@@ -169,21 +178,17 @@ const FavoriteApp = () => {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Footer badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        <div
           className="flex items-center gap-2 rounded-full px-4 py-2 text-sm text-[rgba(180,210,255,0.75)]"
           style={{ background: 'rgba(15,28,50,0.8)', border: '1px solid rgba(80,140,255,0.2)' }}
         >
           <span className="text-cyan-400 w-4 h-4">✦</span>
           More integrations coming soon: ArchiCAD, Cinema 4D, and more
-        </motion.div>
+        </div>
 
       </div>
     </div>
