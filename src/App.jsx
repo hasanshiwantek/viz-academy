@@ -10,6 +10,8 @@ import HappyUsers from "./components/home/HappyUsers";
 import GetStarted from "./components/home/GetStarted";
 import ModelCarousel from "./components/home/ModelCarousel";
 import ArrowCard from "./components/home/ArrowCard";
+import Workflow from "./components/home/Workflow";
+import Footer from "./components/home/Footer";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <ArrowCard />
         <PricingPlan />
         <HappyUsers />
+        <Workflow />
+        <Footer />
       </main>
     </>
   );
