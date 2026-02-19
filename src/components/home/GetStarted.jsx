@@ -72,10 +72,55 @@ const GetStarted = () => {
   const TOTAL = LEFT_COL + CONNECTOR + BADGE + CONNECTOR + RIGHT_COL
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#060e18] px-6 py-16">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16">
+
+      {/* ── Header ── */}
+      <div className="text-center mb-16">
+        <h2
+          style={{
+            fontFamily: "'Sharp Sans Display No1 TRIAL', 'Inter', sans-serif",
+            fontWeight: 700,
+            fontSize: '56px',
+            lineHeight: '120%',
+            letterSpacing: '0px',
+            color: '#ffffff',
+            margin: 0,
+          }}
+        >
+          Get Started {' '}
+          <span
+            style={{
+              backgroundImage: 'linear-gradient(89.43deg, #00FFFF 10.3%, #FF7E57 37.33%, #FFC457 61.09%, #00B2B2 95.49%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          > 
+          in
+            Minutes
+          </span>
+        </h2>
+        <p
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 400,
+            fontSize: '18px',
+            lineHeight: '150%',
+            letterSpacing: '0px',
+            color: '#98A2B3',
+            textAlign: 'center',
+            marginTop: '16px',
+            marginBottom: 0,
+          }}
+        >
+          Simple setup, powerful results. No technical expertise required.
+        </p>
+      </div>
+
+      {/* ── Steps ── */}
       <div className="relative flex flex-col" style={{ width: TOTAL }}>
 
-        {/* Vertical line — 24px wide */}
+        {/* Vertical line */}
         <div
           style={{
             position: 'absolute',
@@ -101,7 +146,7 @@ const GetStarted = () => {
               }}
             >
               {/* Left card area */}
-              <div style={{ width: LEFT_COL, display: 'flex', justifyContent: 'flex-end' ,rotate: '-13.47deg'}}>
+              <div style={{ width: LEFT_COL, display: 'flex', justifyContent: 'flex-end', rotate: '-13.47deg' }}>
                 {!isRight && (
                   <StepCard title={step.title} desc={step.desc} width={step.width} height={step.height} />
                 )}
@@ -127,7 +172,7 @@ const GetStarted = () => {
               }} />
 
               {/* Right card area */}
-              <div style={{ width: RIGHT_COL, display: 'flex', justifyContent: 'flex-start' ,rotate: '13.47deg'}}>
+              <div style={{ width: RIGHT_COL, display: 'flex', justifyContent: 'flex-start', rotate: '13.47deg' }}>
                 {isRight && (
                   <StepCard title={step.title} desc={step.desc} width={step.width} height={step.height} />
                 )}
