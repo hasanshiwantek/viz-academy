@@ -8,6 +8,7 @@ const steps = [
     side: 'right',
     width: 428,
     height: 177,
+    animationDelay: '0s',
   },
   {
     number: '02',
@@ -16,6 +17,7 @@ const steps = [
     side: 'left',
     width: 438,
     height: 177,
+    animationDelay: '-1s',
   },
   {
     number: '03',
@@ -24,25 +26,45 @@ const steps = [
     side: 'right',
     width: 428,
     height: 231,
+    animationDelay: '-2s',
   },
 ]
 
 const LINE_BG = 'linear-gradient(90deg, rgba(9, 49, 49, 0.7) 0%, rgba(0, 255, 255, 0.7) 122.41%)'
 
-const StepCard = ({ title, desc, width, height }) => (
+const StepCard = ({ title, desc, width, height, animationDelay }) => (
   <div
-    className="flex flex-col gap-2 px-5 py-4 rounded-2xl"
+    className="relative"
     style={{
-      background: 'rgba(0,40,50,0.55)',
-      border: '1px solid rgba(0,180,160,0.25)',
       width: `${width}px`,
       height: `${height}px`,
-      backdropFilter: 'blur(10px)',
+      padding: '2px',
       boxSizing: 'border-box',
+      borderRadius: '16px',
     }}
   >
-    <h3 className="text-white font-bold text-4xl m-0 leading-tight">{title}</h3>
-    <p className="text-lg leading-relaxed m-0" style={{ color: 'rgba(160,210,210,0.75)' }}>{desc}</p>
+    {/* Auto animated border — always on */}
+    <div
+      className="absolute inset-0 step-card-border pointer-events-none"
+      style={{
+        borderRadius: '16px',
+        animationDelay,
+      }}
+    />
+
+    {/* Inner card */}
+    <div
+      className="relative flex flex-col gap-2 px-5 py-4 rounded-2xl h-full w-full"
+      style={{
+        background: 'rgba(0,40,50,0.55)',
+        backdropFilter: 'blur(10px)',
+        boxSizing: 'border-box',
+        zIndex: 1,
+      }}
+    >
+      <h3 className="text-white font-bold text-4xl m-0 leading-tight">{title}</h3>
+      <p className="text-lg leading-relaxed m-0" style={{ color: 'rgba(160,210,210,0.75)' }}>{desc}</p>
+    </div>
   </div>
 )
 
@@ -72,22 +94,55 @@ const GetStarted = () => {
   const TOTAL = LEFT_COL + CONNECTOR + BADGE + CONNECTOR + RIGHT_COL
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16"
+      style={{ background: 'rgb(3,6,18)', fontFamily: "'Inter', sans-serif" }}
+    >
+      <style>{`
+        @property --angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
 
-      {/* ── Header ── */}
+        @keyframes stepBorderRotate {
+          from { --angle: 0deg; }
+          to   { --angle: 360deg; }
+        }
+
+        .step-card-border {
+          padding: 2px;
+          background: conic-gradient(
+            from var(--angle),
+            transparent 0%,
+            transparent 30%,
+            #8ef5e8 40%,
+            #00ffff 45%,
+            #ff9b7a 50%,
+            #ffdc7a 55%,
+            transparent 65%,
+            transparent 100%
+          );
+          -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          animation: stepBorderRotate 3s linear infinite;
+        }
+      `}</style>
+
+      {/* Header */}
       <div className="text-center mb-16">
         <h2
           style={{
-            fontFamily: "'Sharp Sans Display No1 TRIAL', 'Inter', sans-serif",
             fontWeight: 700,
             fontSize: '56px',
             lineHeight: '120%',
-            letterSpacing: '0px',
             color: '#ffffff',
             margin: 0,
           }}
         >
-          Get Started {' '}
+          Get Started{' '}
           <span
             style={{
               backgroundImage: 'linear-gradient(89.43deg, #00FFFF 10.3%, #FF7E57 37.33%, #FFC457 61.09%, #00B2B2 95.49%)',
@@ -95,18 +150,14 @@ const GetStarted = () => {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
             }}
-          > 
-          in
-            Minutes
+          >
+            in Minutes
           </span>
         </h2>
         <p
           style={{
-            fontFamily: "'Inter', sans-serif",
             fontWeight: 400,
             fontSize: '18px',
-            lineHeight: '150%',
-            letterSpacing: '0px',
             color: '#98A2B3',
             textAlign: 'center',
             marginTop: '16px',
@@ -117,7 +168,7 @@ const GetStarted = () => {
         </p>
       </div>
 
-      {/* ── Steps ── */}
+      {/* Steps */}
       <div className="relative flex flex-col" style={{ width: TOTAL }}>
 
         {/* Vertical line */}
@@ -148,7 +199,13 @@ const GetStarted = () => {
               {/* Left card area */}
               <div style={{ width: LEFT_COL, display: 'flex', justifyContent: 'flex-end', rotate: '-13.47deg' }}>
                 {!isRight && (
-                  <StepCard title={step.title} desc={step.desc} width={step.width} height={step.height} />
+                  <StepCard
+                    title={step.title}
+                    desc={step.desc}
+                    width={step.width}
+                    height={step.height}
+                    animationDelay={step.animationDelay}
+                  />
                 )}
               </div>
 
@@ -174,7 +231,13 @@ const GetStarted = () => {
               {/* Right card area */}
               <div style={{ width: RIGHT_COL, display: 'flex', justifyContent: 'flex-start', rotate: '13.47deg' }}>
                 {isRight && (
-                  <StepCard title={step.title} desc={step.desc} width={step.width} height={step.height} />
+                  <StepCard
+                    title={step.title}
+                    desc={step.desc}
+                    width={step.width}
+                    height={step.height}
+                    animationDelay={step.animationDelay}
+                  />
                 )}
               </div>
             </div>

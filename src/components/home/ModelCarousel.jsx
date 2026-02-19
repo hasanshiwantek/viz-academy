@@ -151,7 +151,7 @@ const rows = [
 const ModelCarousel = () => {
   return (
     <section
-      className="py-20 px-6 flex flex-col items-center justify-center max-w-[1200px] w-full mx-auto"
+      className="py-20 px-6  flex flex-col items-center justify-center max-w-[1200px] w-full mx-auto"
       style={{ background: "rgb(3, 6, 18)", fontFamily: "'Inter', sans-serif" }}
     >
 
