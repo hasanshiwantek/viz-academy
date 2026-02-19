@@ -8,6 +8,7 @@ import PricingPlan from "./components/home/PricingPlan";
 import FavoriteApp from "./components/home/FavoriteApp";
 import HappyUsers from "./components/home/HappyUsers";
 import GetStarted from "./components/home/GetStarted";
+import ModelCarousel from "./components/home/ModelCarousel";
 import ArrowCard from "./components/home/ArrowCard";
 
 function App() {
@@ -19,9 +20,10 @@ function App() {
         <AIEngines />
         <FavoriteApp />
         <GetStarted />
+        <ModelCarousel />
         <ArrowCard />
         <PricingPlan />
-        <HappyUsers/>
+        <HappyUsers />
       </main>
     </>
   );

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import backgroundimg from "../../assets/hero-section/happyUser.jpg"
+import backgroundimg from "../../assets/hero-section/reviewBG.PNG"
 const reviews = [
   {
     id: 1,
@@ -229,10 +229,15 @@ const HappyUsers = () => {
   const row2Items = [...reviews].reverse();
 
   return (
-    <section
-      className="py-20 flex flex-col items-center overflow-hidden relative justify-center"
-      style={{ background: "rgb(3, 6, 18)", fontFamily: "'Inter', sans-serif" }}
-    >
+<section
+  className="py-20 max-w-[1552px] flex flex-col items-center border-[1px] border-gray-600 rounded-[32px] mx-auto overflow-hidden relative justify-center"
+  style={{
+    backgroundImage: `url(${backgroundimg})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  }}
+>
       {/* Teal glow bottom */}
       <div
         className="absolute bottom-0 left-1/2 pointer-events-none"
