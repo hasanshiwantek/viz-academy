@@ -1,4 +1,5 @@
 import React, { useRef, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import beforeImg1 from "../../assets/models/before1Img.jpeg";
 import afterImg1 from "../../assets/models/after1Img.jpeg";
 import beforeImg2 from "../../assets/models/before2Img.jpeg";
@@ -8,18 +9,31 @@ import afterImg3 from "../../assets/models/after3Img.jpeg";
 
 const ChevronIcon = () => (
   <div className="flex items-center gap-1">
-    {/* Left chevron */}
     <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
       <path d="M8 2L2 8L8 14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
-    {/* Right chevron */}
     <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
       <path d="M2 2L8 8L2 14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   </div>
 );
 
-const BeforeAfterSlider = ({ beforeImg, afterImg, label }) => {
+const cardVariants = {
+  hidden: { opacity: 0, y: 50, rotateX: 15, scale: 0.96 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    scale: 1,
+    transition: {
+      delay: i * 0.12,
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+}
+
+const BeforeAfterSlider = ({ beforeImg, afterImg, label, index }) => {
   const [splitPercent, setSplitPercent] = useState(50);
   const containerRef = useRef(null);
   const isDragging = useRef(false);
@@ -50,64 +64,46 @@ const BeforeAfterSlider = ({ beforeImg, afterImg, label }) => {
     window.removeEventListener("mouseup", onMouseUp);
   }, [onMouseMove]);
 
-  const onTouchStart = (e) => {
-    isDragging.current = true;
-  };
-
-  const onTouchMove = (e) => {
-    if (!isDragging.current) return;
-    updateSplit(e.touches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    isDragging.current = false;
-  };
+  const onTouchStart = () => { isDragging.current = true; };
+  const onTouchMove = (e) => { if (!isDragging.current) return; updateSplit(e.touches[0].clientX); };
+  const onTouchEnd = () => { isDragging.current = false; };
 
   return (
-    <div className="w-full flex flex-col gap-8">
-      {/* Label */}
+    <motion.div
+      custom={index}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-60px" }}
+      variants={cardVariants}
+      className="w-full flex flex-col gap-8"
+      style={{ perspective: 1200 }}
+    >
       {label && (
         <p className="text-[24px] font-bold tracking-wide" style={{ color: "rgba(255,255,255,1)" }}>
           {label}
         </p>
       )}
 
-      {/* Slider container */}
       <div
         ref={containerRef}
         className="relative w-full overflow-hidden select-none"
-        style={{
-          borderRadius: "12px",
-          height: "550px",
-          cursor: "ew-resize",
-        }}
+        style={{ borderRadius: "12px", height: "550px", cursor: "ew-resize" }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        {/* AFTER image (full width, behind) */}
-        <img
-          src={afterImg}
-          alt="After"
-          className="absolute inset-0 w-full h-full object-cover"
-          draggable={false}
-        />
+        <img src={afterImg} alt="After" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
 
-        {/* BEFORE image (clipped to left of split) */}
-        <div
-          className="absolute inset-0 overflow-hidden"
-          style={{ width: `${splitPercent}%` }}
-        >
+        <div className="absolute inset-0 overflow-hidden" style={{ width: `${splitPercent}%` }}>
           <img
             src={beforeImg}
             alt="Before"
-            className="absolute inset-0  h-full object-cover"
+            className="absolute inset-0 h-full object-cover"
             style={{ width: `${100 / (splitPercent / 100)}%`, maxWidth: "none" }}
             draggable={false}
           />
         </div>
 
-        {/* Divider line */}
         <div
           className="absolute top-0 bottom-0 w-[2px] pointer-events-none"
           style={{
@@ -118,7 +114,6 @@ const BeforeAfterSlider = ({ beforeImg, afterImg, label }) => {
           }}
         />
 
-        {/* Chevron handle */}
         <div
           className="absolute top-1/2 flex items-center justify-center rounded-full"
           style={{
@@ -138,7 +133,7 @@ const BeforeAfterSlider = ({ beforeImg, afterImg, label }) => {
           <ChevronIcon />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -151,12 +146,17 @@ const rows = [
 const ModelCarousel = () => {
   return (
     <section
-      className="py-20 px-6  flex flex-col items-center justify-center max-w-[1200px] w-full mx-auto"
+      className="py-20 px-6 flex flex-col items-center justify-center max-w-[1200px] w-full mx-auto"
       style={{ background: "rgb(3, 6, 18)", fontFamily: "'Inter', sans-serif" }}
     >
-
       {/* Header */}
-      <div className="text-center mb-12 max-w-xl">
+      <motion.div
+        className="text-center mb-12 max-w-xl"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      >
         <h2
           className="font-bold leading-tight mb-3"
           style={{ fontSize: "clamp(28px, 4vw, 56px)", color: "#ffffff", letterSpacing: "-0.02em" }}
@@ -177,16 +177,14 @@ const ModelCarousel = () => {
         <p style={{ fontSize: "18px", color: "rgba(152, 162, 179, 1)" }}>
           Simple setup, powerful results. No technical expertise required.
         </p>
-      </div>
+      </motion.div>
 
       {/* Sliders */}
-      <div
-        className="flex flex-col gap-6 w-full"
-        style={{ maxWidth: "1200px" }}
-      >
+      <div className="flex flex-col gap-6 w-full" style={{ maxWidth: "1200px" }}>
         {rows.map((row, i) => (
           <BeforeAfterSlider
             key={i}
+            index={i}
             label={row.label}
             beforeImg={row.beforeImg}
             afterImg={row.afterImg}

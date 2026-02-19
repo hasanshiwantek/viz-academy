@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react'
 import sketchup from '../../assets/sketchuo.svg'
 import ds from '../../assets/3ds.svg'
@@ -32,7 +30,6 @@ const FavoriteApp = () => {
 
         .fav-card-border {
           position: absolute;
-          border:5px solid;
           inset: 0;
           pointer-events: none;
           padding: 2px;
@@ -91,7 +88,7 @@ const FavoriteApp = () => {
 
           {/* SketchUp */}
           <div
-            className="fav-card relative flex flex-col overflow-hidden shrink-0 rounded-[32px] border-[3px] hover:border-none border-[rgba(80,140,255,0.22)] bg-cover bg-center "
+            className="fav-card relative flex flex-col overflow-hidden shrink-0 rounded-[32px] border-[3px] border-[rgba(80,140,255,0.22)] bg-cover bg-center"
             style={{ width: 483, height: 430, backgroundImage: `url(${frame1})` }}
           >
             <div className="fav-card-border" />
@@ -108,7 +105,7 @@ const FavoriteApp = () => {
 
           {/* 3DS Max */}
           <div
-            className="fav-card relative flex flex-col justify-end overflow-hidden flex-1 rounded-[32px] border-[2px] hover:border-none border-[rgba(80,140,255,0.18)] bg-cover bg-center"
+            className="fav-card relative flex flex-col justify-end overflow-hidden flex-1 rounded-[32px] border-[2px] border-[rgba(80,140,255,0.18)] bg-cover bg-center"
             style={{ height: 430, backgroundImage: `url(${frame2})` }}
           >
             <div className="fav-card-border" />
@@ -133,7 +130,7 @@ const FavoriteApp = () => {
 
           {/* Revit */}
           <div
-            className="fav-card relative flex flex-col justify-end overflow-hidden flex-1 rounded-[32px] border-[2px] hover:border-none border-[rgba(80,140,255,0.18)] bg-cover bg-center"
+            className="fav-card relative flex flex-col justify-end overflow-hidden flex-1 rounded-[32px] border-[2px] border-[rgba(80,140,255,0.18)] bg-cover bg-center"
             style={{ height: 430, backgroundImage: `url(${frame3})` }}
           >
             <div className="fav-card-border" />
@@ -150,7 +147,7 @@ const FavoriteApp = () => {
 
           {/* Blender */}
           <div
-            className="fav-card relative flex flex-col overflow-hidden shrink-0 rounded-[32px] border-[3px] border-[rgba(80,140,255,0.22)] hover:border-none bg-cover bg-center"
+            className="fav-card relative flex flex-col overflow-hidden shrink-0 rounded-[32px] border-[3px] border-[rgba(80,140,255,0.22)] bg-cover bg-center"
             style={{ width: 483, height: 430, backgroundImage: `url(${frame4})` }}
           >
             <div className="fav-card-border" />
