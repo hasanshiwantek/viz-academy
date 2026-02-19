@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { motion } from 'framer-motion'
 
 const engines = [
   {
@@ -91,149 +92,140 @@ const engines = [
   },
 ]
 
-const EngineCard = ({ engine }) => {
+const cardVariants = {
+  hidden: { opacity: 0, y: 40, rotateX: 20, scale: 0.95 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    scale: 1,
+    transition: {
+      delay: i * 0.08,
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+}
+
+const EngineCard = ({ engine, index }) => {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div
-      className="relative cursor-pointer transition-all duration-300 overflow-hidden rounded-3xl "
-      style={{
-        transform: hovered ? "translateY(-5px) scale(1.04)" : "translateY(0) scale(1)",
-        padding: hovered ? "2px" : "2px",
-        transition: "all 0.4s ease",
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+    <motion.div
+      custom={index}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-60px' }}
+      variants={cardVariants}
+      style={{ perspective: 1000 }}
     >
-      {/* ✅ ROTATING ANIMATED GRADIENT BORDER */}
       <div
-        className="absolute inset-0 rounded-3xl flex items-center justify-center pointer-events-none"
+        className="relative cursor-pointer transition-all duration-300 overflow-hidden rounded-3xl"
         style={{
-          opacity: hovered ? 1 : 0,
-          transition: "opacity 0.3s ease",
+          transform: hovered ? 'translateY(-5px) scale(1.04)' : 'translateY(0) scale(1)',
+          padding: '2px',
+          transition: 'all 0.4s ease',
         }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
-        {/* Spinning gradient beam */}
+        {/* ROTATING ANIMATED GRADIENT BORDER */}
         <div
-          className="absolute"
-          style={{
-            content: "",
-            display: "block",
-            background:
-              "linear-gradient(90deg, rgba(0,255,255,0) 0%, #8ef5e8 25%, #ff9b7a 50%, #ffdc7a 75%, rgba(0,255,255,0) 100%)",
-            height: "300px",
-            width: "150px",
-            top: "50%",
-            transformOrigin: "top center",
-            animation: hovered ? "gradient-spin 3s linear infinite" : "none",
-            zIndex: 0,
-          }}
-        />
-      </div>
-
-      {/* Inner mask to create 2px border */}
-      <div
-        className="absolute inset-[2px] rounded-3xl z-10 pointer-events-none"
-        style={{ background: "rgb(3,6,18)" }}
-      />
-
-      {/* CARD CONTENT */}
-      <div
-        className="relative rounded-3xl overflow-hidden p-6 h-full z-20 flex flex-col items-center justify-center text-center"
-        style={{
-          background: "linear-gradient(180deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 100%)",
-          backgroundColor: "rgb(3,6,18)",
-          border: hovered ? "none" : "1px solid rgba(0,255,255,0.2)",
-        //   minHeight: "200px",
-          transition: "all 0.4s ease",
-        }}
-      >
-
-        {/* Icon */}
-        <div
-          className="mb-3 transition-all duration-300"
-          style={{
-            color: "var(--primary-color)",
-            transform: hovered ? "scale(1.1)" : "scale(1)",
-          }}
+          className="absolute inset-0 rounded-3xl flex items-center justify-center pointer-events-none"
+          style={{ opacity: hovered ? 1 : 0, transition: 'opacity 0.3s ease' }}
         >
-          {engine.icon}
+          <div
+            className="absolute"
+            style={{
+              background: 'linear-gradient(90deg, rgba(0,255,255,0) 0%, #8ef5e8 25%, #ff9b7a 50%, #ffdc7a 75%, rgba(0,255,255,0) 100%)',
+              height: '300px',
+              width: '150px',
+              top: '50%',
+              transformOrigin: 'top center',
+              animation: hovered ? 'gradient-spin 3s linear infinite' : 'none',
+              zIndex: 0,
+            }}
+          />
         </div>
 
-        {/* Name */}
-        <h3
-          className="font-bold mb-1 text-white"
-          style={{
-            fontSize: "16px",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          {engine.name}
-        </h3>
+        {/* Inner mask */}
+        <div
+          className="absolute inset-[2px] rounded-3xl z-10 pointer-events-none"
+          style={{ background: 'rgb(3,6,18)' }}
+        />
 
-        {/* Category */}
-        <p
-          className="text-xs"
+        {/* CARD CONTENT */}
+        <div
+          className="relative rounded-3xl overflow-hidden p-6 h-full z-20 flex flex-col items-center justify-center text-center"
           style={{
-            color: "rgba(255,255,255,0.5)",
+            background: 'linear-gradient(180deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 100%)',
+            backgroundColor: 'rgb(3,6,18)',
+            border: hovered ? 'none' : '1px solid rgba(0,255,255,0.2)',
+            transition: 'all 0.4s ease',
           }}
         >
-          {engine.category}
-        </p>
+          <div
+            className="mb-3 transition-all duration-300"
+            style={{
+              color: 'var(--primary-color)',
+              transform: hovered ? 'scale(1.1)' : 'scale(1)',
+            }}
+          >
+            {engine.icon}
+          </div>
+          <h3 className="font-bold mb-1 text-white" style={{ fontSize: '16px', letterSpacing: '-0.01em' }}>
+            {engine.name}
+          </h3>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            {engine.category}
+          </p>
+        </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
 const AIEngines = () => {
   return (
     <section className="py-20 px-6 flex justify-center flex-col items-center">
-      {/* Container with border */}
       <div className="w-full max-w-[1200px] rounded-2xl">
         {/* Header */}
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        >
           <h2
             className="font-bold leading-tight mb-3"
-            style={{
-              fontSize: "clamp(56px, 4vw, 42px)",
-              color: "var(--text-color)",
-              letterSpacing: "-0.02em",
-            }}
+            style={{ fontSize: 'clamp(56px, 4vw, 42px)', color: 'var(--text-color)', letterSpacing: '-0.02em' }}
           >
-            Best-in-Class{" "}
+            Best-in-Class{' '}
             <span
               style={{
-                background: "var(--gradient-bg)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
+                background: 'var(--gradient-bg)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}
             >
               AI Engines
             </span>
           </h2>
-
-          <p
-            className="leading-relaxed font-medium max-w-2xl mx-auto"
-            style={{
-              fontSize: "18px",
-              color: "#98A2B3",
-            }}
-          >
+          <p className="leading-relaxed font-medium max-w-2xl mx-auto" style={{ fontSize: '18px', color: '#98A2B3' }}>
             VizMaker integrates the world's most advanced AI models, giving you
             <br />
             access to cutting-edge technology without the complexity.
           </p>
-        </div>
+        </motion.div>
 
         {/* 4x2 Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-6">
-          {engines.map((engine) => (
-            <EngineCard key={engine.id} engine={engine} />
+          {engines.map((engine, index) => (
+            <EngineCard key={engine.id} engine={engine} index={index} />
           ))}
         </div>
-
-
       </div>
     </section>
   )
