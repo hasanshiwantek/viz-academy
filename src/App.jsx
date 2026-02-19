@@ -6,6 +6,7 @@ import AIFeatures from "./components/home/AIFeatures";
 import AIEngines from "./components/home/AIEngines";
 import PricingPlan from "./components/home/PricingPlan";
 import FavoriteApp from "./components/home/FavoriteApp";
+import HappyUsers from "./components/home/HappyUsers";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <AIEngines />
         <FavoriteApp />
         <PricingPlan />
+        <HappyUsers/>
       </main>
     </>
   );
