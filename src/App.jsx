@@ -19,7 +19,7 @@ function App() {
     <>
       <main className="w-full ">
         <HeroSection /> {/* ← pehle */}
-        <AIFeatures />
+        {/* <AIFeatures />
         <AIEngines />
         <FavoriteApp />
         <GetStarted />
@@ -29,7 +29,7 @@ function App() {
         <HappyUsers />
         <FAQ/>
         <Workflow />
-        <Footer />
+        <Footer /> */}
       </main>
     </>
   );

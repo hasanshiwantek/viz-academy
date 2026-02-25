@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import navlogo from '../../assets/nav-logo.png'
+import hamlogo from '../../assets/ham-logo.svg'
 
 const Navbar = () => {
   const [active, setActive] = useState('Home')
@@ -16,8 +17,8 @@ const Navbar = () => {
         <img
           src={navlogo}
           alt="VizMaker Logo"
-          className="w-auto"
-          style={{ height: '60px', objectFit: 'contain' }}
+          className="w-auto h-[40px] sm:h-[60px]"
+          style={{  objectFit: 'contain' }}
         />
       </div>
 
@@ -70,14 +71,16 @@ const Navbar = () => {
       </button>
 
       {/* Mobile Hamburger Button */}
-      <button
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden flex flex-col gap-1.5 w-8 h-8 items-center justify-center"
-      >
-        <span className={`w-6 h-0.5 bg-cyan-400 transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-        <span className={`w-6 h-0.5 bg-cyan-400 transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></span>
-        <span className={`w-6 h-0.5 bg-cyan-400 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
-      </button>
+<button
+  onClick={() => setIsMenuOpen(!isMenuOpen)}
+  className="flex lg:hidden w-10 h-10 items-center justify-center"
+>
+  <img 
+    src={hamlogo} 
+    alt="Menu" 
+    className={`w-12 h-10 transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''}`} 
+  />
+</button>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
