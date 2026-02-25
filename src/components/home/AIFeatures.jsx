@@ -159,7 +159,7 @@ const FeatureCard = ({ feature, index }) => {
       style={{ perspective: 1000, width: "100%", height: "100%" }}
     >
       <div
-        className="relative rounded-2xl cursor-pointer transition-all md:w-[90%] xl:w-[380px] w-full h-full duration-300 overflow-hidden"
+        className="relative rounded-3xl md:rounded-2xl cursor-pointer transition-all md:w-[90%] xl:w-[380px] w-full h-full duration-300 overflow-hidden"
         style={{
           transform: hovered ? "translateY(-5px) scale(1.02)" : "translateY(0) scale(1)",
           padding: "2px",
@@ -170,7 +170,7 @@ const FeatureCard = ({ feature, index }) => {
       >
         {/* ROTATING ANIMATED GRADIENT BORDER */}
         <div
-          className="absolute inset-0 rounded-2xl flex items-center justify-center pointer-events-none"
+          className="absolute inset-0 rounded-3xl md:rounded-2xl flex items-center justify-center pointer-events-none"
           style={{
             opacity: hovered ? 1 : 0,
             transition: "opacity 0.3s ease",
@@ -200,7 +200,7 @@ const FeatureCard = ({ feature, index }) => {
 
         {/* CARD CONTENT */}
         <div
-          className="relative rounded-2xl overflow-hidden p-6 h-full z-20 flex flex-col"
+          className="relative rounded-3xl md:rounded-2xl overflow-hidden p-6 h-full z-20 flex flex-col"
           style={{
             background: "linear-gradient(180deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 100%)",
             backgroundColor: "rgb(3,6,18)",
@@ -240,9 +240,8 @@ const FeatureCard = ({ feature, index }) => {
 
           {/* Title */}
           <h3
-            className="font-bold mb-2 leading-snug flex-shrink-0"
+            className="font-bold mb-2 leading-snug flex-shrink-0 md:text-[24px] text-[20px]"
             style={{
-              fontSize: "24px",
               letterSpacing: "-0.01em",
               color: "var(--text-color)",
             }}
@@ -251,7 +250,7 @@ const FeatureCard = ({ feature, index }) => {
           </h3>
 
           {/* Description */}
-          <p className="leading-relaxed text-[16px] flex-grow" style={{ color: "#98A2B3" }}>
+          <p className="leading-relaxed text-[14px] md:text-[16px]  flex-grow" style={{ color: "#98A2B3" }}>
             {feature.description}
           </p>
         </div>
@@ -272,9 +271,8 @@ const AIFeatures = () => {
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
         <h2
-          className="font-bold leading-tight mb-4 text-[56px]"
+          className="font-bold leading-tight mb-4 text-[24px]  md:text-[56px]"
           style={{
-            fontSize: "clamp(28px, 4vw, 56px)",
             color: "var(--text-color)",
             letterSpacing: "-0.02em",
           }}
@@ -282,7 +280,7 @@ const AIFeatures = () => {
           Powerful AI Features,
           <br />
           <span
-            className="font-bold text-[56px] leading-tight"
+            className="font-bold text-[24px]  md:text-[56px] leading-tight"
             style={{
               background: "var(--gradient-bg)",
               WebkitBackgroundClip: "text",
@@ -293,7 +291,7 @@ const AIFeatures = () => {
             Right Where You Work
           </span>
         </h2>
-        <p className="leading-relaxed" style={{ fontSize: "18px", color: "rgba(255,255,255,0.4)" }}>
+        <p className="leading-relaxed md:text-[18px] text-[14px]"   style={{ color: "rgba(152, 162, 179, 1)" }}>
           Install VizMaker once, use it everywhere. Direct integration means no
           <br />
           export/import hassles.

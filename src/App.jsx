@@ -21,8 +21,8 @@ function App() {
         <HeroSection /> {/* ← pehle */}
         <AIFeatures />
         <AIEngines />
-        <FavoriteApp />
-        <GetStarted />
+        {/* <FavoriteApp /> */}
+        {/* <GetStarted /> */}
         <ModelCarousel />
         <ArrowCard />
         <PricingPlan />
