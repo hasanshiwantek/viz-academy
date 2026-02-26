@@ -160,7 +160,7 @@ const HeroSection = () => {
 
       {/* Main Content */}
       <div
-        className="flex flex-col items-center justify-center text-center px-2 sm:px-4 w-full sm:mt-20"
+        className="flex flex-col items-center justify-center text-center sm:px-4 w-full sm:mt-20"
         // style={{ paddingTop: "88px" }}
       >
         {/* Badge - fade in */}
@@ -310,12 +310,12 @@ const HeroSection = () => {
   <div
     className="
       flex md:justify-center md:items-end
-      gap-4
+      gap-8
       overflow-x-auto md:overflow-visible
       snap-x snap-mandatory
       scrollbar-hide
       px-4 md:px-0
-      w-full
+      w-full md:mb-8
     "
   >
     <PhoneCard image={card2} rotation={-4.94} translateY={32} />

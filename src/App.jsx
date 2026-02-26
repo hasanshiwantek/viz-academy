@@ -19,10 +19,10 @@ function App() {
     <>
       <main className="w-full ">
         <HeroSection /> {/* ← pehle */}
-         <AIFeatures />
-        <AIEngines />
-        {/* <FavoriteApp /> */}
-        {/* <GetStarted /> */}
+          <AIFeatures />
+        <AIEngines /> 
+        <FavoriteApp />
+        <GetStarted />
         <ModelCarousel />
         <ArrowCard />
         <PricingPlan />

@@ -3,7 +3,7 @@ import bgimage from '../../assets/2ndlastImg.png'
 
 const Workflow = () => {
   return (
-    <section className="flex items-center justify-center py-20 px-6" style={{ background: 'rgb(3,6,18)' }}>
+    <section className="flex items-center justify-center pb-12 sm:py-20 px-6" style={{ background: 'rgb(3,6,18)' }}>
       <style>{`
         @property --angle {
           syntax: '<angle>';
@@ -62,7 +62,7 @@ const Workflow = () => {
 
         {/* Inner card with bg image */}
         <div
-          className="relative rounded-[26px] overflow-hidden flex flex-col items-center justify-center text-center px-8 py-20"
+          className="relative rounded-[26px] overflow-hidden flex flex-col items-center justify-center text-center px-3 py-5 sm:px-8 sm:py-20"
           style={{
             backgroundImage: `url(${bgimage})`,
             backgroundSize: 'cover',
@@ -76,14 +76,13 @@ const Workflow = () => {
           />
 
           {/* Content */}
-          <div className="relative z-10 flex flex-col items-center gap-5 max-w-[660px]">
+          <div className="relative z-10 flex flex-col items-center gap-3 sm:gap-5 max-w-[660px]">
 
             {/* Heading */}
-            <h2
+            <h2 className='text-2xl md:text-[3.5rem]'
               style={{
                 fontFamily: "'Sharp Sans Display No1 TRIAL', 'Inter', sans-serif",
                 fontWeight: 700,
-                fontSize: 'clamp(36px, 5vw, 56px)',
                 lineHeight: '120%',
                 letterSpacing: '-0.01em',
                 color: '#ffffff',
@@ -105,11 +104,10 @@ const Workflow = () => {
             </h2>
 
             {/* Paragraph */}
-            <p
+            <p className='text-[14px] md:text-[18px]'
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 400,
-                fontSize: '18px',
                 lineHeight: '160%',
                 color: '#98A2B3',
                 margin: 0,
@@ -121,7 +119,7 @@ const Workflow = () => {
             </p>
 
             {/* Buttons */}
-            <div className="flex items-center gap-4 mt-2 flex-wrap justify-center">
+            <div className="flex flex-col md:flex-row items-center gap-4 mt-2 flex-wrap justify-center">
               {/* Primary - Download */}
               <button
                 className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-[15px] text-white border-2 border-transparent transition-all duration-300 hover:brightness-110"
@@ -145,7 +143,7 @@ const Workflow = () => {
 
               {/* Secondary - Watch Demo */}
               <button
-                className="flex items-center gap-2 px-6 py-3 rounded-full font-medium text-[15px] text-[#00FFFF] border-2 border-transparent transition-all duration-200"
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-[15px] text-[#00FFFF] border-2 border-transparent transition-all duration-200 w-full sm:w-auto"
                 style={{
                   fontFamily: "Inter, sans-serif",
                   background: `
@@ -174,13 +172,13 @@ const Workflow = () => {
             </div>
 
             {/* Trust badges */}
-            <div className="flex items-center gap-6 mt-1 flex-wrap justify-center">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mt-1 flex-wrap justify-center">
               {['14-day free trial', 'No credit card required', 'Cancel anytime'].map((text) => (
                 <div key={text} className="flex items-center gap-2">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="#00FFFF">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5l-4-4 1.41-1.41L10 13.67l6.59-6.59L18 8.5l-8 8z"/>
                   </svg>
-                  <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', fontFamily: 'Inter, sans-serif' }}>
+                  <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', fontFamily: 'Inter, sans-serif' }}>
                     {text}
                   </span>
                 </div>
