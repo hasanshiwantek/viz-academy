@@ -15,14 +15,14 @@ const Footer = () => {
       {/* Dark overlay */}
       {/* <div className="absolute inset-0" style={{ background: 'rgba(3,8,24,0.82)' }} /> */}
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-8 pt-14 pb-6">
+      <div className="relative z-10 max-w-[1200px] mx-auto py-3 px-8 sm:pt-14 sm:pb-6">
 
         {/* ── Main Row ── */}
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 pb-10 border-b border-white/10">
 
           {/* Left — Logo + desc + socials */}
-          <div className="flex flex-col gap-4 max-w-[25%]">
-            <img src={logo} alt="VizMaker" style={{ height: '60px', width: 'auto', objectFit: 'contain', alignSelf: 'flex-start' }} />
+          <div className="flex flex-col gap-4 md:max-w-[25%]">
+            <img src={logo} alt="VizMaker" className='w-100 h-[60px]' style={{ objectFit: 'contain', alignSelf: 'flex-start' }} />
             <p style={{ fontSize: '16px', fontWeight: 400, lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', margin: 0 }}>
               VizMaker is the only AI-powered app that works directly inside SketchUp, 3DS Max, Revit, and more.
             </p>
@@ -81,7 +81,7 @@ const Footer = () => {
           </div>
 
           {/* Right — Nav columns */}
-          <div className="flex flex-1 flex-wrap gap-8 lg:justify-end">
+          <div className="flex flex-1 flex-wrap gap-6 sm:gap-8 lg:justify-end">
             {[
               {
                 heading: 'Product',

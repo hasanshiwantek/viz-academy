@@ -8,10 +8,10 @@ const Navbar = () => {
   const navLinks = ['Home', 'Products', 'Pricing', 'How It Works']
 
   return (
-    <nav
-      className="w-full flex items-center justify-between px-5 lg:px-10 xl:px-0 xl:justify-evenly backdrop-blur-md bg-black/30 border-b border-white/10"
-      style={{ height: '88px' }}
-    >
+  <nav
+  className="relative z-50 w-full flex items-center justify-between px-5 lg:px-10 xl:px-0 xl:justify-evenly backdrop-blur-md bg-black/30 border-b border-white/10"
+  style={{ height: '88px' }}
+>
       {/* Logo */}
       <div className="flex items-center">
         <img
@@ -73,7 +73,7 @@ const Navbar = () => {
       {/* Mobile Hamburger Button */}
 <button
   onClick={() => setIsMenuOpen(!isMenuOpen)}
-  className="flex lg:hidden w-10 h-10 items-center justify-center"
+  className="flex md:hidden w-10 h-10 items-center justify-center"
 >
   <img 
     src={hamlogo} 
@@ -85,7 +85,7 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="absolute top-[88px] left-0 w-full bg-black/95 backdrop-blur-lg border-b border-white/10 md:hidden">
-          <div className="flex flex-col p-6 gap-4">
+          <div className="flex flex-col p-6 gap-4 z-50">
             {/* Mobile Nav Links */}
             {navLinks.map((link) => (
               <button

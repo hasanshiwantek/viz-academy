@@ -69,7 +69,7 @@ const FAQItem = ({ faq, isOpen, onToggle }) => {
         {/* Question row */}
         <div className="flex items-center justify-between gap-4">
           <h3
-            className="font-medium text-[32px]"
+            className="font-medium text-xl sm:text-[32px]"
             style={{ color: "#ffffff" }}
           >
             {faq.id}. {faq.question}
@@ -77,7 +77,7 @@ const FAQItem = ({ faq, isOpen, onToggle }) => {
 
           {/* Toggle icon */}
           <div
-            className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300"
+            className="flex-shrink-0 w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-300"
             style={{
               background: isOpen
               ? "gray"// closed = transparent
@@ -127,7 +127,7 @@ const FAQItem = ({ faq, isOpen, onToggle }) => {
           }}
         >
           <p
-            className="text-[24px] leading-relaxed pt-4"
+            className="text-[14px] sm:text-[24px] leading-relaxed sm:pt-4"
             style={{ color: "rgba(234, 236, 240, 1)" }}
           >
             {faq.answer}
