@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import img1 from "../../assets/hero-section/ai-img1.jpg";
 import img2 from "../../assets/hero-section/ai-img2.png";
@@ -146,33 +146,48 @@ const cardVariants = {
   }),
 };
 
-const FeatureCard = ({ feature, index }) => {
+const SLIDER_CARD_CENTER = { width: 280, height: 479 };
+const SLIDER_CARD_SIDE = { width: 270, height: 366 };
+
+const FeatureCard = ({ feature, index, isSliderCard = false, isSliderActive = false }) => {
   const [hovered, setHovered] = useState(false);
+  // Border animation: on hover OR when this card is selected via tab click
+  const showBorderAnimation = hovered || (isSliderCard && isSliderActive);
+  const sliderSize = isSliderCard
+    ? (isSliderActive ? SLIDER_CARD_CENTER : SLIDER_CARD_SIDE)
+    : null;
 
   return (
     <motion.div
       custom={index}
-      initial="hidden"
-      whileInView="visible"
+      initial={isSliderCard ? "visible" : "hidden"}
+      whileInView={isSliderCard ? undefined : "visible"}
       viewport={{ once: true, margin: "-60px" }}
       variants={cardVariants}
-      style={{ perspective: 1000, width: "100%", height: "100%" }}
+      style={{
+        perspective: 1000,
+        width: sliderSize ? sliderSize.width : "100%",
+        height: sliderSize ? sliderSize.height : "100%",
+        flexShrink: 0,
+        marginLeft: isSliderCard && !isSliderActive ? "auto" : undefined,
+        marginRight: isSliderCard && !isSliderActive ? "auto" : undefined,
+      }}
     >
       <div
         className="relative rounded-3xl md:rounded-2xl cursor-pointer transition-all md:w-[90%] xl:w-[380px] w-full h-full duration-300 overflow-hidden"
         style={{
           transform: hovered ? "translateY(-5px) scale(1.02)" : "translateY(0) scale(1)",
           padding: "2px",
-          minHeight: "450px",
+          minHeight: sliderSize ? sliderSize.height : "450px",
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {/* ROTATING ANIMATED GRADIENT BORDER */}
+        {/* ROTATING ANIMATED GRADIENT BORDER - hover ya tab se select hone par */}
         <div
           className="absolute inset-0 rounded-3xl md:rounded-2xl flex items-center justify-center pointer-events-none"
           style={{
-            opacity: hovered ? 1 : 0,
+            opacity: showBorderAnimation ? 1 : 0,
             transition: "opacity 0.3s ease",
           }}
         >
@@ -184,7 +199,7 @@ const FeatureCard = ({ feature, index }) => {
               width: "200px",
               top: "50%",
               transformOrigin: "top center",
-              animation: hovered ? "gradient-spin 3s linear infinite" : "none",
+              animation: showBorderAnimation ? "gradient-spin 3s linear infinite" : "none",
               zIndex: 0,
             }}
           />
@@ -200,17 +215,21 @@ const FeatureCard = ({ feature, index }) => {
 
         {/* CARD CONTENT */}
         <div
-          className="relative rounded-3xl md:rounded-2xl overflow-hidden p-6 h-full z-20 flex flex-col"
+          className="relative rounded-3xl md:rounded-2xl overflow-hidden h-full z-20 flex flex-col"
           style={{
+            padding: isSliderCard && !isSliderActive ? 12 : 24,
             background: "linear-gradient(180deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 100%)",
             backgroundColor: "rgb(3,6,18)",
-            border: hovered ? "none" : "1px solid rgba(255,255,255,0.08)",
-            boxShadow: hovered ? "0 20px 60px rgba(0,0,0,0.5)" : "0 4px 20px rgba(0,0,0,0.3)",
+            border: showBorderAnimation ? "none" : "1px solid rgba(255,255,255,0.08)",
+            boxShadow: showBorderAnimation ? "0 20px 60px rgba(0,0,0,0.5)" : "0 4px 20px rgba(0,0,0,0.3)",
             transition: "all 0.2s ease",
           }}
         >
           {/* Image */}
-          <div className="relative overflow-hidden h-40 mb-4 flex-shrink-0">
+          <div
+            className="relative overflow-hidden mb-3 flex-shrink-0 rounded-lg"
+            style={{ height: isSliderCard && !isSliderActive ? 100 : 160 }}
+          >
             <img
               src={feature.image}
               alt={feature.title}
@@ -228,8 +247,11 @@ const FeatureCard = ({ feature, index }) => {
 
           {/* Icon badge */}
           <div
-            className="flex items-center justify-center w-8 h-8 rounded-lg mb-3 transition-all duration-300 flex-shrink-0"
+            className="flex items-center justify-center rounded-lg transition-all duration-300 flex-shrink-0"
             style={{
+              width: isSliderCard && !isSliderActive ? 24 : 32,
+              height: isSliderCard && !isSliderActive ? 24 : 32,
+              marginBottom: isSliderCard && !isSliderActive ? 6 : 12,
               background: hovered ? "var(--button-bg)" : "rgba(0,255,255,0.06)",
               border: "1px solid rgba(0,255,255,0.2)",
               color: "var(--primary-color)",
@@ -240,8 +262,10 @@ const FeatureCard = ({ feature, index }) => {
 
           {/* Title */}
           <h3
-            className="font-bold mb-2 leading-snug flex-shrink-0 md:text-[24px] text-[20px]"
+            className="font-bold leading-snug flex-shrink-0 md:text-[24px]"
             style={{
+              marginBottom: isSliderCard && !isSliderActive ? 4 : 8,
+              fontSize: isSliderCard && !isSliderActive ? 14 : 20,
               letterSpacing: "-0.01em",
               color: "var(--text-color)",
             }}
@@ -250,7 +274,13 @@ const FeatureCard = ({ feature, index }) => {
           </h3>
 
           {/* Description */}
-          <p className="leading-relaxed text-[14px] md:text-[16px]  flex-grow" style={{ color: "#98A2B3" }}>
+          <p
+            className="leading-relaxed flex-grow line-clamp-3"
+            style={{
+              color: "#98A2B3",
+              fontSize: isSliderCard && !isSliderActive ? 11 : 14,
+            }}
+          >
             {feature.description}
           </p>
         </div>
@@ -259,7 +289,24 @@ const FeatureCard = ({ feature, index }) => {
   );
 };
 
+const SLIDER_SLOT_WIDTH = SLIDER_CARD_CENTER.width; // 280px per slot
+const SLIDER_GAP = 8;
+
 const AIFeatures = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const sliderRef = useRef(null);
+  const [sliderWidth, setSliderWidth] = useState(0);
+
+  useEffect(() => {
+    if (!sliderRef.current) return;
+    const el = sliderRef.current;
+    const update = () => setSliderWidth(el.offsetWidth);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <section className="py-20 px-6 flex justify-center flex-col items-center">
       {/* Header */}
@@ -293,13 +340,120 @@ const AIFeatures = () => {
         </h2>
         <p className="leading-relaxed md:text-[18px] text-[14px]"   style={{ color: "rgba(152, 162, 179, 1)" }}>
           Install VizMaker once, use it everywhere. Direct integration means no
-          <br />
+          <br className="hidden sm:block" />
           export/import hassles.
         </p>
       </motion.div>
 
-      {/* 3×3 Grid */}
-      <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 w-[1200px] max-w-full mx-auto place-items-center auto-rows-fr">
+      {/* Mobile: tabs + slider + dots (below sm) */}
+      <div className="block sm:hidden w-full max-w-full mx-auto">
+        {/* Feature tabs - active tab = same rotating gradient border as card */}
+        <div className="flex gap-2 overflow-x-auto pb-10 justify-start scrollbar-hide">
+          {features.map((f, i) => {
+            const isActive = activeIndex === i;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setActiveIndex(i)}
+                className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden"
+                style={{ padding: "2px" }}
+              >
+                {/* Same rotating gradient border as card - only when this tab is active */}
+                {isActive && (
+                  <>
+                    {/* Gradient layer - only visible in the 2px border ring */}
+                    <div
+                      className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none"
+                      style={{ zIndex: 0 }}
+                    >
+                      <div
+                        className="absolute"
+                        style={{
+                          background:
+                            "linear-gradient(90deg, rgba(0,255,255,0) 0%, #8ef5e8 25%, #ff9b7a 50%, #ffdc7a 75%, rgba(0,255,255,0) 100%)",
+                          height: "300px",
+                          width: "200px",
+                          top: "50%",
+                          transformOrigin: "top center",
+                          animation: "gradient-spin 3s linear infinite",
+                        }}
+                      />
+                    </div>
+                    {/* Opaque mask: hides gradient everywhere except 2px border */}
+                    <div
+                      className="absolute inset-[2px] rounded-[6px] z-10 pointer-events-none"
+                      style={{ background: "rgb(3,6,18)" }}
+                    />
+                  </>
+                )}
+                {/* Inner content - solid bg so gradient never shows through center */}
+                <span
+                  className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200"
+                  style={{
+                    color: isActive ? "var(--text-color)" : "rgba(152, 162, 179, 1)",
+                    background: isActive ? "rgb(3,6,18)" : "transparent",
+                    border: isActive ? "none" : "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  {f.title}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {/* Card slider - center 280x479, sides 270x366 */}
+        <div ref={sliderRef} className="relative w-full overflow-hidden">
+          <motion.div
+            className="flex items-center"
+            style={{
+              width: features.length * SLIDER_SLOT_WIDTH + (features.length - 1) * SLIDER_GAP,
+              gap: SLIDER_GAP,
+            }}
+            animate={{
+              x:
+                sliderWidth > 0
+                  ? (sliderWidth - SLIDER_SLOT_WIDTH) / 2 -
+                    activeIndex * (SLIDER_SLOT_WIDTH + SLIDER_GAP)
+                  : 0,
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            {features.map((feature, index) => (
+              <div
+                key={feature.id}
+                className="flex-shrink-0 flex justify-center"
+                style={{ width: SLIDER_SLOT_WIDTH }}
+              >
+                <FeatureCard
+                  feature={feature}
+                  index={index}
+                  isSliderCard
+                  isSliderActive={activeIndex === index}
+                />
+              </div>
+            ))}
+          </motion.div>
+        </div>
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-5">
+          {features.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Go to slide ${i + 1}`}
+              onClick={() => setActiveIndex(i)}
+              className="w-2 h-2 rounded-full transition-colors duration-200"
+              style={{
+                background: activeIndex === i ? "#00FFFF" : "rgba(255,255,255,0.2)",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: 3×3 Grid (sm and up) */}
+      <div className="hidden sm:grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 w-[1200px] max-w-full mx-auto place-items-center auto-rows-fr">
         {features.map((feature, index) => (
           <FeatureCard key={feature.id} feature={feature} index={index} />
         ))}

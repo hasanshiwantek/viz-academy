@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import backgroundimg from "../../assets/hero-section/reviewBG.PNG"
 
 const reviews = [
@@ -29,9 +30,9 @@ const StarIcon = ({ filled }) => (
 
 const TestimonialCard = ({ review }) => (
   <div
-    className="flex-shrink-0 rounded-2xl p-5 flex flex-col gap-3 select-none"
+    className="flex-shrink-0 rounded-2xl p-5 flex flex-col gap-3 select-none w-full"
     style={{
-      width: "306px",
+      maxWidth: "306px",
       background: "linear-gradient(180deg, rgba(0,255,255,0.10) 0%, rgba(0,255,255,0) 100%)",
       border: "1px solid rgba(255,255,255,0.08)",
       backdropFilter: "blur(8px)",
@@ -214,6 +215,19 @@ const DraggableRow = ({ items, initialOffset, allowDirection }) => {
 
 const HappyUsers = () => {
   const row2Items = [...reviews].reverse();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const sliderRef = useRef(null);
+  const [sliderWidth, setSliderWidth] = useState(0);
+
+  useEffect(() => {
+    if (!sliderRef.current) return;
+    const el = sliderRef.current;
+    const update = () => setSliderWidth(el.offsetWidth);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <section
@@ -247,38 +261,110 @@ const HappyUsers = () => {
       <div className="text-center mb-12 px-6 relative z-20">
         <h2
           className="font-bold leading-tight"
-          style={{ fontSize: "clamp(32px, 4vw, 56px)", color: "#ffffff", letterSpacing: "-0.02em" }}
+          style={{ fontSize: "clamp(24px, 4vw, 56px)", color: "#ffffff", letterSpacing: "-0.02em" }}
         >
-          Hear From Our
-        </h2>
-        <h2
-          className="font-bold leading-tight"
-          style={{
-            fontSize: "clamp(32px, 4vw, 52px)",
-            letterSpacing: "-0.02em",
-            background: "linear-gradient(90deg, #00ffff 0%, #ff7e57 32%, #ffc457 60%, #00b2b2 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          Happy Users
+          Hear From Our{" "}
+          <span
+            style={{
+              fontSize: "clamp(24px, 4vw, 52px)",
+              letterSpacing: "-0.02em",
+              background: "linear-gradient(90deg, #00ffff 0%, #ff7e57 32%, #ffc457 60%, #00b2b2 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+            className="inline-block"
+          >
+            Happy Users
+          </span>
         </h2>
       </div>
 
-      {/* Row 1 — auto scrolls left, drag left only */}
-      <div className="max-w-[1352px] w-full mb-4 relative z-0">
+      {/* Mobile: single row — dotted slider, drag se bhi slide */}
+      <div className="sm:hidden w-full max-w-[1352px] px-4 relative z-0">
+        <div ref={sliderRef} className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing">
+          <motion.div
+            className="flex"
+            style={{
+              width:
+                sliderWidth > 0
+                  ? reviews.length * sliderWidth * 0.82
+                  : "100%",
+            }}
+            drag="x"
+            dragConstraints={
+              sliderWidth > 0
+                ? (() => {
+                    const cardWidth = sliderWidth * 0.82;
+                    return {
+                      left: -(reviews.length - 1 - activeIndex) * cardWidth,
+                      right: activeIndex * cardWidth,
+                    };
+                  })()
+                : undefined
+            }
+            dragElastic={0.2}
+            animate={{
+              x:
+                sliderWidth > 0
+                  ? (sliderWidth - sliderWidth * 0.82) / 2 -
+                    activeIndex * (sliderWidth * 0.82)
+                  : 0,
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            onDragEnd={(_, info) => {
+              if (sliderWidth <= 0) return;
+              const cardWidth = sliderWidth * 0.82;
+              const center = (sliderWidth - cardWidth) / 2;
+              const currentX = center - activeIndex * cardWidth + info.offset.x;
+              const newIndex = Math.round((center - currentX) / cardWidth);
+              setActiveIndex(Math.max(0, Math.min(newIndex, reviews.length - 1)));
+            }}
+          >
+            {reviews.map((review) => (
+              <div
+                key={review.id}
+                className="flex-shrink-0 flex justify-center px-1"
+                style={{
+                  width: sliderWidth > 0 ? sliderWidth * 0.82 : "82%",
+                }}
+              >
+                <TestimonialCard review={review} />
+              </div>
+            ))}
+          </motion.div>
+        </div>
+        {/* Dots — sb sy neechy */}
+        <div className="flex justify-center gap-2 mt-6 pb-2">
+          {reviews.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Go to review ${i + 1}`}
+              onClick={() => setActiveIndex(i)}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: activeIndex === i ? 8 : 8,
+                height: 8,
+                background:
+                  activeIndex === i ? "#00FFFF" : "rgba(255,255,255,0.3)",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: two rows — auto scroll + drag (sm and up) */}
+      <div className="hidden sm:block max-w-[1352px] w-full mb-4 relative z-0">
         <DraggableRow items={reviews} initialOffset={-SINGLE_SET} allowDirection="left" />
       </div>
-
-      {/* Row 2 — auto scrolls right, drag right only */}
-      <div className="max-w-[1352px] w-full mb-12 relative z-0">
+      <div className="hidden sm:block max-w-[1352px] w-full mb-12 relative z-0">
         <DraggableRow items={row2Items} initialOffset={-SINGLE_SET * 1.5} allowDirection="right" />
       </div>
 
-      {/* Bottom avatars */}
+      {/* Bottom avatars — desktop only (sm and up) */}
       <div
-        className="flex items-center px-5 py-3 rounded-full relative z-20"
+        className="hidden sm:flex items-center px-5 py-3 rounded-full relative z-20"
         style={{
           background: "rgba(255, 255, 255, 0.3)",
           border: "1px solid rgba(255,255,255,0.1)",

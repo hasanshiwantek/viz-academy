@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
+
+const SLIDER_CARD_CENTER = { width: 270, height: 554 };
+const SLIDER_CARD_SIDE = { width: 230, height: 455 };
+const SLIDER_GAP = 0;
 
 const plans = [
   {
@@ -83,27 +88,47 @@ const LogoIcon = ({ active }) => (
   </div>
 );
 
-const PricingCard = ({ plan, isActive, billing, setActivePlan }) => {
+const PricingCard = ({
+  plan,
+  isActive,
+  billing,
+  setActivePlan,
+  isSliderCard = false,
+  isSliderActive = false,
+}) => {
   const price = billing === "monthly" ? plan.price.monthly : plan.price.yearly;
+  const active = isSliderCard ? isSliderActive : isActive;
+  const sliderSize = isSliderCard
+    ? (isSliderActive ? SLIDER_CARD_CENTER : SLIDER_CARD_SIDE)
+    : null;
 
   return (
     /* Outer wrapper — clips the spinning beam to a rounded rect */
     <div
-      onMouseEnter={() => setActivePlan(plan.id)}
-      onMouseLeave={() => setActivePlan(null)}
-      className="relative flex-1 rounded-2xl cursor-pointer"
+      onMouseEnter={() => !isSliderCard && setActivePlan(plan.id)}
+      onMouseLeave={() => !isSliderCard && setActivePlan(null)}
+      className="relative rounded-2xl cursor-pointer"
       style={{
+        flex: isSliderCard ? undefined : 1,
         padding: "2px",
         overflow: "hidden",
-        transform: isActive
-          ? "translateY(-6px) scale(1.02)"
-          : "translateY(0) scale(1)",
+        transform:
+          isSliderCard && isSliderActive
+            ? "translateY(0) scale(1)"
+            : active
+              ? "translateY(-6px) scale(1.02)"
+              : "translateY(0) scale(1)",
         transition: "transform 0.3s ease",
-        zIndex: isActive ? 2 : 1,
+        zIndex: active ? 2 : 1,
+        ...(sliderSize && {
+          width: sliderSize.width,
+          height: sliderSize.height,
+          boxSizing: "border-box",
+        }),
       }}
     >
       {/* ── SPINNING CONIC BORDER (active) ──────────────────────────── */}
-      {isActive ? (
+      {active ? (
         <div
           className="absolute pointer-events-none"
           style={{
@@ -125,47 +150,61 @@ const PricingCard = ({ plan, isActive, billing, setActivePlan }) => {
 
       {/* ── INNER CARD (sits on top, covers the spinner except the 2px rim) */}
       <div
-        className="relative rounded-2xl p-7 h-full flex flex-col"
+        className="relative rounded-2xl h-full flex flex-col overflow-hidden"
         style={{
+          padding: isSliderCard && !isSliderActive ? 12 : 28,
           backgroundColor: "rgb(10, 14, 30)",
           zIndex: 1,
         }}
       >
         {/* Logo */}
-        <div className="mb-4">
-          <LogoIcon active={isActive} />
+        <div style={{ marginBottom: isSliderCard && !isSliderActive ? 8 : 16 }}>
+          <LogoIcon active={active} />
         </div>
 
         {/* Name */}
         <h3
-          className="font-medium text-[24px]  mb-1 leading-tight"
-          style={{ color: "#ffffff" }}
+          className="font-medium mb-1 leading-tight"
+          style={{
+            color: "#ffffff",
+            fontSize: isSliderCard && !isSliderActive ? 16 : 24,
+          }}
         >
           {plan.name}
         </h3>
 
         {/* Subtitle */}
-        <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.8)" }}>
+        <p
+          className="mb-3"
+          style={{
+            color: "rgba(255,255,255,0.8)",
+            fontSize: isSliderCard && !isSliderActive ? 11 : 14,
+          }}
+        >
           {plan.subtitle}
         </p>
 
         {/* Divider */}
         <div
-          className="mb-5 transition-all duration-300"
+          className="transition-all duration-300"
           style={{
             height: "1px",
-            background: isActive
+            marginBottom: isSliderCard && !isSliderActive ? 8 : 20,
+            background: active
               ? "linear-gradient(90deg, rgba(0,255,255,0.5), transparent)"
               : "rgba(255,255,255,0.08)",
           }}
         />
 
         {/* Price */}
-        <div className="flex items-end gap-2 mb-6">
+        <div
+          className="flex items-end gap-2"
+          style={{ marginBottom: isSliderCard && !isSliderActive ? 8 : 24 }}
+        >
           <span
             className="font-extrabold leading-none"
             style={{
-              fontSize: 40,
+              fontSize: isSliderCard && !isSliderActive ? 28 : 40,
               letterSpacing: "-0.03em",
               background:
                 "linear-gradient(90deg, #00ffff 0%, #ff7e57 40%, #ffc457 100%)",
@@ -177,25 +216,42 @@ const PricingCard = ({ plan, isActive, billing, setActivePlan }) => {
             ${price === 0 ? "00" : price.toFixed(2)}
           </span>
           <span
-            className="mb-2 text-sm"
-            style={{ color: "rgba(255,255,255,0.8)" }}
+            className="mb-1"
+            style={{
+              color: "rgba(255,255,255,0.8)",
+              fontSize: isSliderCard && !isSliderActive ? 10 : 14,
+            }}
           >
             / per month
           </span>
         </div>
 
         {/* Features label */}
-        <p className="text-white font-medium text-[18px] mb-3">
+        <p
+          className="text-white font-medium mb-2"
+          style={{
+            fontSize: isSliderCard && !isSliderActive ? 12 : 18,
+          }}
+        >
           What you will get
         </p>
 
         {/* Features list */}
-        <ul className="flex flex-col gap-[16px] mb-8 flex-grow">
+        <ul
+          className="flex flex-col flex-grow overflow-y-auto"
+          style={{
+            gap: isSliderCard && !isSliderActive ? 6 : 16,
+            marginBottom: isSliderCard && !isSliderActive ? 8 : 32,
+          }}
+        >
           {plan.features.map((f, i) => (
             <li
               key={i}
-              className="flex items-center gap-3 text-sm"
-              style={{ color: "rgba(255,255,255,0.65)" }}
+              className="flex items-center gap-2"
+              style={{
+                color: "rgba(255,255,255,0.65)",
+                fontSize: isSliderCard && !isSliderActive ? 11 : 14,
+              }}
             >
               <span
                 style={{
@@ -213,12 +269,14 @@ const PricingCard = ({ plan, isActive, billing, setActivePlan }) => {
 
         {/* CTA Button */}
         <button
-          className="w-full py-4 rounded-full font-semibold text-[15px] transition-all duration-200"
+          className="w-full rounded-full font-semibold transition-all duration-200"
           style={{
-            background: isActive
+            padding: isSliderCard && !isSliderActive ? "10px 16px" : "16px",
+            fontSize: isSliderCard && !isSliderActive ? 12 : 15,
+            background: active
               ? "linear-gradient(135deg, #093131 0%, #049B9B 50%, #00FFFF 100%)"
               : "transparent",
-            border: isActive ? "none" : "1px solid rgba(0,255,255,0.35)",
+            border: active ? "none" : "1px solid rgba(0,255,255,0.35)",
             color: "#ffffff",
             cursor: "pointer",
             letterSpacing: "-0.01em",
@@ -235,12 +293,19 @@ const PricingCard = ({ plan, isActive, billing, setActivePlan }) => {
 const PricingPlan = () => {
   const [billing, setBilling] = useState("monthly");
   const [activePlan, setActivePlan] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const sliderRef = useRef(null);
+  const [sliderWidth, setSliderWidth] = useState(0);
 
-  const handleClick = (id) => setActivePlan(id);
-
-  // Mouse leave pe null
-  // PricingCard onMouseLeave mein:
-  // onMouseLeave={() => setActivePlan(null)}
+  useEffect(() => {
+    if (!sliderRef.current) return;
+    const el = sliderRef.current;
+    const update = () => setSliderWidth(el.offsetWidth);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <section
@@ -321,9 +386,73 @@ const PricingPlan = () => {
         })}
       </div>
 
-      {/* Cards Grid */}
+      {/* Mobile: slider (below sm) — center 270x554, sides 230x455 */}
+      <div className="block sm:hidden w-full overflow-hidden">
+        <div ref={sliderRef} className="relative w-full overflow-hidden py-5">
+          <motion.div
+            className="flex items-center"
+            style={{
+              width:
+                SLIDER_CARD_CENTER.width +
+                (plans.length - 1) * (SLIDER_CARD_SIDE.width + SLIDER_GAP),
+              gap: SLIDER_GAP,
+            }}
+            animate={{
+              x:
+                sliderWidth > 0
+                  ? (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
+                    activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+                  : 0,
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            {plans.map((plan, index) => {
+              const slotWidth =
+                activeIndex === index
+                  ? SLIDER_CARD_CENTER.width
+                  : SLIDER_CARD_SIDE.width;
+              return (
+                <div
+                  key={plan.id}
+                  className="flex-shrink-0 flex justify-center"
+                  style={{ width: slotWidth }}
+                >
+                  <PricingCard
+                    plan={plan}
+                    isActive={activePlan === plan.id}
+                    billing={billing}
+                    setActivePlan={setActivePlan}
+                    isSliderCard
+                    isSliderActive={activeIndex === index}
+                  />
+                </div>
+              );
+            })}
+          </motion.div>
+        </div>
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-6">
+          {plans.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Go to plan ${i + 1}`}
+              onClick={() => setActiveIndex(i)}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: activeIndex === i ? 8 : 8,
+                height: 8,
+                background:
+                  activeIndex === i ? "#00FFFF" : "rgba(255,255,255,0.2)",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: cards grid (sm and up) */}
       <div
-        className=" flex flex-col md:flex-row gap-8 w-full "
+        className="hidden sm:flex flex-col md:flex-row gap-8 w-full"
         style={{ maxWidth: 1200 }}
       >
         {plans.map((plan) => (
@@ -332,7 +461,7 @@ const PricingPlan = () => {
             plan={plan}
             isActive={activePlan === plan.id}
             billing={billing}
-            setActivePlan={setActivePlan} // pass karo
+            setActivePlan={setActivePlan}
           />
         ))}
       </div>
