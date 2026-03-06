@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import img1 from "../../assets/ai-engine1.png";
 import img2 from "../../assets/ai-engine2.png";
@@ -20,6 +20,10 @@ const engines = [
   { id: 8, name: "Sora", category: "Video AI", icon: img8 },
 ];
 
+const SLIDER_CARD_CENTER = { width: 200, height: 200 };
+const SLIDER_CARD_SIDE = { width: 139, height: 142 };
+const SLIDER_GAP = 0; // no gap between center and sides
+
 const cardVariants = {
   hidden: { opacity: 0, y: 40, rotateX: 20, scale: 0.95 },
   visible: (i) => ({
@@ -35,27 +39,41 @@ const cardVariants = {
   }),
 };
 
-const EngineCard = ({ engine, index }) => {
+const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = false }) => {
   const [hovered, setHovered] = useState(false);
+  const showBorderAnimation = hovered || (isSliderCard && isSliderActive);
+  const sliderSize = isSliderCard
+    ? (isSliderActive ? SLIDER_CARD_CENTER : SLIDER_CARD_SIDE)
+    : null;
 
   return (
     <motion.div
       custom={index}
-      initial="hidden"
-      whileInView="visible"
+      initial={isSliderCard ? "visible" : "hidden"}
+      whileInView={isSliderCard ? undefined : "visible"}
       viewport={{ once: true, margin: "-60px" }}
       variants={cardVariants}
-      style={{ perspective: 1000 }}
-      // Mobile pe fixed width taki 2 cards ek baar dikhein
-      className="flex-shrink-0  w-[calc(150%-8px)] sm:w-auto"
+      style={{
+        perspective: 1000,
+        flexShrink: 0,
+        ...(isSliderCard && { width: "100%", display: "flex", justifyContent: "center" }),
+        ...(!isSliderCard && { marginLeft: undefined, marginRight: undefined }),
+      }}
+      className={!isSliderCard ? "flex-shrink-0 w-[calc(150%-8px)] sm:w-auto" : ""}
     >
       <div
         className="relative cursor-pointer transition-all duration-300 overflow-hidden rounded-3xl"
         style={{
           transform: hovered
             ? "translateY(-5px) scale(1.04)"
-            : "translateY(0) scale(1)",
+            : isSliderCard && isSliderActive
+              ? "translateY(-6px) scale(1)"
+              : "translateY(0) scale(1)",
           padding: "2px",
+          ...(sliderSize && {
+            width: sliderSize.width,
+            height: sliderSize.height,
+          }),
           transition: "all 0.4s ease",
         }}
         onMouseEnter={() => setHovered(true)}
@@ -64,7 +82,7 @@ const EngineCard = ({ engine, index }) => {
         {/* ROTATING ANIMATED GRADIENT BORDER */}
         <div
           className="absolute inset-0 rounded-3xl flex items-center justify-center pointer-events-none"
-          style={{ opacity: hovered ? 1 : 0, transition: "opacity 0.3s ease" }}
+          style={{ opacity: showBorderAnimation ? 1 : 0, transition: "opacity 0.3s ease" }}
         >
           <div
             className="absolute"
@@ -75,7 +93,7 @@ const EngineCard = ({ engine, index }) => {
               width: "150px",
               top: "50%",
               transformOrigin: "top center",
-              animation: hovered ? "gradient-spin 3s linear infinite" : "none",
+              animation: showBorderAnimation ? "gradient-spin 3s linear infinite" : "none",
               zIndex: 0,
             }}
           />
@@ -89,32 +107,40 @@ const EngineCard = ({ engine, index }) => {
 
         {/* CARD CONTENT */}
         <div
-          className="relative rounded-3xl overflow-hidden p-6 md:h-full h-[180px] w-[186px] sm:w-full  z-20 flex flex-col items-center justify-center text-center"
+          className="relative rounded-3xl overflow-hidden z-20 flex flex-col items-center justify-center text-center h-full"
           style={{
+            padding: isSliderCard && !isSliderActive ? 8 : 16,
             background:
               "linear-gradient(180deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 100%)",
             backgroundColor: "rgb(3,6,18)",
-            border: hovered ? "none" : "1px solid rgba(0,255,255,0.2)",
+            border: showBorderAnimation ? "none" : "1px solid rgba(0,255,255,0.2)",
             transition: "all 0.4s ease",
           }}
         >
-          <div
-            className="mb-3 transition-all duration-300"
-            // style={{ transform: hovered ? "scale(1.1)" : "scale(1)" }}
-          >
+          <div className="mb-2 flex-shrink-0">
             <img
               src={engine.icon}
               alt={engine.name}
-              className="w-14 h-16 object-contain"
+              className="object-contain"
+              style={{
+                width: isSliderCard && !isSliderActive ? 32 : 48,
+                height: isSliderCard && !isSliderActive ? 36 : 52,
+              }}
             />
           </div>
           <h3
-            className="font-bold mb-1 text-white"
-            style={{ fontSize: "16px", letterSpacing: "-0.01em" }}
+            className="font-bold text-white flex-shrink-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+            style={{
+              fontSize: isSliderCard && !isSliderActive ? 10 : 14,
+              letterSpacing: "-0.01em",
+            }}
           >
             {engine.name}
           </h3>
-          <p className="text-xs" style={{ color: "rgba(152, 162, 179, 1)" }}>
+          <p
+            className="text-xs flex-shrink-0"
+            style={{ color: "rgba(152, 162, 179, 1)", fontSize: isSliderCard && !isSliderActive ? 9 : 11 }}
+          >
             {engine.category}
           </p>
         </div>
@@ -124,17 +150,19 @@ const EngineCard = ({ engine, index }) => {
 };
 
 const AIEngines = () => {
-  const scrollRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const sliderRef = useRef(null);
+  const [sliderWidth, setSliderWidth] = useState(0);
 
-  // Scroll hone par active dot update karo
-  const handleScroll = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardWidth = el.scrollWidth / engines.length;
-    const index = Math.round(el.scrollLeft / cardWidth);
-    setActiveIndex(index);
-  };
+  useEffect(() => {
+    if (!sliderRef.current) return;
+    const el = sliderRef.current;
+    const update = () => setSliderWidth(el.offsetWidth);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <section className="py-20 px-6 flex justify-center flex-col items-center">
@@ -168,58 +196,130 @@ const AIEngines = () => {
           </h2>
           <p className="leading-relaxed font-medium max-w-2xl mx-auto text-[rgb(152,162,179)] text-[14px] md:text-[18px]">
             VizMaker integrates the world's most advanced AI models, giving you
-            <br />
+            <br className="hidden sm:block" />
             access to cutting-edge technology without the complexity.
           </p>
         </motion.div>
 
-        {/* 
-          Mobile: horizontal scroll slider (2 cards visible)
-          sm+: normal 2-col grid
-          lg+: 4-col grid
-        */}
-        <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="
-            flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2
-            sm:grid sm:grid-cols-2 sm:overflow-visible  sm:gap-8 
-            lg:grid-cols-4  
-          "
-          style={{
-            scrollbarWidth: "none", // Firefox
-            msOverflowStyle: "none", // IE
-          }}
-        >
-          {engines.map((engine, index) => (
-            <div key={engine.id} className="snap-start">
-              <EngineCard engine={engine} index={index} />
-            </div>
-          ))}
+        {/* Mobile: tabs + slider + dots (below sm) - same as AIFeatures */}
+        <div className="block sm:hidden w-full max-w-full mx-auto">
+          {/* Engine tabs - scrollbar hidden, active tab = rotating gradient border */}
+          <div className="flex gap-2 overflow-x-auto pb-6 justify-start scrollbar-hide">
+            {engines.map((e, i) => {
+              const isActive = activeIndex === i;
+              return (
+                <button
+                  key={e.id}
+                  type="button"
+                  onClick={() => setActiveIndex(i)}
+                  className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden"
+                  style={{ padding: "2px" }}
+                >
+                  {isActive && (
+                    <>
+                      <div
+                        className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none"
+                        style={{ zIndex: 0 }}
+                      >
+                        <div
+                          className="absolute"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, rgba(0,255,255,0) 0%, #8ef5e8 25%, #ff9b7a 50%, #ffdc7a 75%, rgba(0,255,255,0) 100%)",
+                            height: "300px",
+                            width: "200px",
+                            top: "50%",
+                            transformOrigin: "top center",
+                            animation: "gradient-spin 3s linear infinite",
+                          }}
+                        />
+                      </div>
+                      <div
+                        className="absolute inset-[2px] rounded-[6px] z-10 pointer-events-none"
+                        style={{ background: "rgb(3,6,18)" }}
+                      />
+                    </>
+                  )}
+                  <span
+                    className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200"
+                    style={{
+                      color: isActive ? "var(--text-color)" : "rgba(152, 162, 179, 1)",
+                      background: isActive ? "rgb(3,6,18)" : "transparent",
+                      border: isActive ? "none" : "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    {e.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {/* Card slider - center 200x200, sides 139x142, no gap; pt so top border visible */}
+          <div ref={sliderRef} className="relative w-full overflow-hidden pt-2">
+            <motion.div
+              className="flex items-center"
+              style={{
+                width:
+                  SLIDER_CARD_CENTER.width +
+                  (engines.length - 1) * SLIDER_CARD_SIDE.width +
+                  (engines.length - 1) * SLIDER_GAP,
+                gap: SLIDER_GAP,
+              }}
+              animate={{
+                x:
+                  sliderWidth > 0
+                    ? (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
+                      activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+                    : 0,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {engines.map((engine, index) => {
+                const slotWidth =
+                  activeIndex === index
+                    ? SLIDER_CARD_CENTER.width
+                    : SLIDER_CARD_SIDE.width;
+                return (
+                  <div
+                    key={engine.id}
+                    className="flex-shrink-0 flex justify-center"
+                    style={{ width: slotWidth }}
+                  >
+                    <EngineCard
+                      engine={engine}
+                      index={index}
+                      isSliderCard
+                      isSliderActive={activeIndex === index}
+                    />
+                  </div>
+                );
+              })}
+            </motion.div>
+          </div>
+          {/* Dots */}
+          <div className="flex justify-center gap-2 mt-5">
+            {engines.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Go to slide ${i + 1}`}
+                onClick={() => setActiveIndex(i)}
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: activeIndex === i ? "8px" : "8px",
+                  height: "8px",
+                  background:
+                    activeIndex === i ? "#00FFFF" : "rgba(255,255,255,0.2)",
+                }}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Dots — sirf mobile pe dikhein */}
-        <div className="flex justify-center gap-2 mt-5 sm:hidden">
-          {engines.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                const el = scrollRef.current;
-                if (!el) return;
-                const cardWidth = el.scrollWidth / engines.length;
-                el.scrollTo({ left: cardWidth * i, behavior: "smooth" });
-                setActiveIndex(i);
-              }}
-              className="rounded-full transition-all duration-300"
-              style={{
-                width: activeIndex === i ? "20px" : "8px",
-                height: "8px",
-                background:
-                  activeIndex === i
-                    ? "var(--primary-color, #8ef5e8)"
-                    : "rgba(255,255,255,0.2)",
-              }}
-            />
+        {/* Desktop: grid (sm and up) */}
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-8">
+          {engines.map((engine, index) => (
+            <EngineCard key={engine.id} engine={engine} index={index} />
           ))}
         </div>
       </div>

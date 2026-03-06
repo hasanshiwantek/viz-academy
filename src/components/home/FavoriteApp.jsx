@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import sketchup from '../../assets/sketchuo.svg'
 import ds from '../../assets/3ds.svg'
 import revit from '../../assets/revit.svg'
@@ -10,8 +11,25 @@ import frame4 from '../../assets/frame4.png'
 
 const icons = ['▶','⏸','⏹','⏺','R','⚙'];
 
+const SLIDER_CENTER = { width: 280, height: 430 }
+const SLIDER_SIDE = { width: 210, height: 360 }
+const SLIDER_GAP = 0
+
 const FavoriteApp = () => {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const sliderRef = useRef(null)
+  const [sliderWidth, setSliderWidth] = useState(0)
+
+  useEffect(() => {
+    if (!sliderRef.current) return
+    const el = sliderRef.current
+    const update = () => setSliderWidth(el.offsetWidth)
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   const mobileCards = [
     {
@@ -298,137 +316,170 @@ const FavoriteApp = () => {
           ))}
         </div>
 
-         {/* ===== MOBILE sm aur neechy — 343x430, unique layout per card ===== */}
-        <div className="flex sm:hidden flex-col items-center gap-4 w-full">
-
-          {/* CARD 1 — SketchUp: TOP text, BOTTOM icon image */}
-          <div
-            className="mobile-card w-[94.7%] fav-card relative rounded-[22px] overflow-hidden border border-[rgba(80,140,255,0.22)] bg-cover bg-center"
-            style={{ height: 430, backgroundImage: `url(${frame1})` }}
-          >
-            <div className="absolute inset-0 z-0"
-              style={{ background: 'linear-gradient(to bottom, rgba(3,6,18,0.92) 0%, rgba(3,6,18,0.4) 40%, rgba(3,6,18,0.05) 100%)' }}
-            />
-            <div className="fav-card-border" style={{ borderRadius: '22px' }} />
-
-            {/* TOP: Text */}
-            <div className="absolute top-0 left-0 z-10 p-5">
-              <h3 className="text-white font-bold text-[22px] leading-tight m-0 mb-1">SketchUp</h3>
-              <p className="text-[13px] leading-[150%] m-0 text-[rgba(180,200,220,0.68)]" style={{ maxWidth: '70%' }}>
-                AI-powered rendering directly inside SketchUp for faster design workflows.
-              </p>
-            </div>
-
-            {/* BOTTOM: Icon image centered */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 w-[90%]">
-              <img src={sketchup} alt="SketchUp" className="w-full object-contain" />
-            </div>
-          </div>
-
-          {/* CARD 2 — 3DS Max: TOP text + top-left UI, CENTER icon, BOTTOM text */}
-          <div
-            className="mobile-card w-[94.7%] fav-card relative rounded-[22px] overflow-hidden border border-[rgba(80,140,255,0.22)] bg-cover bg-center"
-            style={{ height: 430, backgroundImage: `url(${frame2})` }}
-          >
-            <div className="absolute inset-0 z-0"
-              style={{ background: 'linear-gradient(to bottom, rgba(3,6,18,0.88) 0%, rgba(3,6,18,0.2) 50%, rgba(3,6,18,0.88) 100%)' }}
-            />
-            <div className="fav-card-border" style={{ borderRadius: '22px' }} />
-
-            {/* TOP: text */}
-            <div className="absolute top-0 left-0 z-10 p-5">
-              {/* top-left UI */}
-              <div className="flex items-center gap-2 mb-3">
-                <div className="rounded-xl w-9 h-[18px] bg-[rgba(25,40,65,0.9)] border border-[rgba(100,150,255,0.2)]" />
-                <div className="rounded-lg w-6 h-6 flex items-center justify-center text-white font-bold text-sm bg-[rgba(0,180,255,0.85)]">+</div>
-              </div>
-             
-            </div>
-
-            {/* CENTER: icon image */}
-            <div className="absolute inset-0 flex items-center justify-center z-10 ">
-              <img src={ds} alt="3DS Max" style={{ maxHeight: 200, objectFit: 'contain' }} />
-            </div>
-
-            {/* BOTTOM: description text */}
-            <div className="absolute bottom-0 left-0 z-10 p-5">
-               <h3 className="text-white font-bold text-[22px] leading-tight m-0 mb-1">3DS Max</h3>
-              <p className="text-[13px] leading-[150%] m-0 text-[rgba(180,200,220,0.68)]" style={{ maxWidth: '100%' }}>
-                AI rendering plugin for 3ds Max, built for professional visual quality.
-              </p>
-            </div>
-          </div>
-
-          {/* CARD 3 — Revit: CENTER icon, BOTTOM text */}
-          <div
-            className="mobile-card w-[94.7%] fav-card relative rounded-[22px] overflow-hidden border border-[rgba(80,140,255,0.22)] bg-cover bg-center"
-            style={{ height: 430, backgroundImage: `url(${frame3})` }}
-          >
-            <div className="absolute inset-0 z-0"
-              style={{ background: 'linear-gradient(to top, rgba(3,6,18,0.92) 0%, rgba(3,6,18,0.35) 50%, rgba(3,6,18,0.1) 100%)' }}
-            />
-            <div className="fav-card-border" style={{ borderRadius: '22px' }} />
-
-            {/* CENTER: icon image */}
-            <div className="absolute inset-0 flex items-center justify-center z-10 mr-10 mb-32">
-              <img src={revit} alt="Revit" style={{ maxHeight: 220, maxWidth: '100%', objectFit: 'contain' }} />
-            </div>
-
-            {/* BOTTOM: text */}
-            <div className="absolute bottom-0 left-0 z-10 p-5">
-              <h3 className="text-white font-bold text-[22px] leading-tight m-0 mb-1">Revit</h3>
-              <p className="text-[13px] leading-[150%] m-0 text-[rgba(180,200,220,0.68)]" style={{ maxWidth: '70%' }}>
-                Generate realistic AI renders directly inside Revit without exporting models.
-              </p>
-            </div>
-          </div>
-
-          {/* CARD 4 — Blender: TOP text, CENTER icon, BOTTOM glow icons */}
-          <div
-            className="mobile-card w-[94.7%] fav-card relative rounded-[22px] overflow-hidden border border-[rgba(80,140,255,0.22)] bg-cover bg-center"
-            style={{ height: 430, backgroundImage: `url(${frame4})` }}
-          >
-            <div className="absolute inset-0 z-0"
-              style={{ background: 'linear-gradient(to bottom, rgba(3,6,18,0.9) 0%, rgba(3,6,18,0.15) 40%, rgba(3,6,18,0.85) 100%)' }}
-            />
-            <div className="fav-card-border" style={{ borderRadius: '22px' }} />
-
-            {/* TOP: text */}
-            <div className="absolute top-0 left-0 z-10 p-5">
-              <h3 className="text-white font-bold text-[22px] leading-tight m-0 mb-1">Blender</h3>
-              <p className="text-[13px] leading-[150%] m-0 text-[rgba(180,200,220,0.68)]" style={{ maxWidth: '65%' }}>
-                Create production-ready renders in Blender using intelligent AI.
-              </p>
-            </div>
-
-            {/* CENTER: icon image */}
-            <div className="absolute inset-0 flex items-center justify-center z-10">
-              <img src={blender} alt="Blender" style={{ maxHeight: 200, maxWidth: '70%', objectFit: 'contain' }} />
-            </div>
-
-            {/* BOTTOM: glow icon buttons */}
-            <div className="absolute bottom-0 left-0 right-0 z-10 p-5 flex justify-center">
-              <div className="flex items-center gap-2">
-                {icons.map((icon, i) => (
-                  <div
-                    key={i}
-                    onClick={() => setActive(i)}
-                    className={`
-                      flex items-center justify-center rounded-md text-[11px] cursor-pointer
-                      w-[34px] h-[34px] transition-all duration-300
-                      ${active === i
-                        ? "bg-cyan-400/20 text-cyan-300 border border-cyan-400 shadow-[0_0_12px_rgba(0,255,255,0.8),0_0_24px_rgba(0,255,255,0.4)]"
-                        : "bg-[rgba(25,40,65,0.85)] text-[rgba(180,210,255,0.8)] border border-[rgba(100,150,255,0.2)]"
-                      }
-                    `}
+         {/* ===== MOBILE below sm — tabs + slider (Pricing-style) ===== */}
+        <div className="flex sm:hidden w-full flex-col overflow-hidden py-5">
+          {/* Tabs — AIEngines jaisa (scrollbar hidden, active = rotating gradient border) */}
+          <div className="flex gap-2 overflow-x-auto pb-5 justify-start scrollbar-hide">
+            {mobileCards.map((card, i) => {
+              const isActive = activeIndex === i
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setActiveIndex(i)}
+                  className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden"
+                  style={{ padding: '2px' }}
+                >
+                  {isActive && (
+                    <>
+                      <div
+                        className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none"
+                        style={{ zIndex: 0 }}
+                      >
+                        <div
+                          className="absolute"
+                          style={{
+                            background:
+                              'linear-gradient(90deg, rgba(0,255,255,0) 0%, #8ef5e8 25%, #ff9b7a 50%, #ffdc7a 75%, rgba(0,255,255,0) 100%)',
+                            height: '300px',
+                            width: '200px',
+                            top: '50%',
+                            transformOrigin: 'top center',
+                            animation: 'gradient-spin 3s linear infinite',
+                          }}
+                        />
+                      </div>
+                      <div
+                        className="absolute inset-[2px] rounded-[6px] z-10 pointer-events-none"
+                        style={{ background: 'rgb(3,6,18)' }}
+                      />
+                    </>
+                  )}
+                  <span
+                    className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200"
+                    style={{
+                      color: isActive ? 'var(--text-color)' : 'rgba(152, 162, 179, 1)',
+                      background: isActive ? 'rgb(3,6,18)' : 'transparent',
+                      border: isActive ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                    }}
                   >
-                    {icon}
+                    {card.title}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+          <div ref={sliderRef} className="relative w-full overflow-hidden">
+            <motion.div
+              className="flex items-center gap-0"
+              style={{
+                width:
+                  SLIDER_CENTER.width +
+                  (mobileCards.length - 1) * SLIDER_SIDE.width,
+                gap: 0,
+              }}
+              animate={{
+                x:
+                  sliderWidth > 0
+                    ? (sliderWidth - SLIDER_CENTER.width) / 2 -
+                      activeIndex * SLIDER_SIDE.width
+                    : 0,
+              }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            >
+              {mobileCards.map((card, idx) => {
+                const isActive = activeIndex === idx
+                const slotW = isActive ? SLIDER_CENTER.width : SLIDER_SIDE.width
+                const slotH = isActive ? SLIDER_CENTER.height : SLIDER_SIDE.height
+                return (
+                  <div
+                    key={idx}
+                    className="flex-shrink-0 flex justify-center items-center overflow-hidden"
+                    style={{ width: slotW, height: slotH, margin: 0, padding: 0 }}
+                  >
+                    <div
+                      className="fav-card relative rounded-[22px] overflow-hidden border border-[rgba(80,140,255,0.22)] w-full h-full"
+                      style={{
+                        width: SLIDER_CENTER.width,
+                        height: SLIDER_CENTER.height,
+                        backgroundImage: `url(${card.frame})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        transform: isActive ? 'none' : 'scale(0.75, 0.84)',
+                        transformOrigin: 'center',
+                      }}
+                    >
+                      <div
+                        className="absolute inset-0 z-0"
+                        style={{
+                          background:
+                            'linear-gradient(to top, rgba(3,6,18,0.92) 0%, rgba(3,6,18,0.4) 50%, rgba(3,6,18,0.05) 100%)',
+                        }}
+                      />
+                      <div className="fav-card-border" style={{ borderRadius: '22px' }} />
+                      {card.extraTopLeft && (
+                        <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
+                          <div className="rounded-xl w-7 h-[14px] bg-[rgba(25,40,65,0.9)] border border-[rgba(100,150,255,0.2)]" />
+                          <div className="rounded-lg w-5 h-5 flex items-center justify-center text-white font-bold text-xs bg-[rgba(0,180,255,0.85)]">+</div>
+                        </div>
+                      )}
+                      {/* App icon — sab center mein */}
+                      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none" style={{ padding: '15% 10% 35% 10%' }}>
+                        <img
+                          src={card.icon}
+                          alt={card.title}
+                          className="w-full h-full object-contain"
+                          style={{ objectPosition: 'center center' }}
+                        />
+                      </div>
+                      <div className="absolute bottom-0 left-0 z-10 p-4 right-0">
+                        <h3 className="text-white font-bold text-[18px] leading-tight m-0 mb-0.5">{card.title}</h3>
+                        <p className="text-[12px] leading-[145%] m-0 text-[rgba(180,200,220,0.68)]" style={{ maxWidth: '90%' }}>
+                          {card.desc}
+                        </p>
+                        {card.hasIcons && (
+                          <div className="flex items-center gap-1 mt-2">
+                            {icons.map((icon, i) => (
+                              <div
+                                key={i}
+                                onClick={(e) => { e.stopPropagation(); setActive(i); }}
+                                className={`
+                                  flex items-center justify-center rounded-md text-[9px] cursor-pointer
+                                  w-[26px] h-[26px] transition-all duration-300
+                                  ${active === i ? 'bg-cyan-400/20 text-cyan-300 border border-cyan-400' : 'bg-[rgba(25,40,65,0.85)] text-[rgba(180,210,255,0.8)] border border-[rgba(100,150,255,0.2)]'}
+                                `}
+                              >
+                                {icon}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                )
+              })}
+            </motion.div>
           </div>
+          {/* Dots neeche — sab ki width 8 */}
+          <div className="flex justify-center gap-2 mt-8 pt-2 pb-1">
+            {mobileCards.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Go to ${mobileCards[i].title}`}
+                onClick={() => setActiveIndex(i)}
+                className="rounded-full transition-all duration-300 flex-shrink-0"
+                style={{
+                  width: 8,
+                  height: 8,
+                  background: activeIndex === i ? '#00FFFF' : 'rgba(255,255,255,0.3)',
+                }}
+              />
+            ))}
           </div>
+        </div>
 
 
         {/* Footer badge */}
