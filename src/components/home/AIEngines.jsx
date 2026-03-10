@@ -22,7 +22,11 @@ const engines = [
 
 const SLIDER_CARD_CENTER = { width: 200, height: 200 };
 const SLIDER_CARD_SIDE = { width: 139, height: 142 };
-const SLIDER_GAP = 0; // no gap between center and sides
+const SLIDER_GAP = 0;
+// xl+: center 432×306, left/right 210×180, no gap
+const XL_CENTER = { width: 432, height: 306 };
+const XL_SIDE = { width: 210, height: 180 };
+const XL_BREAKPOINT = 1280;
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40, rotateX: 20, scale: 0.95 },
@@ -39,11 +43,11 @@ const cardVariants = {
   }),
 };
 
-const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = false }) => {
+const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = false, sizeOverride = null }) => {
   const [hovered, setHovered] = useState(false);
   const showBorderAnimation = hovered || (isSliderCard && isSliderActive);
   const sliderSize = isSliderCard
-    ? (isSliderActive ? SLIDER_CARD_CENTER : SLIDER_CARD_SIDE)
+    ? (sizeOverride ?? (isSliderActive ? SLIDER_CARD_CENTER : SLIDER_CARD_SIDE))
     : null;
 
   return (
@@ -166,7 +170,7 @@ const AIEngines = () => {
 
   return (
     <section className="py-20 px-6 flex justify-center flex-col items-center">
-      <div className="w-full max-w-[1200px] rounded-2xl">
+    <div className="w-full rounded-2xl">
         {/* Header */}
         <motion.div
           className="text-center mb-12"
@@ -201,10 +205,9 @@ const AIEngines = () => {
           </p>
         </motion.div>
 
-        {/* Mobile: tabs + slider + dots (below sm) - same as AIFeatures */}
-        <div className="block sm:hidden w-full max-w-full mx-auto">
-          {/* Engine tabs - scrollbar hidden, active tab = rotating gradient border */}
-          <div className="flex gap-2 overflow-x-auto pb-6 justify-start scrollbar-hide">
+        {/* Tabs + slider + dots: below sm same; big screen same slider, xl = 2+1+2 */}
+        <div className="w-full max-w-full mx-auto">
+          <div className="flex gap-2 overflow-x-auto pb-6 justify-start sm:justify-center scrollbar-hide">
             {engines.map((e, i) => {
               const isActive = activeIndex === i;
               return (
@@ -254,47 +257,69 @@ const AIEngines = () => {
               );
             })}
           </div>
-          {/* Card slider - center 200x200, sides 139x142, no gap; pt so top border visible */}
+          {/* Slider: below xl = 200 center / 139 sides; xl+ = 2+1+2, center 432×306, sides 210×180, gap */}
           <div ref={sliderRef} className="relative w-full overflow-hidden pt-2">
-            <motion.div
-              className="flex items-center"
-              style={{
-                width:
-                  SLIDER_CARD_CENTER.width +
-                  (engines.length - 1) * SLIDER_CARD_SIDE.width +
-                  (engines.length - 1) * SLIDER_GAP,
-                gap: SLIDER_GAP,
-              }}
-              animate={{
-                x:
-                  sliderWidth > 0
-                    ? (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
-                      activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
-                    : 0,
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            >
-              {engines.map((engine, index) => {
-                const slotWidth =
-                  activeIndex === index
+            {(() => {
+              const xlMode = sliderWidth >= XL_BREAKPOINT;
+              const slotW = (i) =>
+                xlMode
+                  ? (i === activeIndex ? XL_CENTER.width : XL_SIDE.width)
+                  : activeIndex === i
                     ? SLIDER_CARD_CENTER.width
                     : SLIDER_CARD_SIDE.width;
-                return (
-                  <div
-                    key={engine.id}
-                    className="flex-shrink-0 flex justify-center"
-                    style={{ width: slotWidth }}
-                  >
-                    <EngineCard
-                      engine={engine}
-                      index={index}
-                      isSliderCard
-                      isSliderActive={activeIndex === index}
-                    />
-                  </div>
-                );
-              })}
-            </motion.div>
+              const trackW = xlMode
+                ? (engines.length - 1) * XL_SIDE.width + XL_CENTER.width
+                : SLIDER_CARD_CENTER.width +
+                  (engines.length - 1) * SLIDER_CARD_SIDE.width +
+                  (engines.length - 1) * SLIDER_GAP;
+              const xlLeftOffset = activeIndex * XL_SIDE.width;
+              const xVal =
+                sliderWidth > 0
+                  ? xlMode
+                    ? sliderWidth / 2 -
+                      (xlLeftOffset + XL_CENTER.width / 2)
+                    : (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
+                      activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+                  : 0;
+              return (
+                <motion.div
+                  className="flex items-center"
+                  style={{ width: trackW, gap: xlMode ? 0 : SLIDER_GAP }}
+                  animate={{ x: xVal }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                >
+                  {engines.map((engine, index) => (
+                    <div
+                      key={engine.id}
+                      className="flex-shrink-0 flex justify-center relative"
+                      style={{
+                        width: slotW(index),
+                        zIndex:
+                          activeIndex === index
+                            ? 10
+                            : index === activeIndex - 1 || index === activeIndex + 1
+                              ? 1
+                              : 0,
+                      }}
+                    >
+                      <EngineCard
+                        engine={engine}
+                        index={index}
+                        isSliderCard
+                        isSliderActive={activeIndex === index}
+                        sizeOverride={
+                          xlMode
+                            ? activeIndex === index
+                              ? XL_CENTER
+                              : XL_SIDE
+                            : null
+                        }
+                      />
+                    </div>
+                  ))}
+                </motion.div>
+              );
+            })()}
           </div>
           {/* Dots */}
           <div className="flex justify-center gap-2 mt-5">
@@ -314,13 +339,6 @@ const AIEngines = () => {
               />
             ))}
           </div>
-        </div>
-
-        {/* Desktop: grid (sm and up) */}
-        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-8">
-          {engines.map((engine, index) => (
-            <EngineCard key={engine.id} engine={engine} index={index} />
-          ))}
         </div>
       </div>
     </section>
