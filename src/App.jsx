@@ -13,6 +13,7 @@ import ArrowCard from "./components/home/ArrowCard";
 import FAQ from "./components/home/FAQ";
 import Workflow from "./components/home/Workflow";
 import Footer from "./components/home/Footer";
+import QualityPreview from "./components/home/QualityPreview";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <GetStarted />
         <ModelCarousel />
         <ArrowCard />
+        <QualityPreview/>
         <PricingPlan />
         <HappyUsers />
         <FAQ/>
