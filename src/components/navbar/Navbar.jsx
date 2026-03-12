@@ -44,7 +44,7 @@ const Navbar = () => {
 
       {/* Desktop Download Button — hidden on mobile */}
       <button
-        className="hidden md:flex relative md:w-[25%] lg:w-[15%] xl:w-[14%] 2xl:w-[10.7%] items-center justify-center gap-2 text-[#00FFFF] rounded-full text-xs sm:text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap overflow-hidden"
+        className="hidden md:flex relative md:w-[25%] lg:w-[15%] xl:w-[14%] 2xl:w-[13.7%] items-center justify-center gap-2 text-[#00FFFF] rounded-full text-xs sm:text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap overflow-hidden"
         style={{ 
           height: '40px',
           background: 'linear-gradient(90deg, rgba(9, 49, 49, 0.2) 0%, rgba(0, 255, 255, 0.2) 122.41%)'
