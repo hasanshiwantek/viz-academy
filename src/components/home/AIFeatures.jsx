@@ -205,8 +205,11 @@ const Dots = ({ activeIndex, onSelect }) => (
 );
 
 // ─── AIFeatures ───────────────────────────────────────────────────────────────
+// Page load par beech wala card (5th of 9) center mein
+const INITIAL_CENTER_INDEX = Math.floor(features.length / 2);
+
 const AIFeatures = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(INITIAL_CENTER_INDEX);
 
   const mobRef = useRef(null);
   const [mobW, setMobW] = useState(0);

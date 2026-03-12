@@ -306,7 +306,7 @@ const HeroSection = () => {
         </motion.div>
 
         {/* Phone Cards with Animated Borders */}
-<div className="w-full overflow-hidden">
+<div className="w-full md:h-[550px] overflow-hidden">
   <div
     className="
       flex md:justify-center md:items-end
@@ -315,7 +315,7 @@ const HeroSection = () => {
       snap-x snap-mandatory
       scrollbar-hide
       px-4 md:px-0
-      w-full md:mb-8
+      w-full md:mt-10
     "
   >
     <PhoneCard image={card2} rotation={-4.94} translateY={32} />

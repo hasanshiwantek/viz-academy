@@ -154,7 +154,7 @@ const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = fals
 };
 
 const AIEngines = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(() => Math.floor(engines.length / 2));
   const sliderRef = useRef(null);
   const [sliderWidth, setSliderWidth] = useState(0);
 

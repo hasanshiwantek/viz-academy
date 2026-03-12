@@ -17,7 +17,7 @@ const MD_BREAKPOINT = 768
 
 const FavoriteApp = () => {
   const [active, setActive] = useState(0)
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(2)
   const sliderRef = useRef(null)
   const [sliderWidth, setSliderWidth] = useState(0)
 
