@@ -34,6 +34,9 @@ const faqs = [
 ];
 
 const FAQItem = ({ faq, isOpen, onToggle }) => {
+  const [hovered, setHovered] = useState(false);
+  const showAnimatedBorder = isOpen || hovered;
+
   return (
     <div
       className="relative rounded-2xl cursor-pointer"
@@ -41,16 +44,17 @@ const FAQItem = ({ faq, isOpen, onToggle }) => {
         padding: "2px",
         transition: "transform 0.3s ease",
       }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onClick={() => onToggle(faq.id)}
     >
-      {/* ── SINGLE BEAM BORDER (active) — sweeps full perimeter ── */}
-      {isOpen ? (
+      {/* ── Animated border: open (click) OR hover ── */}
+      {showAnimatedBorder ? (
         <div
           className="absolute inset-0 pointer-events-none faq-border-active"
           style={{ borderRadius: "56px" }}
         />
       ) : (
-        /* ── STATIC BORDER (inactive) ── */
         <div
           className="absolute inset-0 rounded-[50px] pointer-events-none"
           style={{ border: "1px solid rgba(255,255,255,0.08)" }}

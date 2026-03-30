@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import HeroSection from "./components/home/HeroSection";
 import Navbar from "./components/navbar/Navbar";
@@ -18,8 +17,9 @@ import QualityPreview from "./components/home/QualityPreview";
 function App() {
   return (
     <>
-      <main className="w-full ">
-        <HeroSection /> {/* ← pehle */}
+      <main className="w-full min-w-0 overflow-x-hidden">
+        <Navbar />
+        <HeroSection />
           <AIFeatures />
         <AIEngines /> 
         <FavoriteApp />

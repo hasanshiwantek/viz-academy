@@ -4,16 +4,16 @@ import heroBg from "../../assets/hero section.png";
 import card1 from "../../assets/card1.png";
 import card2 from "../../assets/card2.png";
 import card3 from "../../assets/card3.png";
-import Navbar from "../navbar/Navbar";
 
 const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
   const [hovered, setHovered] = useState(false);
+  const [borderByClick, setBorderByClick] = useState(false);
 
   const isDesktop = window.innerWidth >= 768;
 
   return (
     <div
-      className="relative cursor-pointer transition-all duration-300 snap-center shrink-0 w-[200px] h-[280px] md:w-[262px] md:h-[440px]"
+      className={`phone-card relative cursor-pointer transition-all duration-300 snap-center shrink-0 w-[200px] h-[280px] md:w-[262px] md:h-[440px] ${borderByClick ? "phone-card-pinned" : ""}`}
       style={{
         transform: isDesktop
           ? `rotate(${rotation}deg) translateY(${translateY}px) scale(${hovered ? 1.03 : 1})`
@@ -21,17 +21,13 @@ const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => setBorderByClick((v) => !v)}
     >
       {/* Desktop size override */}
       <div className="hidden md:block absolute inset-0" />
-      
-      <div
-        className="absolute inset-0 pointer-events-none phone-card-border"
-        style={{ borderRadius: "32px" }}
-      />
 
       <div
-        className="absolute inset-0 rounded-[32px] overflow-hidden"
+        className="absolute inset-0 rounded-[32px] overflow-hidden z-[1]"
         style={{
           padding: "10px",
           background: isCenter
@@ -76,13 +72,19 @@ const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
           </div>
         </div>
       </div>
+
+      {/* Animated ring on top (same 2px mask thickness as before — not dulled by cyan layer underneath) */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[2] phone-card-border"
+        style={{ borderRadius: "32px" }}
+      />
     </div>
   );
 };
 
 const HeroSection = () => {
   return (
-    <section className="relative w-full min-h-screen overflow-hidden">
+    <section className="relative w-full min-h-screen overflow-x-clip">
       {/* ✅ ONLY THIS STYLE TAG ADDED */}
       <style>{`
         @property --angle {
@@ -118,12 +120,19 @@ const HeroSection = () => {
             transparent 64%,
             transparent 100%
           );
-          border:10px
           -webkit-mask:
             linear-gradient(#fff 0 0) content-box,
             linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
+          opacity: 0;
+          animation: none;
+          transition: opacity 0.25s ease;
+        }
+
+        .phone-card:hover .phone-card-border,
+        .phone-card.phone-card-pinned .phone-card-border {
+          opacity: 1;
           animation: phoneCardSpin 3s linear infinite;
         }
       `}</style>
@@ -149,18 +158,10 @@ const HeroSection = () => {
         }}
       />
 
-      {/* Navbar with fade in */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <Navbar />
-      </motion.div>
-
+      {/* Navbar App.jsx mein fixed — hero ko top padding taaki content nav ke neeche na chhipe */}
       {/* Main Content */}
       <div
-        className="flex flex-col items-center justify-center text-center sm:px-4 w-full sm:mt-20"
+        className="flex flex-col items-center justify-center text-center sm:px-4 w-full pt-[88px] sm:mt-12"
         // style={{ paddingTop: "88px" }}
       >
         {/* Badge - fade in */}
@@ -306,23 +307,23 @@ const HeroSection = () => {
         </motion.div>
 
         {/* Phone Cards with Animated Borders */}
-<div className="w-full md:h-[550px] overflow-hidden">
-  <div
-    className="
-      flex md:justify-center md:items-end
-      gap-8
-      overflow-x-auto md:overflow-visible
-      snap-x snap-mandatory
-      scrollbar-hide
-      px-4 md:px-0
-      w-full md:mt-10
-    "
-  >
-    <PhoneCard image={card2} rotation={-4.94} translateY={32} />
-    <PhoneCard image={card2} rotation={0} translateY={0} isCenter />
-    <PhoneCard image={card2} rotation={4.94} translateY={32} />
-  </div>
-</div>
+        <div className="w-full md:min-h-0">
+          <div
+            className="
+              flex md:justify-center md:items-end
+              gap-8
+              overflow-x-auto md:overflow-visible
+              snap-x snap-mandatory
+              scrollbar-hide
+              px-4 md:px-0
+              w-full md:mt-10
+            "
+          >
+            <PhoneCard image={card2} rotation={-4.94} translateY={32} />
+            <PhoneCard image={card2} rotation={0} translateY={0} isCenter />
+            <PhoneCard image={card2} rotation={4.94} translateY={32} />
+          </div>
+        </div>
       </div>
     </section>
   );

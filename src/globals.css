@@ -35,11 +35,24 @@
   --text-color: #ffffff;
 }
 
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   background-color: rgb(3, 6, 18);
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+#root {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 a {
