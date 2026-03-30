@@ -45,7 +45,11 @@ const cardVariants = {
 
 const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = false, sizeOverride = null }) => {
   const [hovered, setHovered] = useState(false);
-  const showBorderAnimation = hovered || (isSliderCard && isSliderActive);
+  const [borderByClick, setBorderByClick] = useState(false);
+  useEffect(() => {
+    if (!isSliderActive) setBorderByClick(false);
+  }, [isSliderActive]);
+  const showBorderAnimation = hovered || (isSliderCard && borderByClick);
   const sliderSize = isSliderCard
     ? (sizeOverride ?? (isSliderActive ? SLIDER_CARD_CENTER : SLIDER_CARD_SIDE))
     : null;
@@ -82,6 +86,17 @@ const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = fals
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onClick={() => {
+          if (isSliderCard) setBorderByClick((v) => !v);
+        }}
+        role={isSliderCard ? "button" : undefined}
+        tabIndex={isSliderCard ? 0 : undefined}
+        onKeyDown={(e) => {
+          if (isSliderCard && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            setBorderByClick((v) => !v);
+          }
+        }}
       >
         {/* ROTATING ANIMATED GRADIENT BORDER */}
         <div

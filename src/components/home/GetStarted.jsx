@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const steps = [
   {
@@ -32,39 +32,79 @@ const steps = [
 
 const LINE_BG = 'linear-gradient(90deg, rgba(9, 49, 49, 0.7) 0%, rgba(0, 255, 255, 0.7) 122.41%)'
 
-/* ── Desktop StepCard (fixed px sizes) ── */
-const StepCard = ({ title, desc, width, height, animationDelay }) => (
-  <div
-    className="relative"
-    style={{ width: `${width}px`, height: `${height}px`, padding: '2px', boxSizing: 'border-box', borderRadius: '16px' }}
-  >
-    <div className="absolute inset-0 step-card-border pointer-events-none" style={{ borderRadius: '16px', animationDelay }} />
-    <div
-      className="relative flex flex-col gap-2 px-5 py-4 rounded-2xl h-full w-full"
-      style={{ background: 'rgba(0,40,50,0.55)', backdropFilter: 'blur(10px)', boxSizing: 'border-box', zIndex: 1 }}
-    >
-      <h3 className="text-white font-bold text-4xl m-0 leading-tight">{title}</h3>
-      <p className="text-lg leading-relaxed m-0" style={{ color: 'rgba(160,210,210,0.75)' }}>{desc}</p>
-    </div>
-  </div>
-)
+/* ── Desktop StepCard (fixed px sizes) — border spin on hover or click toggle ── */
+const StepCard = ({ title, desc, width, height, animationDelay }) => {
+  const [hovered, setHovered] = useState(false)
+  const [clicked, setClicked] = useState(false)
+  const spin = hovered || clicked
 
-/* ── Mobile StepCard (263x138 fixed) ── */
-const MobileStepCard = ({ title, desc, animationDelay }) => (
-  <div
-    className="relative"
-    style={{ width: '263px', height: '138px', padding: '2px', boxSizing: 'border-box', borderRadius: '14px' }}
-  >
-    <div className="absolute inset-0 step-card-border pointer-events-none" style={{ borderRadius: '14px', animationDelay }} />
+  return (
     <div
-      className="relative flex flex-col gap-1.5 px-4 py-3 rounded-[12px] h-full w-full"
-      style={{ background: 'rgba(0,40,50,0.55)', backdropFilter: 'blur(10px)', boxSizing: 'border-box', zIndex: 1 }}
+      role="button"
+      tabIndex={0}
+      className="relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 rounded-2xl"
+      style={{ width: `${width}px`, height: `${height}px`, padding: '2px', boxSizing: 'border-box', borderRadius: '16px' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => setClicked((v) => !v)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          setClicked((v) => !v)
+        }
+      }}
     >
-      <h3 className="text-white font-bold text-xl m-0 leading-tight">{title}</h3>
-      <p className="text-[12px] leading-relaxed m-0" style={{ color: 'rgba(160,210,210,0.75)' }}>{desc}</p>
+      <div
+        className={`absolute inset-0 step-card-border pointer-events-none ${spin ? 'step-card-border--spin' : 'step-card-border--idle'}`}
+        style={{ borderRadius: '16px', animationDelay: spin ? animationDelay : undefined }}
+      />
+      <div
+        className="relative flex flex-col gap-2 px-5 py-4 rounded-2xl h-full w-full"
+        style={{ background: 'rgba(0,40,50,0.55)', backdropFilter: 'blur(10px)', boxSizing: 'border-box', zIndex: 1 }}
+      >
+        <h3 className="text-white font-bold text-4xl m-0 leading-tight">{title}</h3>
+        <p className="text-lg leading-relaxed m-0" style={{ color: 'rgba(160,210,210,0.75)' }}>{desc}</p>
+      </div>
     </div>
-  </div>
-)
+  )
+}
+
+/* ── Mobile StepCard (263x138 fixed) — same hover / click ── */
+const MobileStepCard = ({ title, desc, animationDelay }) => {
+  const [hovered, setHovered] = useState(false)
+  const [clicked, setClicked] = useState(false)
+  const spin = hovered || clicked
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      className="relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 rounded-[14px]"
+      style={{ width: '263px', height: '138px', padding: '2px', boxSizing: 'border-box', borderRadius: '14px' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => setClicked((v) => !v)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          setClicked((v) => !v)
+        }
+      }}
+    >
+      <div
+        className={`absolute inset-0 step-card-border pointer-events-none ${spin ? 'step-card-border--spin' : 'step-card-border--idle'}`}
+        style={{ borderRadius: '14px', animationDelay: spin ? animationDelay : undefined }}
+      />
+      <div
+        className="relative flex flex-col gap-1.5 px-4 py-3 rounded-[12px] h-full w-full"
+        style={{ background: 'rgba(0,40,50,0.55)', backdropFilter: 'blur(10px)', boxSizing: 'border-box', zIndex: 1 }}
+      >
+        <h3 className="text-white font-bold text-xl m-0 leading-tight">{title}</h3>
+        <p className="text-[12px] leading-relaxed m-0" style={{ color: 'rgba(160,210,210,0.75)' }}>{desc}</p>
+      </div>
+    </div>
+  )
+}
 
 const NumberBadge = ({ number, small }) => (
   <div
@@ -109,6 +149,14 @@ const GetStarted = () => {
         }
         .step-card-border {
           padding: 2px;
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+        }
+        .step-card-border--idle {
+          background: rgba(255, 255, 255, 0.1);
+        }
+        .step-card-border--spin {
           background: conic-gradient(
             from var(--angle),
             transparent 0%, transparent 30%,
@@ -116,9 +164,6 @@ const GetStarted = () => {
             #ff9b7a 50%, #ffdc7a 55%,
             transparent 65%, transparent 100%
           );
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
           animation: stepBorderRotate 3s linear infinite;
         }
       `}</style>

@@ -101,7 +101,11 @@ const XL_GAP    = 16;
 // ─── FeatureCard ──────────────────────────────────────────────────────────────
 const FeatureCard = ({ feature, index, isSliderCard = false, isSliderActive = false, sizeOverride = null }) => {
   const [hovered, setHovered] = useState(false);
-  const showBorder = hovered || (isSliderCard && isSliderActive);
+  const [borderByClick, setBorderByClick] = useState(false);
+  useEffect(() => {
+    if (!isSliderActive) setBorderByClick(false);
+  }, [isSliderActive]);
+  const showBorder = hovered || (isSliderCard && borderByClick);
   const size = isSliderCard
     ? (sizeOverride ?? (isSliderActive ? MOB_CENTER : MOB_SIDE))
     : null;
@@ -120,6 +124,17 @@ const FeatureCard = ({ feature, index, isSliderCard = false, isSliderActive = fa
         style={{ transform: hovered ? "translateY(-5px) scale(1.02)" : "translateY(0) scale(1)", padding: "2px", minHeight: size ? size.height : "450px" }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onClick={() => {
+          if (isSliderCard) setBorderByClick((v) => !v);
+        }}
+        role={isSliderCard ? "button" : undefined}
+        tabIndex={isSliderCard ? 0 : undefined}
+        onKeyDown={(e) => {
+          if (isSliderCard && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            setBorderByClick((v) => !v);
+          }
+        }}
       >
         {/* Animated gradient border */}
         <div className="absolute inset-0 rounded-3xl md:rounded-2xl flex items-center justify-center pointer-events-none" style={{ opacity: showBorder ? 1 : 0, transition: "opacity 0.3s ease" }}>

@@ -297,6 +297,19 @@ const PricingPlan = () => {
   const sliderRef = useRef(null);
   const [sliderWidth, setSliderWidth] = useState(0);
 
+  const visiblePlans =
+    billing === "yearly" ? plans.filter((p) => p.id !== "free") : plans;
+
+  const setBillingWithIndex = (next) => {
+    if (next === billing) return;
+    if (next === "yearly") {
+      setActiveIndex((i) => (i === 2 ? 1 : 0));
+    } else {
+      setActiveIndex((i) => (i === 0 ? 1 : 2));
+    }
+    setBilling(next);
+  };
+
   useEffect(() => {
     if (!sliderRef.current) return;
     const el = sliderRef.current;
@@ -368,7 +381,7 @@ const PricingPlan = () => {
               }}
             >
               <button
-                onClick={() => setBilling(val)}
+                onClick={() => setBillingWithIndex(val)}
                 className="px-7 py-2 rounded-full text-sm font-medium transition-all duration-200"
                 style={{
                   background: "rgb(3, 6, 18)",
@@ -394,7 +407,7 @@ const PricingPlan = () => {
             style={{
               width:
                 SLIDER_CARD_CENTER.width +
-                (plans.length - 1) * (SLIDER_CARD_SIDE.width + SLIDER_GAP),
+                (visiblePlans.length - 1) * (SLIDER_CARD_SIDE.width + SLIDER_GAP),
               gap: SLIDER_GAP,
             }}
             animate={{
@@ -406,7 +419,7 @@ const PricingPlan = () => {
             }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            {plans.map((plan, index) => {
+            {visiblePlans.map((plan, index) => {
               const slotWidth =
                 activeIndex === index
                   ? SLIDER_CARD_CENTER.width
@@ -432,7 +445,7 @@ const PricingPlan = () => {
         </div>
         {/* Dots */}
         <div className="flex justify-center gap-2 mt-6">
-          {plans.map((_, i) => (
+          {visiblePlans.map((_, i) => (
             <button
               key={i}
               type="button"
@@ -450,19 +463,23 @@ const PricingPlan = () => {
         </div>
       </div>
 
-      {/* Desktop: cards grid (sm and up) */}
+      {/* Desktop: same card width as 3-up layout (1/3 row minus gaps) — yearly shows 2 centered */}
       <div
-        className="hidden sm:flex flex-col md:flex-row gap-8 w-full"
+        className="hidden sm:flex flex-col md:flex-row md:justify-center gap-8 w-full"
         style={{ maxWidth: 1200 }}
       >
-        {plans.map((plan) => (
-          <PricingCard
+        {visiblePlans.map((plan) => (
+          <div
             key={plan.id}
-            plan={plan}
-            isActive={activePlan === plan.id}
-            billing={billing}
-            setActivePlan={setActivePlan}
-          />
+            className="w-full md:w-auto md:min-w-0 md:max-w-[calc((100%-4rem)/3)] md:flex-[0_1_calc((100%-4rem)/3)]"
+          >
+            <PricingCard
+              plan={plan}
+              isActive={activePlan === plan.id}
+              billing={billing}
+              setActivePlan={setActivePlan}
+            />
+          </div>
         ))}
       </div>
     </section>

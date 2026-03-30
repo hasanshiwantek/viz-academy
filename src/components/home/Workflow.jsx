@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import bgimage from '../../assets/2ndlastImg.png'
 
 const Workflow = () => {
+  const [borderPinned, setBorderPinned] = useState(false)
+
   return (
     <section className="flex items-center justify-center pb-12 sm:py-20 px-6" style={{ background: 'rgb(3,6,18)' }}>
       <style>{`
@@ -44,18 +46,20 @@ const Workflow = () => {
           z-index: 10;
         }
 
-        .workflow-card:hover .workflow-border {
+        .workflow-card:hover .workflow-border,
+        .workflow-card.workflow-border-pinned .workflow-border {
           opacity: 1;
         }
       `}</style>
 
       {/* Outer card with gradient border */}
       <div
-        className="workflow-card relative w-full max-w-[1100px] rounded-[28px] overflow-hidden"
+        className={`workflow-card relative w-full max-w-[1100px] rounded-[28px] overflow-hidden cursor-pointer ${borderPinned ? 'workflow-border-pinned' : ''}`}
         style={{
           padding: '2px',
           background: 'linear-gradient(135deg, rgba(0,255,255,0.6) 0%, rgba(255,120,80,0.5) 40%, rgba(0,255,255,0.1) 100%)',
         }}
+        onClick={() => setBorderPinned((v) => !v)}
       >
         {/* ✅ ONLY THIS DIV ADDED — animated hover border */}
         <div className="workflow-border" />
@@ -122,6 +126,8 @@ const Workflow = () => {
             <div className="flex flex-col md:flex-row items-center gap-4 mt-2 flex-wrap justify-center">
               {/* Primary - Download */}
               <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-[15px] text-white border-2 border-transparent transition-all duration-300 hover:brightness-110"
                 style={{
                   fontFamily: "Inter, sans-serif",
@@ -143,6 +149,8 @@ const Workflow = () => {
 
               {/* Secondary - Watch Demo */}
               <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-[15px] text-[#00FFFF] border-2 border-transparent transition-all duration-200 w-full sm:w-auto"
                 style={{
                   fontFamily: "Inter, sans-serif",

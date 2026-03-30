@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import orignal from '../../assets/orignal.svg'
 import finalImg from '../../assets/find.svg'
 import ai from '../../assets/ai.svg'
@@ -44,47 +44,78 @@ const arrowDefs = () => {
 const CANVAS_W = 960
 const CANVAS_H = 920
 
-// ── Mobile layout constants ──
-const MCW = 128
-const MCH = 147
-const GAP_Y = 24          // gap between Final and Enhance (right col)
-const CONN = 44           // connector zone width
-const PAD = 12
+const WorkflowCanvas = ({ arrows, arrowsActive, hoveredCardId, onHoverCard }) => (
+  <div
+    className={`relative overflow-hidden ${arrowsActive ? 'workflow-arrows-active' : ''}`}
+    style={{ width: CANVAS_W, height: CANVAS_H }}
+  >
+    <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden" viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}>
+      <defs>
+        <linearGradient id="ag" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#6CC8B7" /><stop offset="35%" stopColor="#F66A3A" /><stop offset="65%" stopColor="#FFC357" /><stop offset="100%" stopColor="#00FFFF" />
+        </linearGradient>
+        <linearGradient id="ag-bright" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#8ef5e8" /><stop offset="35%" stopColor="#ff9b7a" /><stop offset="65%" stopColor="#ffdc7a" /><stop offset="100%" stopColor="#00FFFF" />
+        </linearGradient>
+        <marker id="ah" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#00FFFF" />
+        </marker>
+      </defs>
+      {arrows.map(({ id, d }) => (
+        <g key={id}>
+          <path className="arrow-path-base" d={d} markerEnd="url(#ah)" />
+          <path className="arrow-path-anim" d={d} />
+        </g>
+      ))}
+    </svg>
+    {cards.map((c) => (
+      <div
+        key={c.id}
+        className="absolute flex flex-col items-center gap-2"
+        style={{ left: c.left, top: c.top }}
+        onMouseEnter={() => onHoverCard(c.id)}
+        onMouseLeave={() => onHoverCard(null)}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          className={`card-border-wrap ${hoveredCardId === c.id ? 'card-border-spin' : ''}`}
+          style={{ width: c.w, height: c.h }}
+        >
+          <div className="card-img-wrap" style={{ width: c.w - 8, height: c.h - 8 }}>
+            <img src={c.img} alt={c.title} className="w-full h-full object-cover block" />
+          </div>
+        </div>
+        <div className="flex flex-col items-center gap-0.5 text-center w-full max-w-[180px] min-w-0 overflow-hidden px-0.5">
+          <span className="text-white text-[13px] font-bold leading-tight text-center break-words">{c.title}</span>
+          <span className="text-[#7a8fb5] text-[10.5px] font-normal leading-[1.45] whitespace-pre-line">{c.sub}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+)
 
-const FINAL_Y = PAD
-const ENHANCE_Y = FINAL_Y + MCH + GAP_Y
-const ORIG_Y = (FINAL_Y + ENHANCE_Y + MCH) / 2 - MCH / 2  // vertically centered
+const CANVAS_PAD = 32
 
-const LEFT_X = PAD
-const RIGHT_X = PAD + MCW + CONN
-
-const SVG_W = RIGHT_X + MCW + PAD
-const SVG_H = ENHANCE_Y + MCH + PAD + 48  // extra for labels below
+const getCanvasScale = () => {
+  if (typeof window === 'undefined') return 1
+  const w = document.documentElement.clientWidth || window.innerWidth
+  return Math.min(1, (w - CANVAS_PAD) / CANVAS_W)
+}
 
 const ArrowCard = () => {
   const arrows = arrowDefs()
+  const [canvasScale, setCanvasScale] = useState(getCanvasScale)
+  const [hoverWorkflow, setHoverWorkflow] = useState(false)
+  const [clickWorkflow, setClickWorkflow] = useState(false)
+  const [hoveredCardId, setHoveredCardId] = useState(null)
+  const arrowsActive = hoverWorkflow || clickWorkflow
 
-  // connector mid x
-  const connMidX = LEFT_X + MCW + CONN / 2
-
-  // from original right edge center
-  const origRX = LEFT_X + MCW
-  const origRY = ORIG_Y + MCH / 2
-
-  // to final left edge center
-  const finalLX = RIGHT_X
-  const finalLY = FINAL_Y + MCH / 2
-
-  // to enhance left edge center
-  const enhLX = RIGHT_X
-  const enhLY = ENHANCE_Y + MCH / 2
-
-  const CR = 10  // corner radius for mobile elbows
-
-  // orig → final path (up-right elbow)
-  const pathFinal = `M ${origRX} ${origRY} H ${connMidX - CR} Q ${connMidX} ${origRY} ${connMidX} ${origRY - CR} V ${finalLY + CR} Q ${connMidX} ${finalLY} ${connMidX + CR} ${finalLY} H ${finalLX}`
-  // orig → enhance path (down-right elbow)
-  const pathEnhance = `M ${origRX} ${origRY} H ${connMidX - CR} Q ${connMidX} ${origRY} ${connMidX} ${origRY + CR} V ${enhLY - CR} Q ${connMidX} ${enhLY} ${connMidX + CR} ${enhLY} H ${enhLX}`
+  useEffect(() => {
+    const update = () => setCanvasScale(getCanvasScale())
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
   return (
     <>
@@ -102,6 +133,8 @@ const ArrowCard = () => {
           padding: 4px;
           overflow: hidden;
           background: #0a0d1a;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          transition: border-color 0.25s ease;
         }
         .card-border-wrap::before {
           content: '';
@@ -111,9 +144,18 @@ const ArrowCard = () => {
           transform-origin: top center;
           transform: translateX(-50%);
           background: linear-gradient(90deg, rgba(0,255,255,0) 0%, #8ef5e8 25%, #ff9b7a 50%, #ffdc7a 75%, rgba(0,255,255,0) 100%);
-          animation: spin-beam 3s linear infinite;
+          animation: none;
+          opacity: 0;
+          transition: opacity 0.25s ease;
           z-index: 1;
           mix-blend-mode: screen;
+        }
+        .card-border-wrap.card-border-spin {
+          border-color: transparent;
+        }
+        .card-border-wrap.card-border-spin::before {
+          animation: spin-beam 3s linear infinite;
+          opacity: 1;
         }
         .card-border-wrap::after {
           content: '';
@@ -131,12 +173,18 @@ const ArrowCard = () => {
           background: #0a0d1a;
         }
         .arrow-path-base { stroke: url(#ag); stroke-width: 2.5; fill: none; }
-        .arrow-path-anim { stroke: url(#ag-bright); stroke-width: 2.5; fill: none; stroke-dasharray: 10 10; animation: dash-march 0.6s linear infinite; opacity: 0.85; }
-        .m-arrow-base { stroke: url(#mag); stroke-width: 2; fill: none; }
-        .m-arrow-anim { stroke: url(#mag-bright); stroke-width: 2; fill: none; stroke-dasharray: 7 7; animation: dash-march 0.6s linear infinite; opacity: 0.85; }
+        .arrow-path-anim {
+          stroke: url(#ag-bright); stroke-width: 2.5; fill: none; stroke-dasharray: 10 10;
+          animation: none; opacity: 0;
+          transition: opacity 0.25s ease;
+        }
+        .workflow-arrows-active .arrow-path-anim {
+          animation: dash-march 0.6s linear infinite;
+          opacity: 0.85;
+        }
       `}</style>
 
-      <div className="min-h-screen flex flex-col items-center justify-start overflow-auto pt-20 pb-20">
+      <section className="w-full max-w-full min-w-0 flex flex-col items-center overflow-x-hidden py-20 box-border">
 
         {/* Header */}
         <div className="flex flex-col items-center gap-5 px-6 text-center">
@@ -161,116 +209,48 @@ const ArrowCard = () => {
           </button>
         </div>
 
-        {/* ===== DESKTOP md+ ===== */}
-        <div className="relative flex-shrink-0 hidden md:block" style={{ width: CANVAS_W, height: CANVAS_H }}>
-          <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}>
-            <defs>
-              <linearGradient id="ag" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#6CC8B7" /><stop offset="35%" stopColor="#F66A3A" /><stop offset="65%" stopColor="#FFC357" /><stop offset="100%" stopColor="#00FFFF" />
-              </linearGradient>
-              <linearGradient id="ag-bright" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#8ef5e8" /><stop offset="35%" stopColor="#ff9b7a" /><stop offset="65%" stopColor="#ffdc7a" /><stop offset="100%" stopColor="#00FFFF" />
-              </linearGradient>
-              <marker id="ah" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-                <polygon points="0 0, 8 3, 0 6" fill="#00FFFF" />
-              </marker>
-            </defs>
-            {arrows.map(({ id, d }) => (
-              <g key={id}>
-                <path className="arrow-path-base" d={d} markerEnd="url(#ah)" />
-                <path className="arrow-path-anim" d={d} />
-              </g>
-            ))}
-          </svg>
-          {cards.map((c) => (
-            <div key={c.id} className="absolute flex flex-col items-center gap-2" style={{ left: c.left, top: c.top }}>
-              <div className="card-border-wrap" style={{ width: c.w, height: c.h }}>
-                <div className="card-img-wrap" style={{ width: c.w - 8, height: c.h - 8 }}>
-                  <img src={c.img} alt={c.title} className="w-full h-full object-cover block" />
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 text-center max-w-[180px]">
-                <span className="text-white text-[13px] font-bold leading-tight whitespace-nowrap">{c.title}</span>
-                <span className="text-[#7a8fb5] text-[10.5px] font-normal leading-[1.45] whitespace-pre-line">{c.sub}</span>
-              </div>
+        {/* Scale down when viewport &lt; canvas width so no horizontal scrollbar (768–960px included) */}
+        <div className="flex w-full min-w-0 max-w-full justify-center mt-10 px-2 sm:px-3 box-border overflow-x-hidden">
+          <div
+            className="relative flex-shrink-0 overflow-hidden"
+            style={{
+              width: CANVAS_W * canvasScale,
+              height: CANVAS_H * canvasScale,
+              maxWidth: '100%',
+            }}
+          >
+            <div
+              role="button"
+              tabIndex={0}
+              aria-label="Workflow diagram — hover or click for arrow animation; hover a card for its border"
+              className="absolute top-0 left-0 outline-none rounded-lg focus-visible:ring-2 focus-visible:ring-cyan-400/50 cursor-pointer overflow-hidden"
+              style={{
+                transform: `scale(${canvasScale})`,
+                transformOrigin: 'top left',
+                width: CANVAS_W,
+                height: CANVAS_H,
+              }}
+              onMouseEnter={() => setHoverWorkflow(true)}
+              onMouseLeave={() => setHoverWorkflow(false)}
+              onClick={() => setClickWorkflow((v) => !v)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setClickWorkflow((v) => !v)
+                }
+              }}
+            >
+              <WorkflowCanvas
+                arrows={arrows}
+                arrowsActive={arrowsActive}
+                hoveredCardId={hoveredCardId}
+                onHoverCard={setHoveredCardId}
+              />
             </div>
-          ))}
-        </div>
-
-        {/* ===== MOBILE below md — original LEFT, final+enhance RIGHT ===== */}
-        <div className="flex md:hidden justify-center w-full mt-10">
-          <div className="relative" style={{ width: SVG_W, height: SVG_H }}>
-
-            {/* SVG lines */}
-            <svg className="absolute inset-0 pointer-events-none overflow-visible" width={SVG_W} height={SVG_H} viewBox={`0 0 ${SVG_W} ${SVG_H}`}>
-              <defs>
-                <linearGradient id="mag" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#6CC8B7" /><stop offset="50%" stopColor="#ff9b7a" /><stop offset="100%" stopColor="#00FFFF" />
-                </linearGradient>
-                <linearGradient id="mag-bright" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#8ef5e8" /><stop offset="50%" stopColor="#ffdc7a" /><stop offset="100%" stopColor="#00FFFF" />
-                </linearGradient>
-                <marker id="mah" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
-                  <polygon points="0 0, 6 2.5, 0 5" fill="#00FFFF" />
-                </marker>
-              </defs>
-
-              {/* original → final */}
-              <g>
-                <path d={pathFinal} className="m-arrow-base" markerEnd="url(#mah)" />
-                <path d={pathFinal} className="m-arrow-anim" />
-              </g>
-
-              {/* original → enhance */}
-              <g>
-                <path d={pathEnhance} className="m-arrow-base" markerEnd="url(#mah)" />
-                <path d={pathEnhance} className="m-arrow-anim" />
-              </g>
-            </svg>
-
-            {/* Original — LEFT, vertically centered */}
-            <div className="absolute flex flex-col items-center gap-1" style={{ left: LEFT_X, top: ORIG_Y }}>
-              <div className="card-border-wrap" style={{ width: MCW, height: MCH }}>
-                <div className="card-img-wrap" style={{ width: MCW - 8, height: MCH - 8 }}>
-                  <img src={orignal} alt="Original Input" className="w-full h-full object-cover block" />
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 text-center" style={{ maxWidth: MCW + 10 }}>
-                <span className="text-white text-[11px] font-bold leading-tight">Original Input</span>
-                <span className="text-[#7a8fb5] text-[9px] leading-[1.4] text-center">Start with your base image or concept</span>
-              </div>
-            </div>
-
-            {/* Final Output — RIGHT TOP */}
-            <div className="absolute flex flex-col items-center gap-1" style={{ left: RIGHT_X, top: FINAL_Y }}>
-              <div className="card-border-wrap" style={{ width: MCW, height: MCH }}>
-                <div className="card-img-wrap" style={{ width: MCW - 8, height: MCH - 8 }}>
-                  <img src={finalImg} alt="Final Output" className="w-full h-full object-cover block" />
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 text-center" style={{ maxWidth: MCW + 10 }}>
-                <span className="text-white text-[11px] font-bold leading-tight">Final Output</span>
-                <span className="text-[#7a8fb5] text-[9px] leading-[1.4] text-center">Polished, production-ready result</span>
-              </div>
-            </div>
-
-            {/* AI Enhancement — RIGHT BOTTOM */}
-            <div className="absolute flex flex-col items-center gap-1" style={{ left: RIGHT_X, top: ENHANCE_Y }}>
-              <div className="card-border-wrap" style={{ width: MCW, height: MCH }}>
-                <div className="card-img-wrap" style={{ width: MCW - 8, height: MCH - 8 }}>
-                  <img src={ai} alt="AI Enhancement" className="w-full h-full object-cover block" />
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 text-center" style={{ maxWidth: MCW + 10 }}>
-                <span className="text-white text-[11px] font-bold leading-tight">AI Enhancement</span>
-                <span className="text-[#7a8fb5] text-[9px] leading-[1.4] text-center">Paint mask & apply AI</span>
-              </div>
-            </div>
-
           </div>
         </div>
 
-      </div>
+      </section>
     </>
   )
 }
