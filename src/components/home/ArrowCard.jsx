@@ -23,8 +23,8 @@ const mid = (a, b) => (rc(a).x + lc(b).x) / 2
 const elbow = (sx, sy, mx, dx, dy) => {
   const goUp = dy < sy
   return goUp
-    ? `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy-R} V ${dy+R} Q ${mx} ${dy} ${mx+R} ${dy} H ${dx}`
-    : `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy+R} V ${dy-R} Q ${mx} ${dy} ${mx+R} ${dy} H ${dx}`
+    ? `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy-R} V ${dy} H ${dx}`
+    : `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy+R} V ${dy} H ${dx}`
 }
 
 const arrowDefs = () => {

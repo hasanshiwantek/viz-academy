@@ -1,15 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import sketchup from '../../assets/sketchuo.svg'
-import ds from '../../assets/3ds.svg'
-import revit from '../../assets/revit.svg'
-import blender from '../../assets/blender.svg'
-import frame1 from '../../assets/frame1.png'
-import frame2 from '../../assets/frame2.png'
-import frame3 from '../../assets/frame3.png'
-import frame4 from '../../assets/frame4.png'
-
-const icons = ['▶','⏸','⏹','⏺','R','⚙'];
 
 const MOB_CENTER = { width: 280, height: 430 }
 const MOB_SIDE   = { width: 210, height: 360 }
@@ -18,8 +8,11 @@ const MD_BREAKPOINT = 768
 const FavoriteApp = () => {
   const [active, setActive] = useState(0)
   const [activeIndex, setActiveIndex] = useState(2)
+  const [hoveredTabIndex, setHoveredTabIndex] = useState(null)
+  const [isDragging, setIsDragging] = useState(false)
   const sliderRef = useRef(null)
   const [sliderWidth, setSliderWidth] = useState(0)
+  const videoRefs = useRef([])
 
   useEffect(() => {
     if (!sliderRef.current) return
@@ -31,38 +24,60 @@ const FavoriteApp = () => {
     return () => ro.disconnect()
   }, [])
 
-  const mobileCards = [
-    {
-      title: 'SketchUp',
-      desc: 'AI-powered rendering directly inside SketchUp for faster design workflows.',
-      frame: frame1,
-      icon: sketchup,
-      iconPos: 'bottom-center',
-    },
-    {
-      title: '3DS Max',
-      desc: 'AI rendering plugin for 3ds Max, built for professional visual quality.',
-      frame: frame2,
-      icon: ds,
-      iconPos: 'top-right',
-      extraTopLeft: true,
-    },
-    {
-      title: 'Revit',
-      desc: 'Generate realistic AI renders directly inside Revit without exporting models.',
-      frame: frame3,
-      icon: revit,
-      iconPos: 'top-right',
-    },
-    {
-      title: 'Blender',
-      desc: 'Create production-ready renders in Blender using intelligent AI.',
-      frame: frame4,
-      icon: blender,
-      iconPos: 'bottom-right',
-      hasIcons: true,
-    },
-  ]
+  const mobileCards = useMemo(() => {
+    const videos = import.meta.glob('../../assets/videos/*.mp4', { eager: true, as: 'url' })
+    const toTitle = (base) =>
+      base
+        .replace(/^www\s+/i, '')
+        .replace(/_compressed.*$/i, '')
+        .replace(/final/gi, '')
+        .replace(/_/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+
+    const toKey = (path) => path.split('/').pop()
+
+    return Object.entries(videos)
+      .map(([path, url]) => {
+        const file = toKey(path)
+        const base = file.replace(/\.mp4$/i, '')
+        const title = toTitle(base)
+        return {
+          id: file,
+          title,
+          desc: `Works inside ${title}.`,
+          video: url,
+        }
+      })
+      .sort((a, b) => a.title.localeCompare(b.title))
+  }, [])
+
+  useEffect(() => {
+    const els = videoRefs.current ?? []
+    els.forEach((el, i) => {
+      if (!el) return
+      if (i === activeIndex) return
+      try {
+        el.pause()
+        el.currentTime = 0
+      } catch {
+        // ignore
+      }
+    })
+
+    const activeEl = els[activeIndex]
+    if (activeEl) {
+      try {
+        activeEl.pause()
+        activeEl.currentTime = 0
+        const p = activeEl.play()
+        if (p && typeof p.catch === 'function') p.catch(() => {})
+      } catch {
+        // ignore
+      }
+    }
+  }, [activeIndex])
 
   return (
     <div className="flex items-center justify-center px-5 py-10">
@@ -98,6 +113,7 @@ const FavoriteApp = () => {
           z-index: 20;
         }
         .fav-card:hover .fav-card-border { opacity: 1; }
+        .fav-card.is-active .fav-card-border { opacity: 1; }
       `}</style>
 
       <div className="w-full flex flex-col items-center gap-[30px]">
@@ -130,15 +146,19 @@ const FavoriteApp = () => {
           <div className="flex gap-2 overflow-x-auto pb-5 justify-start sm:justify-center scrollbar-hide">
             {mobileCards.map((card, i) => {
               const isActive = activeIndex === i
+              const isHovered = hoveredTabIndex === i
+              const showAnim = isActive || isHovered
               return (
                 <button
                   key={i}
                   type="button"
                   onClick={() => setActiveIndex(i)}
+                  onMouseEnter={() => setHoveredTabIndex(i)}
+                  onMouseLeave={() => setHoveredTabIndex(null)}
                   className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden"
                   style={{ padding: '2px' }}
                 >
-                  {isActive && (
+                  {showAnim && (
                     <>
                       <div
                         className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none"
@@ -166,9 +186,9 @@ const FavoriteApp = () => {
                   <span
                     className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200"
                     style={{
-                      color: isActive ? 'var(--text-color)' : 'rgba(152, 162, 179, 1)',
-                      background: isActive ? 'rgb(3,6,18)' : 'transparent',
-                      border: isActive ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                      color: showAnim ? 'var(--text-color)' : 'rgba(152, 162, 179, 1)',
+                      background: showAnim ? 'rgb(3,6,18)' : 'transparent',
+                      border: showAnim ? 'none' : '1px solid rgba(255,255,255,0.08)',
                     }}
                   >
                     {card.title}
@@ -195,6 +215,12 @@ const FavoriteApp = () => {
                 sliderWidth > 0
                   ? (sliderWidth - CENTER.width) / 2 - activeIndex * SIDE.width
                   : 0
+              const clampIndex = (i) => Math.max(0, Math.min(mobileCards.length - 1, i))
+              const indexFromX = (x) => {
+                if (sliderWidth <= 0) return activeIndex
+                const i = ((sliderWidth - CENTER.width) / 2 - x) / SIDE.width
+                return clampIndex(Math.round(i))
+              }
 
               return (
                 <motion.div
@@ -202,6 +228,17 @@ const FavoriteApp = () => {
                 style={{ width: trackW, gap: 0, height: CENTER.height }}
                   animate={{ x: xVal }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  drag="x"
+                  dragConstraints={sliderWidth > 0 ? { left: sliderWidth - trackW, right: 0 } : undefined}
+                  dragElastic={0.08}
+                  dragMomentum={false}
+                  onDragStart={() => setIsDragging(true)}
+                  onDragEnd={(_, info) => {
+                    setIsDragging(false)
+                    if (Math.abs(info.offset.x) < 8) return
+                    const next = indexFromX(xVal + info.offset.x)
+                    setActiveIndex(next)
+                  }}
                 >
                   {mobileCards.map((card, idx) => {
                     const isActive = activeIndex === idx
@@ -215,16 +252,36 @@ const FavoriteApp = () => {
                         style={{ width: cardW, height: cardH, margin: 0, padding: 0 }}
                       >
                         <div
-                          className="fav-card relative rounded-[22px] overflow-hidden border border-[rgba(80,140,255,0.22)]"
+                          className={`fav-card relative rounded-[22px] overflow-hidden border border-[rgba(80,140,255,0.22)] ${isActive ? 'is-active' : ''}`}
                           style={{
                             width: cardW,
                             height: cardH,
-                            backgroundImage: `url(${card.frame})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => {
+                            if (isDragging) return
+                            setActiveIndex(idx)
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              if (isDragging) return
+                              setActiveIndex(idx)
+                            }
                           }}
                         >
+                          {/* Video background */}
+                          <video
+                            className="absolute inset-0 w-full h-full object-cover"
+                            src={card.video}
+                            autoPlay={isActive}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            ref={(el) => { videoRefs.current[idx] = el }}
+                          />
+
                           {/* Gradient overlay */}
                           <div
                             className="absolute inset-0 z-0"
@@ -235,27 +292,6 @@ const FavoriteApp = () => {
                           />
 
                           <div className="fav-card-border" style={{ borderRadius: '22px' }} />
-
-                          {/* 3DS Max top-left UI */}
-                          {card.extraTopLeft && (
-                            <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
-                              <div className="rounded-xl w-7 h-[14px] bg-[rgba(25,40,65,0.9)] border border-[rgba(100,150,255,0.2)]" />
-                              <div className="rounded-lg w-5 h-5 flex items-center justify-center text-white font-bold text-xs bg-[rgba(0,180,255,0.85)]">+</div>
-                            </div>
-                          )}
-
-                          {/* App icon */}
-                          <div
-                            className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
-                            style={{ padding: '6% 4% 26% 4%' }}
-                          >
-                            <img
-                              src={card.icon}
-                              alt={card.title}
-                              className="w-full h-full object-contain"
-                              style={{ objectPosition: 'center center' }}
-                            />
-                          </div>
 
                           {/* Text */}
                           <div className="absolute bottom-0 left-0 z-10 p-3 right-0">
@@ -268,28 +304,6 @@ const FavoriteApp = () => {
                             >
                               {card.desc}
                             </p>
-
-                            {/* Blender icons */}
-                            {card.hasIcons && (
-                              <div className="flex items-center gap-1 mt-2">
-                                {icons.map((icon, i) => (
-                                  <div
-                                    key={i}
-                                    onClick={(e) => { e.stopPropagation(); setActive(i) }}
-                                    className={`
-                                      flex items-center justify-center rounded-md text-[9px] cursor-pointer
-                                      w-[26px] h-[26px] transition-all duration-300
-                                      ${active === i
-                                        ? 'bg-cyan-400/20 text-cyan-300 border border-cyan-400 shadow-[0_0_8px_rgba(0,255,255,0.6)]'
-                                        : 'bg-[rgba(25,40,65,0.85)] text-[rgba(180,210,255,0.8)] border border-[rgba(100,150,255,0.2)]'
-                                      }
-                                    `}
-                                  >
-                                    {icon}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
                           </div>
                         </div>
                       </div>

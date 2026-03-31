@@ -294,6 +294,7 @@ const PricingPlan = () => {
   const [billing, setBilling] = useState("monthly");
   const [activePlan, setActivePlan] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef(null);
   const [sliderWidth, setSliderWidth] = useState(0);
 
@@ -319,6 +320,23 @@ const PricingPlan = () => {
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+
+  const clampIndex = (i) => Math.max(0, Math.min(visiblePlans.length - 1, i));
+  const mobileTrackW =
+    SLIDER_CARD_CENTER.width +
+    (visiblePlans.length - 1) * (SLIDER_CARD_SIDE.width + SLIDER_GAP);
+  const mobileXVal =
+    sliderWidth > 0
+      ? (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
+        activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+      : 0;
+  const mobileIndexFromX = (x) => {
+    if (sliderWidth <= 0) return activeIndex;
+    const i =
+      ((sliderWidth - SLIDER_CARD_CENTER.width) / 2 - x) /
+      (SLIDER_CARD_SIDE.width + SLIDER_GAP);
+    return clampIndex(Math.round(i));
+  };
 
   return (
     <section
@@ -405,19 +423,24 @@ const PricingPlan = () => {
           <motion.div
             className="flex items-center"
             style={{
-              width:
-                SLIDER_CARD_CENTER.width +
-                (visiblePlans.length - 1) * (SLIDER_CARD_SIDE.width + SLIDER_GAP),
+              width: mobileTrackW,
               gap: SLIDER_GAP,
             }}
             animate={{
-              x:
-                sliderWidth > 0
-                  ? (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
-                    activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
-                  : 0,
+              x: mobileXVal,
             }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            drag="x"
+            dragConstraints={sliderWidth > 0 ? { left: sliderWidth - mobileTrackW, right: 0 } : undefined}
+            dragElastic={0.08}
+            dragMomentum={false}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={(_, info) => {
+              setIsDragging(false);
+              if (Math.abs(info.offset.x) < 8) return;
+              const next = mobileIndexFromX(mobileXVal + info.offset.x);
+              setActiveIndex(next);
+            }}
           >
             {visiblePlans.map((plan, index) => {
               const slotWidth =
