@@ -1,12 +1,12 @@
-import React, { useRef, useState, useCallback, useEffect, forwardRef } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 
-import vRhino from "../../assets/videos/Rhino www_compressed_q27_res50_fps30_nocrop_noaudio.mp4";
-import v3ds from "../../assets/videos/www 3ds max_compressed_q27_res50_fps30_nocrop_noaudio.mp4";
-import vArchicad from "../../assets/videos/www archicad final_compressed_q27_res50_fps30_nocrop_noaudio.mp4";
-import vBlender from "../../assets/videos/www blender_compressed_q27_res50_fps30_nocrop_noaudio.mp4";
-import vRevit from "../../assets/videos/www revit _compressed_q27_res50_fps30_nocrop_noaudio.mp4";
-import vSketchup from "../../assets/videos/www sketchup final _compressed_q27_res50_fps30_nocrop_noaudio.mp4";
+import beforeImg1 from "../../assets/models/before1Img.jpeg";
+import afterImg1 from "../../assets/models/after1Img.jpeg";
+import beforeImg2 from "../../assets/models/before2Img.jpeg";
+import afterImg2 from "../../assets/models/after2Img.jpeg";
+import beforeImg3 from "../../assets/models/before3Img.jpeg";
+import afterImg3 from "../../assets/models/after3Img.jpeg";
 
 const ChevronIcon = () => (
   <div className="flex items-center gap-1">
@@ -34,36 +34,11 @@ const cardVariants = {
   }),
 }
 
-const VideoLayer = forwardRef(({ src, className, style }, ref) => (
-  <video
-    ref={ref}
-    src={src}
-    className={className}
-    style={style}
-    muted
-    playsInline
-    preload="auto"
-    controls={false}
-    draggable={false}
-  />
-));
-VideoLayer.displayName = "VideoLayer";
-
-const BeforeAfterSlider = ({ beforeVideo, afterVideo, label, index, shouldPlay }) => {
+const BeforeAfterSlider = ({ beforeImg, afterImg, label, index }) => {
   const [splitPercent, setSplitPercent] = useState(50);
   const containerRef = useRef(null);
-  const beforeVidRef = useRef(null);
-  const afterVidRef = useRef(null);
   const isDragging = useRef(false);
 
-  useEffect(() => {
-    if (!shouldPlay) return;
-    const run = () => {
-      beforeVidRef.current?.play().catch(() => {});
-      afterVidRef.current?.play().catch(() => {});
-    };
-    run();
-  }, [shouldPlay]);
   const updateSplit = useCallback((clientX) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -118,18 +93,15 @@ const BeforeAfterSlider = ({ beforeVideo, afterVideo, label, index, shouldPlay }
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <VideoLayer
-          ref={afterVidRef}
-          src={afterVideo}
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        />
+        <img src={afterImg} alt="After" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
 
         <div className="absolute inset-0 overflow-hidden" style={{ width: `${splitPercent}%` }}>
-          <VideoLayer
-            ref={beforeVidRef}
-            src={beforeVideo}
-            className="absolute inset-0 h-full object-cover pointer-events-none"
+          <img
+            src={beforeImg}
+            alt="Before"
+            className="absolute inset-0 h-full object-cover"
             style={{ width: `${100 / (splitPercent / 100)}%`, maxWidth: "none" }}
+            draggable={false}
           />
         </div>
 
@@ -167,50 +139,12 @@ const BeforeAfterSlider = ({ beforeVideo, afterVideo, label, index, shouldPlay }
 };
 
 const rows = [
-  { label: "Architectural", beforeVideo: vRhino, afterVideo: v3ds },
-  { label: "Interior",      beforeVideo: vArchicad, afterVideo: vBlender },
-  { label: "Concept",       beforeVideo: vRevit, afterVideo: vSketchup },
+  { label: "Architectural", beforeImg: beforeImg1, afterImg: afterImg1 },
+  { label: "Interior",      beforeImg: beforeImg2, afterImg: afterImg2 },
+  { label: "Concept",       beforeImg: beforeImg3, afterImg: afterImg3 },
 ];
 
 const ModelCarousel = () => {
-  const slidersRef = useRef(null);
-  const [shouldPlay, setShouldPlay] = useState(false);
-  const hasTriggeredPlay = useRef(false);
-
-  useEffect(() => {
-    const el = slidersRef.current;
-    if (!el) return;
-
-    const thresholds = Array.from({ length: 21 }, (_, i) => i * 0.05);
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (hasTriggeredPlay.current || !entry.isIntersecting) return;
-        const br = entry.boundingClientRect;
-        const ir = entry.intersectionRect;
-        const heightFrac = br.height > 0 ? ir.height / br.height : 0;
-        const vh = typeof window !== "undefined" ? window.innerHeight : 800;
-        const blockTallerThanViewport = br.height > vh * 1.1;
-        const maxRatio = br.height > 0 ? Math.min(1, vh / br.height) : 0;
-        const relaxedTall =
-          blockTallerThanViewport &&
-          entry.intersectionRatio >= Math.min(0.5, maxRatio) * 0.9;
-        const halfInView =
-          entry.intersectionRatio >= 0.5 ||
-          heightFrac >= 0.5 ||
-          relaxedTall;
-        if (halfInView) {
-          hasTriggeredPlay.current = true;
-          setShouldPlay(true);
-        }
-      },
-      { threshold: thresholds }
-    );
-
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
     <section
       className="py-20 px-6 flex flex-col items-center justify-center max-w-[1200px] w-full mx-auto"
@@ -246,20 +180,15 @@ const ModelCarousel = () => {
         </p>
       </motion.div>
 
-      {/* Sliders — play videos once when ≥50% of this block is in view */}
-      <div
-        ref={slidersRef}
-        className="flex flex-col gap-6 w-full"
-        style={{ maxWidth: "1200px" }}
-      >
+      {/* Sliders */}
+      <div className="flex flex-col gap-6 w-full" style={{ maxWidth: "1200px" }}>
         {rows.map((row, i) => (
           <BeforeAfterSlider
             key={i}
             index={i}
             label={row.label}
-            beforeVideo={row.beforeVideo}
-            afterVideo={row.afterVideo}
-            shouldPlay={shouldPlay}
+            beforeImg={row.beforeImg}
+            afterImg={row.afterImg}
           />
         ))}
       </div>

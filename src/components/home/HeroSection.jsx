@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import heroBg from "../../assets/hero section.png";
+import heroBg from "../../assets/hero-section/hero section.svg";
 import card1 from "../../assets/card1.png";
 import card2 from "../../assets/card2.png";
 import card3 from "../../assets/card3.png";
@@ -227,13 +227,13 @@ const HeroSection = () => {
 
         {/* CTA Buttons - hover effects */}
         <motion.div
-          className="flex flex-col sm:flex-row items-center gap-4 mb-16"
+          className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-4 mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.7 }}
         >
           <motion.button
-            className="relative flex items-center gap-2 text-white px-7 py-3.5 rounded-full font-medium text-sm md:text-lg transition-all duration-200 shadow-lg shadow-cyan-500/30 overflow-hidden"
+            className="relative w-80 sm:w-auto flex items-center justify-center gap-2 text-white px-7 py-3.5 rounded-full font-medium text-sm md:text-lg transition-all duration-200 shadow-lg shadow-cyan-500/30 overflow-hidden"
             style={{
               background:
                 "linear-gradient(89.69deg, #00FFFF -1.81%, #003131 95.62%)",
@@ -270,7 +270,7 @@ const HeroSection = () => {
           </motion.button>
 
           <motion.button
-            className="relative flex items-center justify-center gap-2 text-cyan-300 px-7 py-3.5 w-full sm:w-auto rounded-full font-medium text-sm md:text-lg transition-all duration-200 overflow-hidden"
+            className="relative flex items-center justify-center gap-2 text-cyan-300 px-7 py-3.5 w-80 sm:w-auto rounded-full font-medium text-sm md:text-lg transition-all duration-200 overflow-hidden"
             style={{
               background:
                 "linear-gradient(90deg, rgba(9, 49, 49, 0.2) 0%, rgba(0, 255, 255, 0.2) 122.41%)",
@@ -307,7 +307,7 @@ const HeroSection = () => {
         </motion.div>
 
         {/* Phone Cards with Animated Borders */}
-        <div className="w-full md:min-h-0">
+        {/* <div className="w-full md:min-h-0">
           <div
             className="
               flex md:justify-center md:items-end
@@ -323,7 +323,7 @@ const HeroSection = () => {
             <PhoneCard image={card2} rotation={0} translateY={0} isCenter />
             <PhoneCard image={card2} rotation={4.94} translateY={32} />
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

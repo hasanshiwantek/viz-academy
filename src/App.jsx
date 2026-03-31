@@ -13,6 +13,7 @@ import FAQ from "./components/home/FAQ";
 import Workflow from "./components/home/Workflow";
 import Footer from "./components/home/Footer";
 import QualityPreview from "./components/home/QualityPreview";
+import SecureWorkflows from "./components/home/SecureWorkflows";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <AIFeatures />
         <AIEngines /> 
         <FavoriteApp />
+        <SecureWorkflows />
         <GetStarted />
         <ModelCarousel />
         <ArrowCard />
