@@ -99,13 +99,9 @@ const XL_SLOT   = 280;
 const XL_GAP    = 16;
 
 // ─── FeatureCard ──────────────────────────────────────────────────────────────
-const FeatureCard = ({ feature, index, isSliderCard = false, isSliderActive = false, sizeOverride = null }) => {
+const FeatureCard = ({ feature, index, isSliderCard = false, isSliderActive = false, sizeOverride = null, onSelect = null, disableClick = false }) => {
   const [hovered, setHovered] = useState(false);
-  const [borderByClick, setBorderByClick] = useState(false);
-  useEffect(() => {
-    if (!isSliderActive) setBorderByClick(false);
-  }, [isSliderActive]);
-  const showBorder = hovered || (isSliderCard && borderByClick);
+  const showBorder = hovered || (isSliderCard && isSliderActive);
   const size = isSliderCard
     ? (sizeOverride ?? (isSliderActive ? MOB_CENTER : MOB_SIDE))
     : null;
@@ -125,24 +121,38 @@ const FeatureCard = ({ feature, index, isSliderCard = false, isSliderActive = fa
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onClick={() => {
-          if (isSliderCard) setBorderByClick((v) => !v);
+          if (disableClick) return;
+          if (isSliderCard && onSelect) onSelect(index);
         }}
         role={isSliderCard ? "button" : undefined}
         tabIndex={isSliderCard ? 0 : undefined}
         onKeyDown={(e) => {
-          if (isSliderCard && (e.key === "Enter" || e.key === " ")) {
+          if (!isSliderCard || !onSelect) return;
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            setBorderByClick((v) => !v);
+            onSelect(index);
           }
         }}
       >
         {/* Animated gradient border */}
         <div className="absolute inset-0 rounded-3xl md:rounded-2xl flex items-center justify-center pointer-events-none" style={{ opacity: showBorder ? 1 : 0, transition: "opacity 0.3s ease" }}>
-          <div className="absolute" style={{ background: "linear-gradient(90deg,rgba(0,255,255,0) 0%,#8ef5e8 25%,#ff9b7a 50%,#ffdc7a 75%,rgba(0,255,255,0) 100%)", height: "300px", width: "200px", top: "50%", transformOrigin: "top center", animation: showBorder ? "gradient-spin 3s linear infinite" : "none", zIndex: 0 }} />
+          <div
+            className="absolute"
+            style={{
+              background:
+                "linear-gradient(90deg,rgba(0,255,255,0) 0%,#8ef5e8 25%,#ff9b7a 50%,#ffdc7a 75%,rgba(0,255,255,0) 100%)",
+              height: isSliderCard && isSliderActive ? "420px" : "300px",
+              width: isSliderCard && isSliderActive ? "260px" : "200px",
+              top: "50%",
+              transformOrigin: "top center",
+              animation: showBorder ? "gradient-spin 3s linear infinite" : "none",
+              zIndex: 0,
+            }}
+          />
         </div>
 
         {/* Inner mask */}
-        <div className="absolute inset-[2px] rounded-2xl z-10 pointer-events-none" style={{ background: "linear-gradient(180deg,rgba(0,255,255,0.05) 0%,rgba(3,6,18,1) 100%)" }} />
+        <div className="absolute inset-[2px] rounded-3xl md:rounded-2xl z-10 pointer-events-none" style={{ background: "linear-gradient(180deg,rgba(0,255,255,0.05) 0%,rgba(3,6,18,1) 100%)" }} />
 
         {/* Content */}
         <div
@@ -187,28 +197,50 @@ const FeatureCard = ({ feature, index, isSliderCard = false, isSliderActive = fa
 };
 
 // ─── Shared TabBar ────────────────────────────────────────────────────────────
-const TabBar = ({ activeIndex, onSelect, className = "" }) => (
-  <div className={`flex gap-2 overflow-x-auto pb-10 scrollbar-hide ${className}`}>
-    {features.map((f, i) => {
-      const isActive = activeIndex === i;
-      return (
-        <button key={f.id} type="button" onClick={() => onSelect(i)} className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden" style={{ padding: "2px" }}>
-          {isActive && (
-            <>
-              <div className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none" style={{ zIndex: 0 }}>
-                <div className="absolute" style={{ background: "linear-gradient(90deg,rgba(0,255,255,0) 0%,#8ef5e8 25%,#ff9b7a 50%,#ffdc7a 75%,rgba(0,255,255,0) 100%)", height: "300px", width: "200px", top: "50%", transformOrigin: "top center", animation: "gradient-spin 3s linear infinite" }} />
-              </div>
-              <div className="absolute inset-[2px] rounded-[6px] z-10 pointer-events-none" style={{ background: "rgb(3,6,18)" }} />
-            </>
-          )}
-          <span className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200" style={{ color: isActive ? "var(--text-color)" : "rgba(152,162,179,1)", background: isActive ? "rgb(3,6,18)" : "transparent", border: isActive ? "none" : "1px solid rgba(255,255,255,0.08)" }}>
-            {f.title}
-          </span>
-        </button>
-      );
-    })}
-  </div>
-);
+const TabBar = ({ activeIndex, onSelect, className = "" }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  return (
+    <div className={`flex gap-2 overflow-x-auto pb-10 scrollbar-hide ${className}`}>
+      {features.map((f, i) => {
+        const isActive = activeIndex === i;
+        const isHovered = hoveredIndex === i;
+        const showAnim = isActive || isHovered;
+
+        return (
+          <button
+            key={f.id}
+            type="button"
+            onClick={() => onSelect(i)}
+            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseLeave={() => setHoveredIndex(null)}
+            className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden"
+            style={{ padding: "2px" }}
+          >
+            {showAnim && (
+              <>
+                <div className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none" style={{ zIndex: 0 }}>
+                  <div className="absolute" style={{ background: "linear-gradient(90deg,rgba(0,255,255,0) 0%,#8ef5e8 25%,#ff9b7a 50%,#ffdc7a 75%,rgba(0,255,255,0) 100%)", height: "300px", width: "200px", top: "50%", transformOrigin: "top center", animation: "gradient-spin 3s linear infinite" }} />
+                </div>
+                <div className="absolute inset-[2px] rounded-[6px] z-10 pointer-events-none" style={{ background: "rgb(3,6,18)" }} />
+              </>
+            )}
+            <span
+              className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200"
+              style={{
+                color: showAnim ? "var(--text-color)" : "rgba(152,162,179,1)",
+                background: showAnim ? "rgb(3,6,18)" : "transparent",
+                border: showAnim ? "none" : "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              {f.title}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 
 // ─── Shared Dots ──────────────────────────────────────────────────────────────
 const Dots = ({ activeIndex, onSelect }) => (
@@ -225,6 +257,7 @@ const INITIAL_CENTER_INDEX = Math.floor(features.length / 2);
 
 const AIFeatures = () => {
   const [activeIndex, setActiveIndex] = useState(INITIAL_CENTER_INDEX);
+  const [isDragging, setIsDragging] = useState(false);
 
   const mobRef = useRef(null);
   const [mobW, setMobW] = useState(0);
@@ -251,6 +284,16 @@ const AIFeatures = () => {
 
   const mobX = mobW > 0 ? (mobW - MOB_SLOT) / 2 - activeIndex * (MOB_SLOT + MOB_GAP) : 0;
   const xlX  = xlW  > 0 ? (xlW  - XL_SLOT)  / 2 - activeIndex * (XL_SLOT  + XL_GAP)  : 0;
+
+  const clampIndex = (i) => Math.max(0, Math.min(features.length - 1, i));
+  const mobIndexFromX = (x) => {
+    const i = ((mobW - MOB_SLOT) / 2 - x) / (MOB_SLOT + MOB_GAP);
+    return clampIndex(Math.round(i));
+  };
+  const xlIndexFromX = (x) => {
+    const i = ((xlW - XL_SLOT) / 2 - x) / (XL_SLOT + XL_GAP);
+    return clampIndex(Math.round(i));
+  };
 
   return (
     <section className="py-20 flex flex-col items-center overflow-x-hidden">
@@ -287,10 +330,21 @@ const AIFeatures = () => {
             style={{ width: mobTrackW, gap: MOB_GAP }}
             animate={{ x: mobX }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            drag="x"
+            dragConstraints={mobW > 0 ? { left: mobW - mobTrackW, right: 0 } : undefined}
+            dragElastic={0.08}
+            dragMomentum={false}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={(_, info) => {
+              setIsDragging(false);
+              if (Math.abs(info.offset.x) < 8) return;
+              const next = mobIndexFromX(mobX + info.offset.x);
+              setActiveIndex(next);
+            }}
           >
             {features.map((feature, index) => (
               <div key={feature.id} className="flex-shrink-0 flex justify-center" style={{ width: MOB_SLOT, alignSelf: activeIndex === index ? "flex-start" : undefined, paddingTop: activeIndex === index ? 0 : 28 }}>
-                <FeatureCard feature={feature} index={index} isSliderCard isSliderActive={activeIndex === index} />
+                <FeatureCard feature={feature} index={index} isSliderCard isSliderActive={activeIndex === index} onSelect={setActiveIndex} disableClick={isDragging} />
               </div>
             ))}
           </motion.div>
@@ -318,6 +372,17 @@ const AIFeatures = () => {
             style={{ width: xlTrackW, gap: XL_GAP }}
             animate={{ x: xlX }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            drag="x"
+            dragConstraints={xlW > 0 ? { left: xlW - xlTrackW, right: 0 } : undefined}
+            dragElastic={0.06}
+            dragMomentum={false}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={(_, info) => {
+              setIsDragging(false);
+              if (Math.abs(info.offset.x) < 8) return;
+              const next = xlIndexFromX(xlX + info.offset.x);
+              setActiveIndex(next);
+            }}
           >
             {features.map((feature, index) => {
               const isActive = activeIndex === index;
@@ -338,6 +403,8 @@ const AIFeatures = () => {
                     isSliderCard
                     isSliderActive={isActive}
                     sizeOverride={isActive ? XL_CENTER : XL_SIDE}
+                    onSelect={setActiveIndex}
+                    disableClick={isDragging}
                   />
                 </div>
               );
@@ -352,3 +419,6 @@ const AIFeatures = () => {
 };
 
 export default AIFeatures;
+
+
+

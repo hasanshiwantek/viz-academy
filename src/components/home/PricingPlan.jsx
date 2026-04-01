@@ -453,14 +453,32 @@ const PricingPlan = () => {
                   className="flex-shrink-0 flex justify-center"
                   style={{ width: slotWidth }}
                 >
-                  <PricingCard
-                    plan={plan}
-                    isActive={activePlan === plan.id}
-                    billing={billing}
-                    setActivePlan={setActivePlan}
-                    isSliderCard
-                    isSliderActive={activeIndex === index}
-                  />
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Select ${plan.name} plan`}
+                    className="outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 rounded-2xl"
+                    onClick={() => {
+                      if (isDragging) return;
+                      setActiveIndex(index);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        if (isDragging) return;
+                        setActiveIndex(index);
+                      }
+                    }}
+                  >
+                    <PricingCard
+                      plan={plan}
+                      isActive={activePlan === plan.id}
+                      billing={billing}
+                      setActivePlan={setActivePlan}
+                      isSliderCard
+                      isSliderActive={activeIndex === index}
+                    />
+                  </div>
                 </div>
               );
             })}

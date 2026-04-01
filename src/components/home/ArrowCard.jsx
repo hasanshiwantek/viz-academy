@@ -24,7 +24,7 @@ const elbow = (sx, sy, mx, dx, dy) => {
   const goUp = dy < sy
   return goUp
     ? `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy-R} V ${dy} H ${dx}`
-    : `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy+R} V ${dy} H ${dx}`
+    : `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy+R-4} V ${dy} H ${dx}`
 }
 
 const arrowDefs = () => {
