@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import img1 from "../../assets/ai-engine1.png";
@@ -43,13 +44,17 @@ const cardVariants = {
   }),
 };
 
-const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = false, sizeOverride = null }) => {
+const EngineCard = ({
+  engine,
+  index,
+  isSliderCard = false,
+  isSliderActive = false,
+  sizeOverride = null,
+  onSelect = null,
+  disableClick = false,
+}) => {
   const [hovered, setHovered] = useState(false);
-  const [borderByClick, setBorderByClick] = useState(false);
-  useEffect(() => {
-    if (!isSliderActive) setBorderByClick(false);
-  }, [isSliderActive]);
-  const showBorderAnimation = hovered || (isSliderCard && borderByClick);
+  const showBorderAnimation = hovered || (isSliderCard && isSliderActive);
   const sliderSize = isSliderCard
     ? (sizeOverride ?? (isSliderActive ? SLIDER_CARD_CENTER : SLIDER_CARD_SIDE))
     : null;
@@ -87,14 +92,16 @@ const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = fals
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onClick={() => {
-          if (isSliderCard) setBorderByClick((v) => !v);
+          if (disableClick) return;
+          if (isSliderCard && onSelect) onSelect(index);
         }}
         role={isSliderCard ? "button" : undefined}
         tabIndex={isSliderCard ? 0 : undefined}
         onKeyDown={(e) => {
-          if (isSliderCard && (e.key === "Enter" || e.key === " ")) {
+          if (!isSliderCard || !onSelect) return;
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            setBorderByClick((v) => !v);
+            onSelect(index);
           }
         }}
       >
@@ -170,8 +177,10 @@ const EngineCard = ({ engine, index, isSliderCard = false, isSliderActive = fals
 
 const AIEngines = () => {
   const [activeIndex, setActiveIndex] = useState(() => Math.floor(engines.length / 2));
+  const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef(null);
   const [sliderWidth, setSliderWidth] = useState(0);
+  const [hoveredTabIndex, setHoveredTabIndex] = useState(null);
 
   useEffect(() => {
     if (!sliderRef.current) return;
@@ -182,6 +191,39 @@ const AIEngines = () => {
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+
+  const clampIndex = (i) => Math.max(0, Math.min(engines.length - 1, i));
+  const xlMode = sliderWidth >= XL_BREAKPOINT;
+  const trackW = xlMode
+    ? (engines.length - 1) * XL_SIDE.width + XL_CENTER.width
+    : SLIDER_CARD_CENTER.width +
+      (engines.length - 1) * SLIDER_CARD_SIDE.width +
+      (engines.length - 1) * SLIDER_GAP;
+  const xlLeftOffset = activeIndex * XL_SIDE.width;
+  const xVal =
+    sliderWidth > 0
+      ? xlMode
+        ? sliderWidth / 2 - (xlLeftOffset + XL_CENTER.width / 2)
+        : (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
+          activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+      : 0;
+  const indexFromX = (x) => {
+    if (sliderWidth <= 0) return activeIndex;
+    if (xlMode) {
+      const i = (sliderWidth / 2 - XL_CENTER.width / 2 - x) / XL_SIDE.width;
+      return clampIndex(Math.round(i));
+    }
+    const i =
+      ((sliderWidth - SLIDER_CARD_CENTER.width) / 2 - x) /
+      (SLIDER_CARD_SIDE.width + SLIDER_GAP);
+    return clampIndex(Math.round(i));
+  };
+  const slotW = (i) =>
+    xlMode
+      ? (i === activeIndex ? XL_CENTER.width : XL_SIDE.width)
+      : activeIndex === i
+        ? SLIDER_CARD_CENTER.width
+        : SLIDER_CARD_SIDE.width;
 
   return (
     <section className="py-20 px-6 flex justify-center flex-col items-center">
@@ -225,15 +267,19 @@ const AIEngines = () => {
           <div className="flex gap-2 overflow-x-auto pb-6 justify-start sm:justify-center scrollbar-hide">
             {engines.map((e, i) => {
               const isActive = activeIndex === i;
+              const isHovered = hoveredTabIndex === i;
+              const showAnim = isActive || isHovered;
               return (
                 <button
                   key={e.id}
                   type="button"
                   onClick={() => setActiveIndex(i)}
+                  onMouseEnter={() => setHoveredTabIndex(i)}
+                  onMouseLeave={() => setHoveredTabIndex(null)}
                   className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden"
                   style={{ padding: "2px" }}
                 >
-                  {isActive && (
+                  {showAnim && (
                     <>
                       <div
                         className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none"
@@ -261,9 +307,9 @@ const AIEngines = () => {
                   <span
                     className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200"
                     style={{
-                      color: isActive ? "var(--text-color)" : "rgba(152, 162, 179, 1)",
-                      background: isActive ? "rgb(3,6,18)" : "transparent",
-                      border: isActive ? "none" : "1px solid rgba(255,255,255,0.08)",
+                      color: showAnim ? "var(--text-color)" : "rgba(152, 162, 179, 1)",
+                      background: showAnim ? "rgb(3,6,18)" : "transparent",
+                      border: showAnim ? "none" : "1px solid rgba(255,255,255,0.08)",
                     }}
                   >
                     {e.name}
@@ -274,67 +320,55 @@ const AIEngines = () => {
           </div>
           {/* Slider: below xl = 200 center / 139 sides; xl+ = 2+1+2, center 432×306, sides 210×180, gap */}
           <div ref={sliderRef} className="relative w-full overflow-hidden pt-2">
-            {(() => {
-              const xlMode = sliderWidth >= XL_BREAKPOINT;
-              const slotW = (i) =>
-                xlMode
-                  ? (i === activeIndex ? XL_CENTER.width : XL_SIDE.width)
-                  : activeIndex === i
-                    ? SLIDER_CARD_CENTER.width
-                    : SLIDER_CARD_SIDE.width;
-              const trackW = xlMode
-                ? (engines.length - 1) * XL_SIDE.width + XL_CENTER.width
-                : SLIDER_CARD_CENTER.width +
-                  (engines.length - 1) * SLIDER_CARD_SIDE.width +
-                  (engines.length - 1) * SLIDER_GAP;
-              const xlLeftOffset = activeIndex * XL_SIDE.width;
-              const xVal =
-                sliderWidth > 0
-                  ? xlMode
-                    ? sliderWidth / 2 -
-                      (xlLeftOffset + XL_CENTER.width / 2)
-                    : (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
-                      activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
-                  : 0;
-              return (
-                <motion.div
-                  className="flex items-center"
-                  style={{ width: trackW, gap: xlMode ? 0 : SLIDER_GAP }}
-                  animate={{ x: xVal }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            <motion.div
+              className="flex items-center"
+              style={{ width: trackW, gap: xlMode ? 0 : SLIDER_GAP }}
+              animate={{ x: xVal }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              drag="x"
+              dragConstraints={sliderWidth > 0 ? { left: sliderWidth - trackW, right: 0 } : undefined}
+              dragElastic={xlMode ? 0.06 : 0.08}
+              dragMomentum={false}
+              onDragStart={() => setIsDragging(true)}
+              onDragEnd={(_, info) => {
+                setIsDragging(false);
+                if (Math.abs(info.offset.x) < 8) return;
+                const next = indexFromX(xVal + info.offset.x);
+                setActiveIndex(next);
+              }}
+            >
+              {engines.map((engine, index) => (
+                <div
+                  key={engine.id}
+                  className="flex-shrink-0 flex justify-center relative"
+                  style={{
+                    width: slotW(index),
+                    zIndex:
+                      activeIndex === index
+                        ? 10
+                        : index === activeIndex - 1 || index === activeIndex + 1
+                          ? 1
+                          : 0,
+                  }}
                 >
-                  {engines.map((engine, index) => (
-                    <div
-                      key={engine.id}
-                      className="flex-shrink-0 flex justify-center relative"
-                      style={{
-                        width: slotW(index),
-                        zIndex:
-                          activeIndex === index
-                            ? 10
-                            : index === activeIndex - 1 || index === activeIndex + 1
-                              ? 1
-                              : 0,
-                      }}
-                    >
-                      <EngineCard
-                        engine={engine}
-                        index={index}
-                        isSliderCard
-                        isSliderActive={activeIndex === index}
-                        sizeOverride={
-                          xlMode
-                            ? activeIndex === index
-                              ? XL_CENTER
-                              : XL_SIDE
-                            : null
-                        }
-                      />
-                    </div>
-                  ))}
-                </motion.div>
-              );
-            })()}
+                  <EngineCard
+                    engine={engine}
+                    index={index}
+                    isSliderCard
+                    isSliderActive={activeIndex === index}
+                    sizeOverride={
+                      xlMode
+                        ? activeIndex === index
+                          ? XL_CENTER
+                          : XL_SIDE
+                        : null
+                    }
+                    onSelect={setActiveIndex}
+                    disableClick={isDragging}
+                  />
+                </div>
+              ))}
+            </motion.div>
           </div>
           {/* Dots */}
           <div className="flex justify-center gap-2 mt-5">
