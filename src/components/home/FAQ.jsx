@@ -151,7 +151,7 @@ const FAQ = () => {
 
   return (
     <section
-      className="py-20  flex flex-col items-center max-w-[1200px] mx-auto"
+      className="pt-4 pb-20 sm:pt-6 sm:pb-20 flex flex-col items-center max-w-[1200px] mx-auto"
       style={{ background: "rgb(3, 6, 18)", fontFamily: "'Inter', sans-serif" }}
     >
       <style>{`

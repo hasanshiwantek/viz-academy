@@ -10,6 +10,7 @@ import GetStarted from "./components/home/GetStarted";
 import ModelCarousel from "./components/home/ModelCarousel";
 import ArrowCard from "./components/home/ArrowCard";
 import FAQ from "./components/home/FAQ";
+import StatsBar from "./components/home/StatsBar";
 import Workflow from "./components/home/Workflow";
 import Footer from "./components/home/Footer";
 import QualityPreview from "./components/home/QualityPreview";
@@ -31,6 +32,7 @@ function App() {
         <QualityPreview/>
         <PricingPlan />
         <HappyUsers />
+        <StatsBar />
         <FAQ/>
         <Workflow />
         <Footer /> 
