@@ -12,7 +12,7 @@ const cards = [
   { id: 'original', title: 'Original Input', sub: 'Start with your base image\nor concept', left: 1, top: 446, w: 192, h: 233, img: orignal },
   { id: 'final', title: 'Final Output', sub: 'Polished, production-ready\nresult', left: mobile ? 244 : 354, top: 263, w: 192, h: 224, img: finalImg },
   { id: 'enhance', title: 'AI Enhancement', sub: 'Paint mask & apply AI', left: mobile ? 244 : 354, top: 638, w: 192, h: 233, img: ai },
-  { id: 'styleB', title: 'Style Variation B', sub: 'Branch into alternative\naesthetics', left: mobile ? 550 : 738, top: 60, w: 192, h: 215, img: b },
+  { id: 'styleB', title: 'Style Variation B', sub: 'Branch into alternative\naesthetics', left: mobile ? 500 : 738, top: 60, w: 192, h: 215, img: b },
   { id: 'styleA', title: 'Style Variation A', sub: 'Explore different artistic\ndirections', left: mobile ? 500 : 738, top: 338, w: 192, h: 216, img: a },
   { id: 'colorShift', title: 'Color Shift', sub: 'Adjust tones and\natmosphere', left: mobile ? 500 : 738, top: 646, w: 192, h: 216, img: colorImg },
 ]
