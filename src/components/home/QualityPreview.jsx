@@ -96,18 +96,42 @@ const InfiniteImageColumn = ({ sources, mobile = false, durationSec = 22, revers
           yRef.current = latest.y
         }}
         onHoverStart={() => controls.stop()}
+        // onHoverEnd={() => {
+        //   const remaining = Math.abs(toY - yRef.current)
+        //   const total = Math.abs(toY - fromY)
+        //   const duration = durationSec * (remaining / total)
+
+        //   controls.start({
+        //     y: [yRef.current, toY],
+        //     transition: {
+        //       duration,
+        //       repeat: Infinity,
+        //       ease: "linear",
+        //     },
+        //   })
+        // }}
         onHoverEnd={() => {
           const remaining = Math.abs(toY - yRef.current)
           const total = Math.abs(toY - fromY)
           const duration = durationSec * (remaining / total)
 
           controls.start({
-            y: [yRef.current, toY],
+            y: toY,
             transition: {
               duration,
-              repeat: Infinity,
               ease: "linear",
-            },
+              onComplete: () => {
+                controls.set({ y: fromY })
+                controls.start({
+                  y: toY,
+                  transition: {
+                    duration: durationSec,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }
+                })
+              }
+            }
           })
         }}
 
