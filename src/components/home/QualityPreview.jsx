@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import quality1 from "../../assets/quality/quality1.svg";
 import quality2 from "../../assets/quality/quality2.svg";
 import quality3 from "../../assets/quality/quality3.svg";
@@ -40,6 +40,51 @@ const Card = ({ src, style, className = "", mobile = false }) => {
       style={{ width: w, height: h, ...style }}
     >
       <img src={src} alt="" className="w-full h-full object-cover" />
+    </div>
+  );
+};
+
+/** Same 3 images stacked twice; translate by one block height for seamless loop */
+const InfiniteImageColumn = ({ sources, mobile = false, durationSec = 22, reverse = false }) => {
+  const reduceMotion = useReducedMotion();
+  const h = mobile ? MOB_H : CARD_H;
+  const g = mobile ? MOB_GAP : GAP;
+  const w = mobile ? MOB_W : CARD_W;
+  const blockH = h * 3 + g * 2;
+  const step = blockH + g;
+  const viewH = blockH;
+
+  const renderStrip = (copyKey) => (
+    <div className="flex flex-col shrink-0" style={{ gap: g }}>
+      {sources.map((src, i) => (
+        <Card key={`${copyKey}-${i}`} src={src} mobile={mobile} />
+      ))}
+    </div>
+  );
+
+  if (reduceMotion) {
+    return (
+      <div className="shrink-0 overflow-hidden" style={{ width: w, height: viewH }}>
+        {renderStrip("a")}
+      </div>
+    );
+  }
+
+  const fromY = reverse ? -step : 0;
+  const toY = reverse ? 0 : -step;
+
+  return (
+    <div className="shrink-0 overflow-hidden" style={{ width: w, height: viewH }}>
+      <motion.div
+        className="flex flex-col will-change-transform"
+        style={{ gap: g }}
+        initial={{ y: fromY }}
+        animate={{ y: [fromY, toY] }}
+        transition={{ duration: durationSec, repeat: Infinity, ease: "linear" }}
+      >
+        {renderStrip("a")}
+        {renderStrip("b")}
+      </motion.div>
     </div>
   );
 };
@@ -90,16 +135,17 @@ const QualityPreview = () => {
             <Card src={QUALITY_IMAGES[1]} mobile />
           </div>
           <div className="flex shrink-0" style={{ gap: MOB_GAP }}>
-            <div className="flex flex-col" style={{ gap: MOB_GAP }}>
-              <Card src={QUALITY_IMAGES[2]} mobile />
-              <Card src={QUALITY_IMAGES[3]} mobile />
-              <Card src={QUALITY_IMAGES[4]} mobile />
-            </div>
-            <div className="flex flex-col" style={{ gap: MOB_GAP }}>
-              <Card src={QUALITY_IMAGES[5]} mobile />
-              <Card src={QUALITY_IMAGES[6]} mobile />
-              <Card src={QUALITY_IMAGES[7]} mobile />
-            </div>
+            <InfiniteImageColumn
+              mobile
+              durationSec={16}
+              sources={[QUALITY_IMAGES[2], QUALITY_IMAGES[3], QUALITY_IMAGES[4]]}
+            />
+            <InfiniteImageColumn
+              mobile
+              durationSec={18}
+              reverse
+              sources={[QUALITY_IMAGES[5], QUALITY_IMAGES[6], QUALITY_IMAGES[7]]}
+            />
           </div>
           <div className="flex flex-col shrink-0" style={{ gap: MOB_GAP, opacity: 0.4, marginTop: mobSideOffset }}>
             <Card src={QUALITY_IMAGES[8]} mobile />
@@ -118,16 +164,15 @@ const QualityPreview = () => {
             <Card src={QUALITY_IMAGES[1]} />
           </div>
           <div className="flex shrink-0" style={{ gap: GAP }}>
-            <div className="flex flex-col" style={{ gap: GAP }}>
-              <Card src={QUALITY_IMAGES[2]} />
-              <Card src={QUALITY_IMAGES[3]} />
-              <Card src={QUALITY_IMAGES[4]} />
-            </div>
-            <div className="flex flex-col" style={{ gap: GAP }}>
-              <Card src={QUALITY_IMAGES[5]} />
-              <Card src={QUALITY_IMAGES[6]} />
-              <Card src={QUALITY_IMAGES[7]} />
-            </div>
+            <InfiniteImageColumn
+              durationSec={24}
+              sources={[QUALITY_IMAGES[2], QUALITY_IMAGES[3], QUALITY_IMAGES[4]]}
+            />
+            <InfiniteImageColumn
+              durationSec={28}
+              reverse
+              sources={[QUALITY_IMAGES[5], QUALITY_IMAGES[6], QUALITY_IMAGES[7]]}
+            />
           </div>
           <div className="flex flex-col shrink-0" style={{ gap: GAP, opacity: 0.4, marginTop: sideOffset }}>
             <Card src={QUALITY_IMAGES[8]} />

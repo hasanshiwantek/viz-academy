@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import orignal from '../../assets/orignal.svg'
 import finalImg from '../../assets/find.svg'
 import ai from '../../assets/ai.svg'
@@ -12,7 +12,7 @@ const cards = [
   { id: 'enhance',    title: 'AI Enhancement',    sub: 'Paint mask & apply AI',                   left: 354, top: 638, w: 192, h: 233, img: ai       },
   { id: 'styleB',     title: 'Style Variation B', sub: 'Branch into alternative\naesthetics',     left: 738, top: 60,  w: 192, h: 215, img: b        },
   { id: 'styleA',     title: 'Style Variation A', sub: 'Explore different artistic\ndirections',  left: 738, top: 338, w: 192, h: 216, img: a        },
-  { id: 'colorShift', title: 'Color Shift',       sub: 'Adjust tones and\natmosphere',            left: 738, top: 659, w: 192, h: 212, img: colorImg },
+  { id: 'colorShift', title: 'Color Shift',       sub: 'Adjust tones and\natmosphere',            left: 738, top: 646, w: 192, h: 216, img: colorImg },
 ]
 
 const R = 14
@@ -23,7 +23,7 @@ const mid = (a, b) => (rc(a).x + lc(b).x) / 2
 const elbow = (sx, sy, mx, dx, dy) => {
   const goUp = dy < sy
   return goUp
-    ? `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy-R} V ${dy} H ${dx}`
+    ? `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy-R-4} V ${dy} H ${dx}`
     : `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy+R-4} V ${dy} H ${dx}`
 }
 
@@ -37,7 +37,7 @@ const arrowDefs = () => {
     { id:'final-styleB', d: elbow(finalR.x,finalR.y, mid('final','styleB'),    styleBL.x,styleBL.y) },
     { id:'final-styleA', d: elbow(finalR.x,finalR.y, mid('final','styleA'),    styleAL.x,styleAL.y) },
     { id:'ai-styleA',    d: elbow(enhR.x,enhR.y,    mid('enhance','styleA'),   styleAL.x,styleAL.y) },
-    { id:'ai-color',     d: elbow(enhR.x,enhR.y,    mid('enhance','colorShift'),colorL.x, colorL.y) },
+    { id:'ai-color',     d: elbow(enhR.x, enhR.y, mid('enhance','colorShift'), colorL.x, colorL.y) },
   ]
 }
 
@@ -94,28 +94,12 @@ const WorkflowCanvas = ({ arrows, arrowsActive, hoveredCardId, onHoverCard }) =>
   </div>
 )
 
-const CANVAS_PAD = 32
-
-const getCanvasScale = () => {
-  if (typeof window === 'undefined') return 1
-  const w = document.documentElement.clientWidth || window.innerWidth
-  return Math.min(1, (w - CANVAS_PAD) / CANVAS_W)
-}
-
 const ArrowCard = () => {
   const arrows = arrowDefs()
-  const [canvasScale, setCanvasScale] = useState(getCanvasScale)
   const [hoverWorkflow, setHoverWorkflow] = useState(false)
   const [clickWorkflow, setClickWorkflow] = useState(false)
   const [hoveredCardId, setHoveredCardId] = useState(null)
   const arrowsActive = hoverWorkflow || clickWorkflow
-
-  useEffect(() => {
-    const update = () => setCanvasScale(getCanvasScale())
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [])
 
   return (
     <>
@@ -184,7 +168,7 @@ const ArrowCard = () => {
         }
       `}</style>
 
-      <section className="w-full max-w-full min-w-0 flex flex-col items-center overflow-x-hidden py-20 box-border">
+      <section className="w-full max-w-full min-w-0 flex flex-col items-center py-20 box-border">
 
         {/* Header */}
         <div className="flex flex-col items-center gap-5 px-6 text-center">
@@ -209,27 +193,15 @@ const ArrowCard = () => {
           </button>
         </div>
 
-        {/* Scale down when viewport &lt; canvas width so no horizontal scrollbar (768–960px included) */}
-        <div className="flex w-full min-w-0 max-w-full justify-center mt-10 px-2 sm:px-3 box-border overflow-x-hidden">
-          <div
-            className="relative flex-shrink-0 overflow-hidden"
-            style={{
-              width: CANVAS_W * canvasScale,
-              height: CANVAS_H * canvasScale,
-              maxWidth: '100%',
-            }}
-          >
+        {/* Fixed web canvas width; narrow viewports scroll horizontally */}
+        <div className="w-full min-w-0 max-w-full mt-10 px-2 sm:px-3 box-border overflow-x-auto overflow-y-hidden [scrollbar-gutter:stable]">
+          <div className="flex w-max min-w-full justify-center mx-auto pb-1">
             <div
               role="button"
               tabIndex={0}
-              aria-label="Workflow diagram — hover or click for arrow animation; hover a card for its border"
-              className="absolute top-0 left-0 outline-none rounded-lg focus-visible:ring-2 focus-visible:ring-cyan-400/50 cursor-pointer overflow-hidden"
-              style={{
-                transform: `scale(${canvasScale})`,
-                transformOrigin: 'top left',
-                width: CANVAS_W,
-                height: CANVAS_H,
-              }}
+              aria-label="Workflow diagram — hover or click for arrow animation; hover a card for its border. Scroll horizontally on small screens."
+              className="relative flex-shrink-0 outline-none rounded-lg focus-visible:ring-2 focus-visible:ring-cyan-400/50 cursor-pointer overflow-hidden"
+              style={{ width: CANVAS_W, height: CANVAS_H }}
               onMouseEnter={() => setHoverWorkflow(true)}
               onMouseLeave={() => setHoverWorkflow(false)}
               onClick={() => setClickWorkflow((v) => !v)}
