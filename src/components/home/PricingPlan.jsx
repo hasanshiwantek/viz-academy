@@ -303,13 +303,15 @@ const PricingPlan = () => {
 
   const setBillingWithIndex = (next) => {
     if (next === billing) return;
+
     if (next === "yearly") {
       setActiveIndex((i) => (i === 2 ? 1 : 0));
     } else {
-      setActiveIndex((i) => (i === 0 ? 1 : 2));
+      setActiveIndex((i) => 0);
     }
     setBilling(next);
   };
+
 
   useEffect(() => {
     if (!sliderRef.current) return;
@@ -328,7 +330,7 @@ const PricingPlan = () => {
   const mobileXVal =
     sliderWidth > 0
       ? (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
-        activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+      activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
       : 0;
   const mobileIndexFromX = (x) => {
     if (sliderWidth <= 0) return activeIndex;

@@ -6,38 +6,40 @@ import b from '../../assets/b.svg'
 import a from '../../assets/a.svg'
 import colorImg from '../../assets/color.svg'
 
+
+const mobile = window.innerWidth < 768
 const cards = [
-  { id: 'original',   title: 'Original Input',   sub: 'Start with your base image\nor concept',  left: 1,   top: 446, w: 192, h: 233, img: orignal  },
-  { id: 'final',      title: 'Final Output',      sub: 'Polished, production-ready\nresult',      left: 354, top: 263, w: 192, h: 224, img: finalImg },
-  { id: 'enhance',    title: 'AI Enhancement',    sub: 'Paint mask & apply AI',                   left: 354, top: 638, w: 192, h: 233, img: ai       },
-  { id: 'styleB',     title: 'Style Variation B', sub: 'Branch into alternative\naesthetics',     left: 738, top: 60,  w: 192, h: 215, img: b        },
-  { id: 'styleA',     title: 'Style Variation A', sub: 'Explore different artistic\ndirections',  left: 738, top: 338, w: 192, h: 216, img: a        },
-  { id: 'colorShift', title: 'Color Shift',       sub: 'Adjust tones and\natmosphere',            left: 738, top: 646, w: 192, h: 216, img: colorImg },
+  { id: 'original', title: 'Original Input', sub: 'Start with your base image\nor concept', left: 1, top: 446, w: 192, h: 233, img: orignal },
+  { id: 'final', title: 'Final Output', sub: 'Polished, production-ready\nresult', left: mobile ? 244 : 354, top: 263, w: 192, h: 224, img: finalImg },
+  { id: 'enhance', title: 'AI Enhancement', sub: 'Paint mask & apply AI', left: mobile ? 244 : 354, top: 638, w: 192, h: 233, img: ai },
+  { id: 'styleB', title: 'Style Variation B', sub: 'Branch into alternative\naesthetics', left: mobile ? 550 : 738, top: 60, w: 192, h: 215, img: b },
+  { id: 'styleA', title: 'Style Variation A', sub: 'Explore different artistic\ndirections', left: mobile ? 550 : 738, top: 338, w: 192, h: 216, img: a },
+  { id: 'colorShift', title: 'Color Shift', sub: 'Adjust tones and\natmosphere', left: mobile ? 550 : 738, top: 646, w: 192, h: 216, img: colorImg },
 ]
 
 const R = 14
 const rc = (id) => { const c = cards.find(x => x.id === id); return { x: c.left + c.w, y: c.top + c.h / 2 } }
-const lc = (id) => { const c = cards.find(x => x.id === id); return { x: c.left,        y: c.top + c.h / 2 } }
+const lc = (id) => { const c = cards.find(x => x.id === id); return { x: c.left, y: c.top + c.h / 2 } }
 const mid = (a, b) => (rc(a).x + lc(b).x) / 2
 
 const elbow = (sx, sy, mx, dx, dy) => {
   const goUp = dy < sy
   return goUp
-    ? `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy-R-4} V ${dy} H ${dx}`
-    : `M ${sx} ${sy} H ${mx-R} Q ${mx} ${sy} ${mx} ${sy+R-4} V ${dy} H ${dx}`
+    ? `M ${sx} ${sy} H ${mx - R} Q ${mx} ${sy} ${mx} ${sy - R - 4} V ${dy} H ${dx}`
+    : `M ${sx} ${sy} H ${mx - R} Q ${mx} ${sy} ${mx} ${sy + R - 4} V ${dy} H ${dx}`
 }
 
 const arrowDefs = () => {
-  const origR=rc('original'), finalL=lc('final'), finalR=rc('final')
-  const enhR=rc('enhance'), enhL=lc('enhance')
-  const styleBL=lc('styleB'), styleAL=lc('styleA'), colorL=lc('colorShift')
+  const origR = rc('original'), finalL = lc('final'), finalR = rc('final')
+  const enhR = rc('enhance'), enhL = lc('enhance')
+  const styleBL = lc('styleB'), styleAL = lc('styleA'), colorL = lc('colorShift')
   return [
-    { id:'orig-final',   d: elbow(origR.x,origR.y,  mid('original','final'),   finalL.x, finalL.y)  },
-    { id:'orig-ai',      d: elbow(origR.x,origR.y,  mid('original','enhance'), enhL.x,   enhL.y)    },
-    { id:'final-styleB', d: elbow(finalR.x,finalR.y, mid('final','styleB'),    styleBL.x,styleBL.y) },
-    { id:'final-styleA', d: elbow(finalR.x,finalR.y, mid('final','styleA'),    styleAL.x,styleAL.y) },
-    { id:'ai-styleA',    d: elbow(enhR.x,enhR.y,    mid('enhance','styleA'),   styleAL.x,styleAL.y) },
-    { id:'ai-color',     d: elbow(enhR.x, enhR.y, mid('enhance','colorShift'), colorL.x, colorL.y) },
+    { id: 'orig-final', d: elbow(origR.x, origR.y, mid('original', 'final'), finalL.x, finalL.y) },
+    { id: 'orig-ai', d: elbow(origR.x, origR.y, mid('original', 'enhance'), enhL.x, enhL.y) },
+    { id: 'final-styleB', d: elbow(finalR.x, finalR.y, mid('final', 'styleB'), styleBL.x, styleBL.y) },
+    { id: 'final-styleA', d: elbow(finalR.x, finalR.y, mid('final', 'styleA'), styleAL.x, styleAL.y) },
+    { id: 'ai-styleA', d: elbow(enhR.x, enhR.y, mid('enhance', 'styleA'), styleAL.x, styleAL.y) },
+    { id: 'ai-color', d: elbow(enhR.x, enhR.y, mid('enhance', 'colorShift'), colorL.x, colorL.y) },
   ]
 }
 
