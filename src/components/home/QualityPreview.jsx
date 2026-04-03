@@ -88,27 +88,6 @@ const InfiniteImageColumn = ({ sources, mobile = false, durationSec = 22, revers
   return (
     <div className="shrink-0 overflow-hidden" style={{ width: w, height: viewH }}>
       <motion.div
-        // className="flex flex-col will-change-transform"
-        // style={{ gap: g }}
-        // initial={{ y: fromY }}
-        // animate={{ y: [fromY, toY] }}
-        // transition={{ duration: durationSec, repeat: Infinity, ease: "linear" }}
-        // whileHover={{ animationPlayState: "paused" }}
-        // className="flex flex-col will-change-transform"
-        // style={{ gap: g }}
-        // initial={{ y: fromY }}
-        // animate={controls}
-        // onHoverStart={() => controls.stop()}
-        // onHoverEnd={() =>
-        //   controls.start({
-        //     y: [fromY, toY],
-        //     transition: {
-        //       duration: durationSec,
-        //       repeat: Infinity,
-        //       ease: "linear",
-        //     },
-        //   })
-        // }
         className="flex flex-col will-change-transform"
         style={{ gap: g }}
         initial={{ y: fromY }}
@@ -117,16 +96,6 @@ const InfiniteImageColumn = ({ sources, mobile = false, durationSec = 22, revers
           yRef.current = latest.y
         }}
         onHoverStart={() => controls.stop()}
-        // onHoverEnd={() =>
-        //   controls.start({
-        //     y: [yRef.current, toY],
-        //     transition: {
-        //       duration: durationSec,
-        //       repeat: Infinity,
-        //       ease: "linear",
-        //     },
-        //   })
-        // }
         onHoverEnd={() => {
           const remaining = Math.abs(toY - yRef.current)
           const total = Math.abs(toY - fromY)
