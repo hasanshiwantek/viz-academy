@@ -1,5 +1,5 @@
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useAnimationControls } from "framer-motion";
 import quality1 from "../../assets/quality/quality1.svg";
 import quality2 from "../../assets/quality/quality2.svg";
 import quality3 from "../../assets/quality/quality3.svg";
@@ -53,6 +53,7 @@ const InfiniteImageColumn = ({ sources, mobile = false, durationSec = 22, revers
   const blockH = h * 3 + g * 2;
   const step = blockH + g;
   const viewH = blockH;
+  const controls = useAnimationControls()
 
   const renderStrip = (copyKey) => (
     <div className="flex flex-col shrink-0" style={{ gap: g }}>
@@ -72,15 +73,75 @@ const InfiniteImageColumn = ({ sources, mobile = false, durationSec = 22, revers
 
   const fromY = reverse ? -step : 0;
   const toY = reverse ? 0 : -step;
+  const yRef = React.useRef(fromY)
 
+  React.useEffect(() => {
+    controls.start({
+      y: [fromY, toY],
+      transition: {
+        duration: durationSec,
+        repeat: Infinity,
+        ease: "linear",
+      },
+    });
+  }, []);
   return (
     <div className="shrink-0 overflow-hidden" style={{ width: w, height: viewH }}>
       <motion.div
+        // className="flex flex-col will-change-transform"
+        // style={{ gap: g }}
+        // initial={{ y: fromY }}
+        // animate={{ y: [fromY, toY] }}
+        // transition={{ duration: durationSec, repeat: Infinity, ease: "linear" }}
+        // whileHover={{ animationPlayState: "paused" }}
+        // className="flex flex-col will-change-transform"
+        // style={{ gap: g }}
+        // initial={{ y: fromY }}
+        // animate={controls}
+        // onHoverStart={() => controls.stop()}
+        // onHoverEnd={() =>
+        //   controls.start({
+        //     y: [fromY, toY],
+        //     transition: {
+        //       duration: durationSec,
+        //       repeat: Infinity,
+        //       ease: "linear",
+        //     },
+        //   })
+        // }
         className="flex flex-col will-change-transform"
         style={{ gap: g }}
         initial={{ y: fromY }}
-        animate={{ y: [fromY, toY] }}
-        transition={{ duration: durationSec, repeat: Infinity, ease: "linear" }}
+        animate={controls}
+        onUpdate={(latest) => {
+          yRef.current = latest.y
+        }}
+        onHoverStart={() => controls.stop()}
+        // onHoverEnd={() =>
+        //   controls.start({
+        //     y: [yRef.current, toY],
+        //     transition: {
+        //       duration: durationSec,
+        //       repeat: Infinity,
+        //       ease: "linear",
+        //     },
+        //   })
+        // }
+        onHoverEnd={() => {
+          const remaining = Math.abs(toY - yRef.current)
+          const total = Math.abs(toY - fromY)
+          const duration = durationSec * (remaining / total)
+
+          controls.start({
+            y: [yRef.current, toY],
+            transition: {
+              duration,
+              repeat: Infinity,
+              ease: "linear",
+            },
+          })
+        }}
+
       >
         {renderStrip("a")}
         {renderStrip("b")}
