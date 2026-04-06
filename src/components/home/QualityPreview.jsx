@@ -74,42 +74,58 @@ const InfiniteImageColumn = ({ sources, mobile = false, durationSec = 22, revers
   const fromY = reverse ? -step : 0;
   const toY = reverse ? 0 : -step;
   const yRef = React.useRef(fromY)
+  const resumeAnimation = () => {
+    const remaining = Math.abs(toY - yRef.current)
+    const total = Math.abs(toY - fromY)
+    const duration = durationSec * (remaining / total)
 
-  React.useEffect(() => {
     controls.start({
-      y: [fromY, toY],
+      y: toY,
+      transition: {
+        duration,
+        ease: "linear"
+      }
+    }).then(() => {
+      controls.set({ y: fromY })
+
+      controls.start({
+        y: toY,
+        transition: {
+          duration: durationSec,
+          repeat: Infinity,
+          ease: "linear"
+        }
+      })
+    })
+  }
+  React.useEffect(() => {
+    controls.set({ y: fromY })
+
+    controls.start({
+      y: toY,
       transition: {
         duration: durationSec,
         repeat: Infinity,
-        ease: "linear",
-      },
-    });
-  }, []);
+        ease: "linear"
+      }
+    })
+  }, [fromY, toY, durationSec])
   return (
     <div className="shrink-0 overflow-hidden" style={{ width: w, height: viewH }}>
       <motion.div
-        className="flex flex-col will-change-transform"
-        style={{ gap: g }}
+        className="flex flex-col"
+        style={{
+          gap: g,
+          willChange: "transform",
+          transform: "translate3d(0,0,0)"
+        }}
         initial={{ y: fromY }}
         animate={controls}
         onUpdate={(latest) => {
           yRef.current = latest.y
         }}
         onHoverStart={() => controls.stop()}
-        // onHoverEnd={() => {
-        //   const remaining = Math.abs(toY - yRef.current)
-        //   const total = Math.abs(toY - fromY)
-        //   const duration = durationSec * (remaining / total)
 
-        //   controls.start({
-        //     y: [yRef.current, toY],
-        //     transition: {
-        //       duration,
-        //       repeat: Infinity,
-        //       ease: "linear",
-        //     },
-        //   })
-        // }}
         onHoverEnd={() => {
           const remaining = Math.abs(toY - yRef.current)
           const total = Math.abs(toY - fromY)
@@ -119,22 +135,24 @@ const InfiniteImageColumn = ({ sources, mobile = false, durationSec = 22, revers
             y: toY,
             transition: {
               duration,
-              ease: "linear",
-              onComplete: () => {
-                controls.set({ y: fromY })
-                controls.start({
-                  y: toY,
-                  transition: {
-                    duration: durationSec,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }
-                })
-              }
+              ease: "linear"
             }
+          }).then(() => {
+            controls.set({ y: fromY })
+
+            controls.start({
+              y: toY,
+              transition: {
+                duration: durationSec,
+                repeat: Infinity,
+                ease: "linear"
+              }
+            })
           })
         }}
 
+        onTouchStart={() => controls.stop()}
+        onTouchEnd={resumeAnimation}
       >
         {renderStrip("a")}
         {renderStrip("b")}
