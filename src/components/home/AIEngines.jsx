@@ -2,20 +2,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import img1 from "../../assets/ai-engine1.png";
-import img2 from "../../assets/ai-engine2.png";
-import img3 from "../../assets/ai-engine3.png";
-import img4 from "../../assets/ai-engine4.jpg";
-import img5 from "../../assets/ai-engine5.png";
-import img6 from "../../assets/ai-engine6.jpg";
-import img7 from "../../assets/ai-engine7.png";
-import img8 from "../../assets/ai-engine8.png";
-
+import img2 from "../../assets/Engines/kling-icon.png";
+import img3 from "../../assets/Engines/bytedance-icon.png";
+import img4 from "../../assets/Engines/magnific-icon.png";
+import img5 from "../../assets/Engines/google-icon.png";
+import img6 from "../../assets/Engines/meshy-icon.png";
+import img7 from "../../assets/Engines/tripodo-icon.png";
+import img8 from "../../assets/Engines/sora-icon.png";
 const engines = [
-  { id: 1, name: "Nano Banana PRO", category: "Image Generation", icon: img1 },
+  { id: 1, name: "VEO", category: "Video Engine", icon: img5 },
   { id: 2, name: "Kling", category: "Video Generation", icon: img2 },
   { id: 3, name: "Seedream", category: "Creative AI", icon: img3 },
   { id: 4, name: "Magnific", category: "AI Upscaling", icon: img4 },
-  { id: 5, name: "VEO", category: "Video Engine", icon: img5 },
+  { id: 5, name: "Nano Banana PRO", category: "Image Generation", icon: img5 },
   { id: 6, name: "Meshy AI", category: "3D Generation", icon: img6 },
   { id: 7, name: "Tripo3D", category: "3D Modeling", icon: img7 },
   { id: 8, name: "Sora", category: "Video AI", icon: img8 },
@@ -225,6 +224,8 @@ const AIEngines = () => {
         ? SLIDER_CARD_CENTER.width
         : SLIDER_CARD_SIDE.width;
 
+  const sliderMaxH = xlMode ? XL_CENTER.height : SLIDER_CARD_CENTER.height;
+
   return (
     <section className="py-20 px-6 flex justify-center flex-col items-center">
     <div className="w-full rounded-2xl">
@@ -268,7 +269,6 @@ const AIEngines = () => {
             {engines.map((e, i) => {
               const isActive = activeIndex === i;
               const isHovered = hoveredTabIndex === i;
-              const showAnim = isActive || isHovered;
               return (
                 <button
                   key={e.id}
@@ -276,40 +276,14 @@ const AIEngines = () => {
                   onClick={() => setActiveIndex(i)}
                   onMouseEnter={() => setHoveredTabIndex(i)}
                   onMouseLeave={() => setHoveredTabIndex(null)}
-                  className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden"
-                  style={{ padding: "2px" }}
+                  className="flex-shrink-0 rounded-lg text-sm font-medium whitespace-nowrap"
                 >
-                  {showAnim && (
-                    <>
-                      <div
-                        className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none"
-                        style={{ zIndex: 0 }}
-                      >
-                        <div
-                          className="absolute"
-                          style={{
-                            background:
-                              "linear-gradient(90deg, rgba(0,255,255,0) 0%, #8ef5e8 25%, #ff9b7a 50%, #ffdc7a 75%, rgba(0,255,255,0) 100%)",
-                            height: "300px",
-                            width: "200px",
-                            top: "50%",
-                            transformOrigin: "top center",
-                            animation: "gradient-spin 3s linear infinite",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className="absolute inset-[2px] rounded-[6px] z-10 pointer-events-none"
-                        style={{ background: "rgb(3,6,18)" }}
-                      />
-                    </>
-                  )}
                   <span
-                    className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200"
+                    className="block px-3 py-2 rounded-[6px] transition-colors duration-200"
                     style={{
-                      color: showAnim ? "var(--text-color)" : "rgba(152, 162, 179, 1)",
-                      background: showAnim ? "rgb(3,6,18)" : "transparent",
-                      border: showAnim ? "none" : "1px solid rgba(255,255,255,0.08)",
+                      color: isActive ? "var(--text-color)" : isHovered ? "rgba(220, 224, 235, 1)" : "rgba(152, 162, 179, 1)",
+                      background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                      border: "1px solid rgba(255,255,255,0.1)",
                     }}
                   >
                     {e.name}
@@ -322,9 +296,9 @@ const AIEngines = () => {
           <div ref={sliderRef} className="relative w-full overflow-hidden pt-2">
             <motion.div
               className="flex items-center"
-              style={{ width: trackW, gap: xlMode ? 0 : SLIDER_GAP }}
+              style={{ width: trackW, gap: xlMode ? 0 : SLIDER_GAP, minHeight: sliderMaxH }}
               animate={{ x: xVal }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              transition={{ type: "tween", duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               drag="x"
               dragConstraints={sliderWidth > 0 ? { left: sliderWidth - trackW, right: 0 } : undefined}
               dragElastic={xlMode ? 0.06 : 0.08}

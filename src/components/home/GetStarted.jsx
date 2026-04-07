@@ -201,7 +201,7 @@ const GetStarted = () => {
               className="flex items-center"
               style={{ marginBottom: i < steps.length - 1 ? 60 : 0, position: 'relative', zIndex: 1 }}
             >
-              <div style={{ width: LEFT_COL, display: 'flex', justifyContent: 'flex-end', rotate: '-13.47deg' }}>
+              <div style={{ width: LEFT_COL, display: 'flex', justifyContent: 'flex-end',}}>
                 {!isRight && (
                   <StepCard title={step.title} desc={step.desc} width={step.width} height={step.height} animationDelay={step.animationDelay} />
                 )}
@@ -209,7 +209,7 @@ const GetStarted = () => {
               <div style={{ width: CONNECTOR, height: 24, background: !isRight ? LINE_BG : 'transparent', flexShrink: 0 }} />
               <NumberBadge number={step.number} />
               <div style={{ width: CONNECTOR, height: 24, background: isRight ? LINE_BG : 'transparent', flexShrink: 0 }} />
-              <div style={{ width: RIGHT_COL, display: 'flex', justifyContent: 'flex-start', rotate: '13.47deg' }}>
+              <div style={{ width: RIGHT_COL, display: 'flex', justifyContent: 'flex-start',  }}>
                 {isRight && (
                   <StepCard title={step.title} desc={step.desc} width={step.width} height={step.height} animationDelay={step.animationDelay} />
                 )}
