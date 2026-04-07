@@ -80,7 +80,7 @@ const FavoriteApp = () => {
   }, [activeIndex])
 
   return (
-    <div className="flex items-center justify-center px-5 py-10">
+    <div id="products" className="flex items-center justify-center px-5 py-10 scroll-mt-[88px]">
       <style>{`
         @property --angle {
           syntax: '<angle>';
@@ -147,7 +147,6 @@ const FavoriteApp = () => {
             {mobileCards.map((card, i) => {
               const isActive = activeIndex === i
               const isHovered = hoveredTabIndex === i
-              const showAnim = isActive || isHovered
               return (
                 <button
                   key={i}
@@ -155,40 +154,14 @@ const FavoriteApp = () => {
                   onClick={() => setActiveIndex(i)}
                   onMouseEnter={() => setHoveredTabIndex(i)}
                   onMouseLeave={() => setHoveredTabIndex(null)}
-                  className="flex-shrink-0 relative rounded-lg text-sm font-medium whitespace-nowrap overflow-hidden"
-                  style={{ padding: '2px' }}
+                  className="flex-shrink-0 rounded-lg text-sm font-medium whitespace-nowrap"
                 >
-                  {showAnim && (
-                    <>
-                      <div
-                        className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none"
-                        style={{ zIndex: 0 }}
-                      >
-                        <div
-                          className="absolute"
-                          style={{
-                            background:
-                              'linear-gradient(90deg, rgba(0,255,255,0) 0%, #8ef5e8 25%, #ff9b7a 50%, #ffdc7a 75%, rgba(0,255,255,0) 100%)',
-                            height: '300px',
-                            width: '200px',
-                            top: '50%',
-                            transformOrigin: 'top center',
-                            animation: 'gradient-spin 3s linear infinite',
-                          }}
-                        />
-                      </div>
-                      <div
-                        className="absolute inset-[2px] rounded-[6px] z-10 pointer-events-none"
-                        style={{ background: 'rgb(3,6,18)' }}
-                      />
-                    </>
-                  )}
                   <span
-                    className="relative z-20 block px-3 py-2 rounded-[6px] transition-colors duration-200"
+                    className="block px-3 py-2 rounded-[6px] transition-colors duration-200"
                     style={{
-                      color: showAnim ? 'var(--text-color)' : 'rgba(152, 162, 179, 1)',
-                      background: showAnim ? 'rgb(3,6,18)' : 'transparent',
-                      border: showAnim ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                      color: isActive ? 'var(--text-color)' : isHovered ? 'rgba(220, 224, 235, 1)' : 'rgba(152, 162, 179, 1)',
+                      background: isActive ? 'rgba(255,255,255,0.08)' : 'transparent',
+                      border: '1px solid rgba(255,255,255,0.1)',
                     }}
                   >
                     {card.title}

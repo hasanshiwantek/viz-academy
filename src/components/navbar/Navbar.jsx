@@ -2,10 +2,21 @@ import { useState } from 'react'
 import navlogo from '../../assets/nav-logo.png'
 import hamlogo from '../../assets/ham-logo.svg'
 
+const navLinks = [
+  { label: 'Home', sectionId: 'home' },
+  { label: 'Products', sectionId: 'products' },
+  { label: 'Pricing', sectionId: 'pricing' },
+  { label: 'How It Works', sectionId: 'how-it-works' },
+]
+
+const scrollToSection = (sectionId) => {
+  const el = document.getElementById(sectionId)
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
 const Navbar = () => {
   const [active, setActive] = useState('Home')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const navLinks = ['Home', 'Products', 'Pricing', 'How It Works']
 
   return (
   <nav
@@ -27,17 +38,21 @@ const Navbar = () => {
         className="hidden md:flex md:w-[40%] lg:w-[30%] xl:w-[25%] 2xl:w-[23.4%] items-center gap-1 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-2"
         style={{ height: '44px' }}
       >
-        {navLinks.map((link) => (
+        {navLinks.map(({ label, sectionId }) => (
           <button
-            key={link}
-            onClick={() => setActive(link)}
+            key={label}
+            type="button"
+            onClick={() => {
+              setActive(label)
+              scrollToSection(sectionId)
+            }}
             className={`flex-1 h-full rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-              active === link
+              active === label
                 ? 'bg-white/10 text-white border border-white/20'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
-            {link}
+            {label}
           </button>
         ))}
       </div>
@@ -87,20 +102,22 @@ const Navbar = () => {
         <div className="absolute top-[88px] left-0 w-full bg-black/95 backdrop-blur-lg border-b border-white/10 md:hidden">
           <div className="flex flex-col p-6 gap-4 z-50">
             {/* Mobile Nav Links */}
-            {navLinks.map((link) => (
+            {navLinks.map(({ label, sectionId }) => (
               <button
-                key={link}
+                key={label}
+                type="button"
                 onClick={() => {
-                  setActive(link)
+                  setActive(label)
+                  scrollToSection(sectionId)
                   setIsMenuOpen(false)
                 }}
                 className={`w-full py-3 px-4 rounded-lg text-left transition-all ${
-                  active === link
+                  active === label
                     ? 'bg-white/10 text-white border border-white/20'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                {link}
+                {label}
               </button>
             ))}
 

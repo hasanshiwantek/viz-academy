@@ -342,7 +342,8 @@ const PricingPlan = () => {
 
   return (
     <section
-      className="min-h-screen flex flex-col items-center py-20 px-6"
+      id="pricing"
+      className="min-h-screen flex flex-col items-center py-20 px-6 scroll-mt-[88px]"
       style={{ background: "rgb(3, 6, 18)", fontFamily: "'Inter', sans-serif" }}
     >
       <style>{`
