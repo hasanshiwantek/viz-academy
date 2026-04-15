@@ -153,7 +153,7 @@ const Navbar = () => {
                     setActive(label)
                     // scrollToSection(sectionId)
                     if (label === 'How It Works') {
-                      setShowHowItWorks(true);
+                      setShowDownloadvizMaker(true);
                     } else {
                       scrollToSection(sectionId);
                     }
