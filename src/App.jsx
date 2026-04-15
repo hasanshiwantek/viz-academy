@@ -22,20 +22,20 @@ function App() {
       <main className="w-full min-w-0 overflow-x-hidden">
         <Navbar />
         <HeroSection />
-          <AIFeatures />
-        <AIEngines /> 
+        <AIFeatures />
+        <AIEngines />
         <FavoriteApp />
         <SecureWorkflows />
         <GetStarted />
         <ModelCarousel />
         <ArrowCard />
-        <QualityPreview/>
+        <QualityPreview />
         <PricingPlan />
         <HappyUsers />
         <StatsBar />
-        <FAQ/>
+        <FAQ />
         <Workflow />
-        <Footer /> 
+        <Footer />
       </main>
     </>
   );

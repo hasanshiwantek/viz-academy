@@ -84,7 +84,7 @@ const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
 
 const HeroSection = () => {
   return (
-    <section className="relative w-full min-h-screen overflow-x-clip">
+    <section id="home" className="relative w-full min-h-screen overflow-x-clip scroll-mt-[88px]">
       {/* ✅ ONLY THIS STYLE TAG ADDED */}
       <style>{`
         @property --angle {
