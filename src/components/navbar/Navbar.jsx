@@ -8,17 +8,17 @@ const Navbar = () => {
   const navLinks = ['Home', 'Products', 'Pricing', 'How It Works']
 
   return (
-  <nav
-    className="fixed top-0 left-0 right-0 z-[100] w-full flex items-center justify-between px-5 lg:px-10 xl:px-0 xl:justify-evenly backdrop-blur-md bg-black/50 border-b border-white/10"
-    style={{ height: '88px' }}
-  >
+    <nav
+      className="fixed top-0 left-0 right-0 z-[100] w-full flex items-center justify-between px-5 lg:px-10 xl:px-0 xl:justify-evenly backdrop-blur-md bg-black/50 border-b border-white/10"
+      style={{ height: '88px' }}
+    >
       {/* Logo */}
       <div className="flex items-center">
         <img
           src={navlogo}
           alt="VizMaker Logo"
           className="w-auto h-[40px] sm:h-[60px]"
-          style={{  objectFit: 'contain' }}
+          style={{ objectFit: 'contain' }}
         />
       </div>
 
@@ -31,11 +31,10 @@ const Navbar = () => {
           <button
             key={link}
             onClick={() => setActive(link)}
-            className={`flex-1 h-full rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-              active === link
+            className={`flex-1 h-full rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${active === link
                 ? 'bg-white/10 text-white border border-white/20'
                 : 'text-gray-400 hover:text-white'
-            }`}
+              }`}
           >
             {link}
           </button>
@@ -45,12 +44,12 @@ const Navbar = () => {
       {/* Desktop Download Button — hidden on mobile */}
       <button
         className="hidden md:flex relative md:w-[25%] lg:w-[15%] xl:w-[14%] 2xl:w-[13.7%] items-center justify-center gap-2 text-[#00FFFF] rounded-full text-xs sm:text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap overflow-hidden"
-        style={{ 
+        style={{
           height: '40px',
           background: 'linear-gradient(90deg, rgba(9, 49, 49, 0.2) 0%, rgba(0, 255, 255, 0.2) 122.41%)'
         }}
       >
-        <span 
+        <span
           className="absolute inset-0 rounded-full"
           style={{
             padding: '2px',
@@ -61,26 +60,26 @@ const Navbar = () => {
             pointerEvents: 'none'
           }}
         />
-        
+
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
         </svg>
         Download VizMaker
       </button>
 
       {/* Mobile Hamburger Button */}
-<button
-  onClick={() => setIsMenuOpen(!isMenuOpen)}
-  className="flex md:hidden w-10 h-10 items-center justify-center"
->
-  <img 
-    src={hamlogo} 
-    alt="Menu" 
-    className={`w-12 h-10 transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''}`} 
-  />
-</button>
+      <button
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        className="flex md:hidden w-10 h-10 items-center justify-center"
+      >
+        <img
+          src={hamlogo}
+          alt="Menu"
+          className={`w-12 h-10 transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''}`}
+        />
+      </button>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
@@ -94,11 +93,10 @@ const Navbar = () => {
                   setActive(link)
                   setIsMenuOpen(false)
                 }}
-                className={`w-full py-3 px-4 rounded-lg text-left transition-all ${
-                  active === link
+                className={`w-full py-3 px-4 rounded-lg text-left transition-all ${active === link
                     ? 'bg-white/10 text-white border border-white/20'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
+                  }`}
               >
                 {link}
               </button>
@@ -107,12 +105,12 @@ const Navbar = () => {
             {/* Mobile Download Button */}
             <button
               className="relative flex items-center justify-center gap-2 text-[#00FFFF] rounded-full text-sm font-medium hover:opacity-90 transition-all mt-4 overflow-hidden"
-              style={{ 
+              style={{
                 height: '44px',
                 background: 'linear-gradient(90deg, rgba(9, 49, 49, 0.2) 0%, rgba(0, 255, 255, 0.2) 122.41%)'
               }}
             >
-              <span 
+              <span
                 className="absolute inset-0 rounded-full"
                 style={{
                   padding: '2px',
@@ -123,11 +121,11 @@ const Navbar = () => {
                   pointerEvents: 'none'
                 }}
               />
-              
+
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
               Download VizMaker
             </button>
