@@ -30,14 +30,7 @@ const Navbar = () => {
         onClose={() => setShowHowItWorks(false)}
       />}
       {/* Desktop Modal */}
-      {/* <div className="hidden md:block">
-        {showDownloadvizMaker && (
-          <DownloadvizMakermodal
-            isOpen={showDownloadvizMaker}
-            onClose={() => setShowDownloadvizMaker(false)}
-          />
-        )}
-      </div> */}
+      
       {mobile ? <DownloadvizMakerForMobilemodal
             isOpen={showDownloadvizMaker}
             onClose={() => setShowDownloadvizMaker(false)}
@@ -47,15 +40,6 @@ const Navbar = () => {
           />
       }
 
-      {/* Mobile Modal */}
-      {/* <div className="block md:hidden">
-        {showDownloadvizMaker && (
-          <DownloadvizMakerForMobilemodal
-            isOpen={showDownloadvizMaker}
-            onClose={() => setShowDownloadvizMaker(false)}
-          />
-        )}
-      </div> */}
       <nav
         className="fixed top-0 left-0 right-0 z-[100] w-full flex items-center justify-between px-5 lg:px-10 xl:px-0 xl:justify-evenly backdrop-blur-md bg-black/50 border-b border-white/10"
         style={{ height: '88px' }}

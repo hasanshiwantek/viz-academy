@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { motion } from "framer-motion";
 import bgNew from "../../assets/bg-new.png";
-import cubeImg from "../../assets/cube.png";
-import switchImg from "../../assets/switch-btn-and-arrow-top.png";
-import cursorIcon from "../../assets/cursor-icon.png";
+import cubeImg from "../../assets/cube-complete-img.png";
 
 const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
@@ -89,40 +87,6 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                                         height: '100%',
                                         objectFit: 'contain',
                                         objectPosition: 'bottom left',
-                                    }}
-                                />
-
-                                {/* Cursor Icon */}
-                                <motion.img
-                                    src={cursorIcon}
-                                    alt="cursor"
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ duration: 0.4, delay: 0.45 }}
-                                    style={{
-                                        position: 'absolute',
-                                        top: '140px',
-                                        right: '62px',
-                                        width: '65px',
-                                        height: 'auto',
-                                        zIndex: 3,
-                                    }}
-                                />
-
-                                {/* Switch/Toggle */}
-                                <motion.img
-                                    src={switchImg}
-                                    alt="switchImg"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.3 }}
-                                    style={{
-                                        position: 'absolute',
-                                        bottom: '14px',
-                                        right: '62px',
-                                        width: '65px',
-                                        height: 'auto',
-                                        zIndex: 3,
                                     }}
                                 />
                             </div>
