@@ -215,8 +215,10 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                                     width: '100%',
                                     height: "52px",
                                 }}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
+                               whileHover={!loading ? { scale: 1.05 } : {}}
+                                whileTap={!loading ? { scale: 0.95 } : {}}
+                                onClick={handleGetApp}
+                                disabled={loading}
                             >
                                 <span
                                     className="absolute inset-0 rounded-full"
@@ -229,7 +231,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                                         pointerEvents: "none",
                                     }}
                                 />
-                                Get the app
+                                {loading ? "loading..." :"Get the app"}
                             </motion.button>
                             {zapStatus && (
                                 <motion.div
