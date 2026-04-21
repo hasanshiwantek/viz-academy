@@ -262,7 +262,7 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                                 }}
                             />
 
-                            Get the app
+                                                          {loading ? "loading..." :"Get the app"}
                         </motion.button>
                         {zapStatus && (
                             <motion.div
