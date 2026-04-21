@@ -2,12 +2,19 @@ import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { motion } from "framer-motion";
 import bgNew from "../../assets/bg-new.png";
-import cubeImg from "../../assets/cube.png"; // ← apna 3D cube image yahan lagao
-import switchImg from "../../assets/switch-btn-and-arrow-top.png"; // ← apna 3D cube image yahan lagao
-import cursorIcon from "../../assets/cursor-icon.png"; // ← apna 3D cube image yahan lagao
+import cubeImg from "../../assets/cube.png";
+import switchImg from "../../assets/switch-btn-and-arrow-top.png";
+import cursorIcon from "../../assets/cursor-icon.png";
+import { ZAPIER_WEBHOOK } from '../../utils/constant';
+
+
 
 const DownloadvizMakermodal = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState('');
+    const [zapStatus, setZapStatus] = useState(null); // null | "success" | "error"
 
     useEffect(() => {
         const handleEsc = (e) => {
@@ -23,8 +30,51 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
         };
     }, [isOpen, onClose]);
 
-    if (!isOpen) return null;
 
+    useEffect(() => {
+        if (isOpen) {
+            setEmail('');
+            setSubmitted(false);
+            setError('');
+            setLoading(false);
+            setZapStatus(null);
+        }
+    }, [isOpen]);
+
+    if (!isOpen) return null;
+    const handleGetApp = async () => {
+        if (!email.trim()) { setError('Please enter your email.'); return; }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) { setError('Please enter a valid email.'); return; }
+
+        setError('');
+        setLoading(true);
+        setZapStatus(null);
+
+        try {
+            const res = await fetch(ZAPIER_WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    "your-email": email,
+                    "src": window.location.href,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (data.status === "success") {
+                setZapStatus("success");
+                setEmail("")
+            } else {
+                setZapStatus("error");
+            }
+        } catch (err) {
+            setZapStatus("error");
+        } finally {
+            setLoading(false);
+        }
+    };
     return ReactDOM.createPortal(
         <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-6"
@@ -191,8 +241,12 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                                 width: '100%',
                                 height: "56px"
                             }}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            // whileHover={{ scale: 1.05 }}
+                            // whileTap={{ scale: 0.95 }}
+                            whileHover={!loading ? { scale: 1.05 } : {}}
+                            whileTap={!loading ? { scale: 0.95 } : {}}
+                            onClick={handleGetApp}
+                            disabled={loading}
                         >
                             <span
                                 className="absolute inset-0 rounded-full"
@@ -210,6 +264,64 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
 
                             Get the app
                         </motion.button>
+                        {zapStatus && (
+                            <motion.div
+                                key="status"
+                                initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ duration: 0.4 }}
+                                style={{
+                                    width: '100%',
+                                    borderRadius: '14px',
+                                    padding: '16px 20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '12px',
+                                    textAlign: 'left',
+                                    background: zapStatus === "success"
+                                        ? 'rgba(0, 229, 150, 0.08)'
+                                        : 'rgba(255, 80, 80, 0.08)',
+                                    border: zapStatus === "success"
+                                        ? '1px solid rgba(0, 229, 150, 0.3)'
+                                        : '1px solid rgba(255, 80, 80, 0.3)',
+                                }}
+                            >
+                                {/* Icon */}
+                                <div style={{
+                                    width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    background: zapStatus === "success"
+                                        ? 'rgba(0, 229, 150, 0.15)'
+                                        : 'rgba(255, 80, 80, 0.15)',
+                                }}>
+                                    {zapStatus === "success" ? (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e596" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                    ) : (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5050" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    )}
+                                </div>
+
+                                {/* Text */}
+                                <div>
+                                    <p style={{
+                                        margin: 0, fontWeight: 600, fontSize: '0.9rem',
+                                        color: zapStatus === "success" ? '#00e596' : '#ff5050',
+                                    }}>
+                                        {zapStatus === "success" ? "You're on the list! 🎉" : "Something went wrong"}
+                                    </p>
+                                    <p style={{ margin: '3px 0 0 0', fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>
+                                        {zapStatus === "success"
+                                            ? "We'll send the download link to your inbox shortly."
+                                            : "Please try again or contact support."}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
                     </div>
                     {/* </div> */}
                 </div>
