@@ -57,7 +57,7 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({
                     "your-email": email,
-                    "src": window.location.href,
+                    "src": window.location.pathname,
                 }),
             });
 
