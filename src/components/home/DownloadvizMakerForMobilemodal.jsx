@@ -50,7 +50,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({
                     "your-email": email,
-                    "src": window.location.href,
+                    "src": new URLSearchParams(window.location.search).get("src") || "direct",
                 }),
             });
 

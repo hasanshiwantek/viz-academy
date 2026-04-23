@@ -52,12 +52,13 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
         setZapStatus(null);
 
         try {
+
             const res = await fetch(ZAPIER_WEBHOOK, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({
                     "your-email": email,
-                    "src": window.location.href,
+                    "src": new URLSearchParams(window.location.search).get("src") || "direct",
                 }),
             });
 
