@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import DownloadvizMakermodal from "./DownloadvizMakermodal";
+import DownloadvizMakerForMobilemodal from "./DownloadvizMakerForMobilemodal";
 
 const SLIDER_CARD_CENTER = { width: 270, height: 554 };
 const SLIDER_CARD_SIDE = { width: 230, height: 455 };
 const SLIDER_GAP = 0;
-
+const mobile = window.innerWidth < 768
 const plans = [
   {
     id: "free",
@@ -101,192 +103,205 @@ const PricingCard = ({
   const sliderSize = isSliderCard
     ? (isSliderActive ? SLIDER_CARD_CENTER : SLIDER_CARD_SIDE)
     : null;
+  const [showDownloadvizMaker, setShowDownloadvizMaker] = useState(false);
+
 
   return (
-    /* Outer wrapper — clips the spinning beam to a rounded rect */
-    <div
-      onMouseEnter={() => !isSliderCard && setActivePlan(plan.id)}
-      onMouseLeave={() => !isSliderCard && setActivePlan(null)}
-      className="relative rounded-2xl cursor-pointer"
-      style={{
-        flex: isSliderCard ? undefined : 1,
-        padding: "2px",
-        overflow: "hidden",
-        transform:
-          isSliderCard && isSliderActive
-            ? "translateY(0) scale(1)"
-            : active
-              ? "translateY(-6px) scale(1.02)"
-              : "translateY(0) scale(1)",
-        transition: "transform 0.3s ease",
-        zIndex: active ? 2 : 1,
-        ...(sliderSize && {
-          width: sliderSize.width,
-          height: sliderSize.height,
-          boxSizing: "border-box",
-        }),
-      }}
-    >
-      {/* ── SPINNING CONIC BORDER (active) ──────────────────────────── */}
-      {active ? (
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            /* Make it a square centred on the card so the conic gradient
-               sweeps evenly around all four sides */
-            inset: "-100%",
-            background:
-              "conic-gradient(from 0deg, transparent 0deg, #8ef5e8 60deg, #00ffff 90deg, #ff9b7a 150deg, #ffdc7a 210deg, transparent 270deg)",
-            animation: "pricingBorderSpin 2.5s linear infinite",
-          }}
-        />
-      ) : (
-        /* ── STATIC BORDER (inactive) ───────────────────────────────── */
-        <div
-          className="absolute inset-0 rounded-2xl pointer-events-none"
-          style={{ border: "1px solid rgba(255,255,255,0.1)" }}
-        />
-      )}
+    <React.Fragment>
+      {mobile ? <DownloadvizMakerForMobilemodal
+        isOpen={showDownloadvizMaker}
+        onClose={() => setShowDownloadvizMaker(false)}
+      /> : <DownloadvizMakermodal
+        isOpen={showDownloadvizMaker}
+        onClose={() => setShowDownloadvizMaker(false)}
+      />
+      }
 
-      {/* ── INNER CARD (sits on top, covers the spinner except the 2px rim) */}
       <div
-        className="relative rounded-2xl h-full flex flex-col overflow-hidden"
+        onMouseEnter={() => !isSliderCard && setActivePlan(plan.id)}
+        onMouseLeave={() => !isSliderCard && setActivePlan(null)}
+        className="relative rounded-2xl cursor-pointer"
         style={{
-          padding: isSliderCard && !isSliderActive ? 12 : 28,
-          backgroundColor: "rgb(10, 14, 30)",
-          zIndex: 1,
+          flex: isSliderCard ? undefined : 1,
+          padding: "2px",
+          overflow: "hidden",
+          transform:
+            isSliderCard && isSliderActive
+              ? "translateY(0) scale(1)"
+              : active
+                ? "translateY(-6px) scale(1.02)"
+                : "translateY(0) scale(1)",
+          transition: "transform 0.3s ease",
+          zIndex: active ? 2 : 1,
+          ...(sliderSize && {
+            width: sliderSize.width,
+            height: sliderSize.height,
+            boxSizing: "border-box",
+          }),
         }}
       >
-        {/* Logo */}
-        <div style={{ marginBottom: isSliderCard && !isSliderActive ? 8 : 16 }}>
-          <LogoIcon active={active} />
-        </div>
-
-        {/* Name */}
-        <h3
-          className="font-medium mb-1 leading-tight"
-          style={{
-            color: "#ffffff",
-            fontSize: isSliderCard && !isSliderActive ? 16 : 24,
-          }}
-        >
-          {plan.name}
-        </h3>
-
-        {/* Subtitle */}
-        <p
-          className="mb-3"
-          style={{
-            color: "rgba(255,255,255,0.8)",
-            fontSize: isSliderCard && !isSliderActive ? 11 : 14,
-          }}
-        >
-          {plan.subtitle}
-        </p>
-
-        {/* Divider */}
-        <div
-          className="transition-all duration-300"
-          style={{
-            height: "1px",
-            marginBottom: isSliderCard && !isSliderActive ? 8 : 20,
-            background: active
-              ? "linear-gradient(90deg, rgba(0,255,255,0.5), transparent)"
-              : "rgba(255,255,255,0.08)",
-          }}
-        />
-
-        {/* Price */}
-        <div
-          className="flex items-end gap-2"
-          style={{ marginBottom: isSliderCard && !isSliderActive ? 8 : 24 }}
-        >
-          <span
-            className="font-extrabold leading-none"
+        {/* ── SPINNING CONIC BORDER (active) ──────────────────────────── */}
+        {active ? (
+          <div
+            className="absolute pointer-events-none"
             style={{
-              fontSize: isSliderCard && !isSliderActive ? 28 : 40,
-              letterSpacing: "-0.03em",
+              /* Make it a square centred on the card so the conic gradient
+                 sweeps evenly around all four sides */
+              inset: "-100%",
               background:
-                "linear-gradient(90deg, #00ffff 0%, #ff7e57 40%, #ffc457 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
+                "conic-gradient(from 0deg, transparent 0deg, #8ef5e8 60deg, #00ffff 90deg, #ff9b7a 150deg, #ffdc7a 210deg, transparent 270deg)",
+              animation: "pricingBorderSpin 2.5s linear infinite",
+            }}
+          />
+        ) : (
+          /* ── STATIC BORDER (inactive) ───────────────────────────────── */
+          <div
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{ border: "1px solid rgba(255,255,255,0.1)" }}
+          />
+        )}
+
+        {/* ── INNER CARD (sits on top, covers the spinner except the 2px rim) */}
+        <div
+          className="relative rounded-2xl h-full flex flex-col overflow-hidden"
+          style={{
+            padding: isSliderCard && !isSliderActive ? 12 : 28,
+            backgroundColor: "rgb(10, 14, 30)",
+            zIndex: 1,
+          }}
+        >
+          {/* Logo */}
+          <div style={{ marginBottom: isSliderCard && !isSliderActive ? 8 : 16 }}>
+            <LogoIcon active={active} />
+          </div>
+
+          {/* Name */}
+          <h3
+            className="font-medium mb-1 leading-tight"
+            style={{
+              color: "#ffffff",
+              fontSize: isSliderCard && !isSliderActive ? 16 : 24,
             }}
           >
-            ${price === 0 ? "00" : price.toFixed(2)}
-          </span>
-          <span
-            className="mb-1"
+            {plan.name}
+          </h3>
+
+          {/* Subtitle */}
+          <p
+            className="mb-3"
             style={{
               color: "rgba(255,255,255,0.8)",
-              fontSize: isSliderCard && !isSliderActive ? 10 : 14,
+              fontSize: isSliderCard && !isSliderActive ? 11 : 14,
             }}
           >
-            / per month
-          </span>
-        </div>
+            {plan.subtitle}
+          </p>
 
-        {/* Features label */}
-        <p
-          className="text-white font-medium mb-2"
-          style={{
-            fontSize: isSliderCard && !isSliderActive ? 12 : 18,
-          }}
-        >
-          What you will get
-        </p>
+          {/* Divider */}
+          <div
+            className="transition-all duration-300"
+            style={{
+              height: "1px",
+              marginBottom: isSliderCard && !isSliderActive ? 8 : 20,
+              background: active
+                ? "linear-gradient(90deg, rgba(0,255,255,0.5), transparent)"
+                : "rgba(255,255,255,0.08)",
+            }}
+          />
 
-        {/* Features list */}
-        <ul
-          className="flex flex-col flex-grow overflow-y-auto"
-          style={{
-            gap: isSliderCard && !isSliderActive ? 6 : 16,
-            marginBottom: isSliderCard && !isSliderActive ? 8 : 32,
-          }}
-        >
-          {plan.features.map((f, i) => (
-            <li
-              key={i}
-              className="flex items-center gap-2"
+          {/* Price */}
+          <div
+            className="flex items-end gap-2"
+            style={{ marginBottom: isSliderCard && !isSliderActive ? 8 : 24 }}
+          >
+            <span
+              className="font-extrabold leading-none"
               style={{
-                color: "rgba(255,255,255,0.65)",
-                fontSize: isSliderCard && !isSliderActive ? 11 : 14,
+                fontSize: isSliderCard && !isSliderActive ? 28 : 40,
+                letterSpacing: "-0.03em",
+                background:
+                  "linear-gradient(90deg, #00ffff 0%, #ff7e57 40%, #ffc457 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
-              <span
+              ${price === 0 ? "00" : price.toFixed(2)}
+            </span>
+            <span
+              className="mb-1"
+              style={{
+                color: "rgba(255,255,255,0.8)",
+                fontSize: isSliderCard && !isSliderActive ? 10 : 14,
+              }}
+            >
+              / per month
+            </span>
+          </div>
+
+          {/* Features label */}
+          <p
+            className="text-white font-medium mb-2"
+            style={{
+              fontSize: isSliderCard && !isSliderActive ? 12 : 18,
+            }}
+          >
+            What you will get
+          </p>
+
+          {/* Features list */}
+          <ul
+            className="flex flex-col flex-grow overflow-y-auto"
+            style={{
+              gap: isSliderCard && !isSliderActive ? 6 : 16,
+              marginBottom: isSliderCard && !isSliderActive ? 8 : 32,
+            }}
+          >
+            {plan.features.map((f, i) => (
+              <li
+                key={i}
+                className="flex items-center gap-2"
                 style={{
-                  color: "rgba(255, 255, 255, 0.8)",
-                  flexShrink: 0,
-                  opacity: 0.85,
+                  color: "rgba(255,255,255,0.65)",
+                  fontSize: isSliderCard && !isSliderActive ? 11 : 14,
                 }}
               >
-                <CheckIcon />
-              </span>
-              {f}
-            </li>
-          ))}
-        </ul>
+                <span
+                  style={{
+                    color: "rgba(255, 255, 255, 0.8)",
+                    flexShrink: 0,
+                    opacity: 0.85,
+                  }}
+                >
+                  <CheckIcon />
+                </span>
+                {f}
+              </li>
+            ))}
+          </ul>
 
-        {/* CTA Button */}
-        <button
-          className="w-full rounded-full font-semibold transition-all duration-200"
-          style={{
-            padding: isSliderCard && !isSliderActive ? "10px 16px" : "16px",
-            fontSize: isSliderCard && !isSliderActive ? 12 : 15,
-            background: active
-              ? "linear-gradient(135deg, #093131 0%, #049B9B 50%, #00FFFF 100%)"
-              : "transparent",
-            border: active ? "none" : "1px solid rgba(0,255,255,0.35)",
-            color: "#ffffff",
-            cursor: "pointer",
-            letterSpacing: "-0.01em",
-            fontFamily: "Inter, sans-serif",
-          }}
-        >
-          Get Started
-        </button>
+          {/* CTA Button */}
+          <button
+            className="w-full rounded-full font-semibold transition-all duration-200"
+            style={{
+              padding: isSliderCard && !isSliderActive ? "10px 16px" : "16px",
+              fontSize: isSliderCard && !isSliderActive ? 12 : 15,
+              background: active
+                ? "linear-gradient(135deg, #093131 0%, #049B9B 50%, #00FFFF 100%)"
+                : "transparent",
+              border: active ? "none" : "1px solid rgba(0,255,255,0.35)",
+              color: "#ffffff",
+              cursor: "pointer",
+              letterSpacing: "-0.01em",
+              fontFamily: "Inter, sans-serif",
+            }}
+            onClick={() => setShowDownloadvizMaker(true)}
+          >
+            Get Started
+          </button>
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 

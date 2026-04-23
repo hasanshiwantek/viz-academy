@@ -1,9 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import heroBg from "../../assets/hero-section/hero section.svg";
 import card1 from "../../assets/card1.png";
 import card2 from "../../assets/card2.png";
 import card3 from "../../assets/card3.png";
+import DownloadvizMakerForMobilemodal from "./DownloadvizMakerForMobilemodal";
+import DownloadvizMakermodal from "./DownloadvizMakermodal";
+import HowItWorksModal from "./HowItWorksModal";
 
 const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
   const [hovered, setHovered] = useState(false);
@@ -83,10 +86,27 @@ const PhoneCard = ({ image, rotation, translateY, isCenter }) => {
 };
 
 const HeroSection = () => {
+  const mobile = window.innerWidth < 768
+  const [showDownloadvizMaker, setShowDownloadvizMaker] = useState(false);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+
   return (
-    <section id="home" className="relative w-full min-h-screen overflow-x-clip scroll-mt-[88px]">
-      {/* ✅ ONLY THIS STYLE TAG ADDED */}
-      <style>{`
+    <React.Fragment>
+      {mobile ? <DownloadvizMakerForMobilemodal
+        isOpen={showDownloadvizMaker}
+        onClose={() => setShowDownloadvizMaker(false)}
+      /> : <DownloadvizMakermodal
+        isOpen={showDownloadvizMaker}
+        onClose={() => setShowDownloadvizMaker(false)}
+      />
+      }
+      {showHowItWorks && <HowItWorksModal
+        isOpen={showHowItWorks}
+        onClose={() => setShowHowItWorks(false)}
+      />}
+      <section id="home" className="relative w-full min-h-screen overflow-x-clip scroll-mt-[88px]">
+        {/* ✅ ONLY THIS STYLE TAG ADDED */}
+        <style>{`
         @property --angle {
           syntax: '<angle>';
           initial-value: 0deg;
@@ -137,177 +157,179 @@ const HeroSection = () => {
         }
       `}</style>
 
-      {/* Animated Background */}
-      <motion.div
-        className="absolute inset-0 -z-10"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-        }}
-        animate={{
-          scale: [1, 1.08, 1],
-          x: [0, -15, 10, -5, 0],
-          y: [0, 10, -8, 12, 0],
-        }}
-        transition={{
-          duration: 30,
-          repeat: Infinity,
-          ease: [0.45, 0.05, 0.55, 0.95],
-        }}
-      />
-
-      {/* Navbar App.jsx mein fixed — hero ko top padding taaki content nav ke neeche na chhipe */}
-      {/* Main Content */}
-      <div
-        className="flex flex-col items-center justify-center text-center sm:px-4 w-full pt-[88px] sm:mt-12"
-        // style={{ paddingTop: "88px" }}
-      >
-        {/* Badge - fade in */}
+        {/* Animated Background */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex items-center justify-center gap-2 text-white text-sm px-4 py-1.5 rounded-md mt-8 mb-6 bg-white/5 backdrop-blur-sm"
+          className="absolute inset-0 -z-10"
           style={{
-            border: "1px solid #FFFFFF1A",
-            boxShadow:
-              "0 0 10px rgba(156, 163, 175, 0.1), 0 0 20px rgba(156, 163, 175, 0.05)",
+            backgroundImage: `url(${heroBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
           }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#22d3ee">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-          </svg>
-          AI-Powered app for designers
-        </motion.div>
+          animate={{
+            scale: [1, 1.08, 1],
+            x: [0, -15, 10, -5, 0],
+            y: [0, 10, -8, 12, 0],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: [0.45, 0.05, 0.55, 0.95],
+          }}
+        />
 
-        {/* Heading - stagger animation */}
-        <motion.h1
-          className="text-[2.5rem] sm:text-6xl md:text-7xl font-bold leading-tight mb-4"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+        {/* Navbar App.jsx mein fixed — hero ko top padding taaki content nav ke neeche na chhipe */}
+        {/* Main Content */}
+        <div
+          className="flex flex-col items-center justify-center text-center sm:px-4 w-full pt-[88px] sm:mt-12"
+        // style={{ paddingTop: "88px" }}
         >
-          <span
-            className="block bg-clip-text text-transparent"
+          {/* Badge - fade in */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center justify-center gap-2 text-white text-sm px-4 py-1.5 rounded-md mt-8 mb-6 bg-white/5 backdrop-blur-sm"
             style={{
-              backgroundImage:
-                "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 40%,  #030612 100%)",
+              border: "1px solid #FFFFFF1A",
+              boxShadow:
+                "0 0 10px rgba(156, 163, 175, 0.1), 0 0 20px rgba(156, 163, 175, 0.05)",
             }}
           >
-            Transform Your 3D
-          </span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#22d3ee">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg>
+            AI-Powered app for designers
+          </motion.div>
 
-          <motion.span
-            className="block bg-clip-text text-transparent md:mt-5"
-            style={{
-              backgroundImage:
-                "linear-gradient(90deg, #00FFFF 0%, #FF7E57 32%, #FFC457 60%, #00B2B2 100%)",
-            }}
+          {/* Heading - stagger animation */}
+          <motion.h1
+            className="text-[2.5rem] sm:text-6xl md:text-7xl font-bold leading-tight mb-4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <span
+              className="block bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 40%,  #030612 100%)",
+              }}
+            >
+              Transform Your 3D
+            </span>
+
+            <motion.span
+              className="block bg-clip-text text-transparent md:mt-5"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, #00FFFF 0%, #FF7E57 32%, #FFC457 60%, #00B2B2 100%)",
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              Workflow with AI
+            </motion.span>
+          </motion.h1>
+
+          {/* Subtext - fade in */}
+          <motion.p
+            className="text-gray-400 text-[14px] sm:text-lg max-w-100 md:max-w-[70%] lg:max-w-[50%] xl:max-w-[43%] 2xl:max-w-[32%] mx-auto mb-10 leading-relaxed"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
           >
-            Workflow with AI
-          </motion.span>
-        </motion.h1>
+            VizMaker is the only AI-powered app that works directly inside
+            SketchUp, 3DS Max, Revit, and more. Generate photorealistic renders
+            and 3D models instantly—no web uploads, no waiting.
+          </motion.p>
 
-        {/* Subtext - fade in */}
-        <motion.p
-          className="text-gray-400 text-[14px] sm:text-lg max-w-100 md:max-w-[70%] lg:max-w-[50%] xl:max-w-[43%] 2xl:max-w-[32%] mx-auto mb-10 leading-relaxed"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          VizMaker is the only AI-powered app that works directly inside
-          SketchUp, 3DS Max, Revit, and more. Generate photorealistic renders
-          and 3D models instantly—no web uploads, no waiting.
-        </motion.p>
-
-        {/* CTA Buttons - hover effects */}
-        <motion.div
-          className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-4 mb-16"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-        >
-          <motion.button
-            className="relative w-80 sm:w-auto flex items-center justify-center gap-2 text-white px-7 py-3.5 rounded-full font-medium text-sm md:text-lg transition-all duration-200 shadow-lg shadow-cyan-500/30 overflow-hidden"
-            style={{
-              background:
-                "linear-gradient(89.69deg, #00FFFF -1.81%, #003131 95.62%)",
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          {/* CTA Buttons - hover effects */}
+          <motion.div
+            className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-4 mb-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
           >
-            <span
-              className="absolute inset-0 rounded-full"
+            <motion.button
+              className="relative w-80 sm:w-auto flex items-center justify-center gap-2 text-white px-7 py-3.5 rounded-full font-medium text-sm md:text-lg transition-all duration-200 shadow-lg shadow-cyan-500/30 overflow-hidden"
               style={{
-                padding: "2px",
                 background:
-                  "linear-gradient(171.77deg, rgba(255, 255, 255, 0) -5.76%, rgba(255, 255, 255, 0.2) 32.96%, rgba(255, 255, 255, 0.7) 78.14%)",
-                WebkitMask:
-                  "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                WebkitMaskComposite: "xor",
-                maskComposite: "exclude",
-                pointerEvents: "none",
+                  "linear-gradient(89.69deg, #00FFFF -1.81%, #003131 95.62%)",
               }}
-            />
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowDownloadvizMaker(true)}
             >
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Download VizMaker
-          </motion.button>
+              <span
+                className="absolute inset-0 rounded-full"
+                style={{
+                  padding: "2px",
+                  background:
+                    "linear-gradient(171.77deg, rgba(255, 255, 255, 0) -5.76%, rgba(255, 255, 255, 0.2) 32.96%, rgba(255, 255, 255, 0.7) 78.14%)",
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "xor",
+                  maskComposite: "exclude",
+                  pointerEvents: "none",
+                }}
+              />
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download VizMaker
+            </motion.button>
 
-          <motion.button
-            className="relative flex items-center justify-center gap-2 text-cyan-300 px-7 py-3.5 w-80 sm:w-auto rounded-full font-medium text-sm md:text-lg transition-all duration-200 overflow-hidden"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(9, 49, 49, 0.2) 0%, rgba(0, 255, 255, 0.2) 122.41%)",
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span
-              className="absolute inset-0 rounded-full"
+            <motion.button
+              className="relative flex items-center justify-center gap-2 text-cyan-300 px-7 py-3.5 w-80 sm:w-auto rounded-full font-medium text-sm md:text-lg transition-all duration-200 overflow-hidden"
               style={{
-                padding: "2px",
                 background:
-                  "linear-gradient(171.77deg, rgba(255, 255, 255, 0.7) -5.76%, rgba(255, 255, 255, 0.2) 39.41%, rgba(255, 255, 255, 0) 78.14%)",
-                WebkitMask:
-                  "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                WebkitMaskComposite: "xor",
-                maskComposite: "exclude",
-                pointerEvents: "none",
+                  "linear-gradient(90deg, rgba(9, 49, 49, 0.2) 0%, rgba(0, 255, 255, 0.2) 122.41%)",
               }}
-            />
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowHowItWorks(true)}
             >
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <polygon points="10 8 16 11 10 14 10 8" fill="currentColor" />
-            </svg>
-            Watch Demo
-          </motion.button>
-        </motion.div>
+              <span
+                className="absolute inset-0 rounded-full"
+                style={{
+                  padding: "2px",
+                  background:
+                    "linear-gradient(171.77deg, rgba(255, 255, 255, 0.7) -5.76%, rgba(255, 255, 255, 0.2) 39.41%, rgba(255, 255, 255, 0) 78.14%)",
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "xor",
+                  maskComposite: "exclude",
+                  pointerEvents: "none",
+                }}
+              />
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <polygon points="10 8 16 11 10 14 10 8" fill="currentColor" />
+              </svg>
+              Watch Demo
+            </motion.button>
+          </motion.div>
 
-        {/* Phone Cards with Animated Borders */}
-        {/* <div className="w-full md:min-h-0">
+          {/* Phone Cards with Animated Borders */}
+          {/* <div className="w-full md:min-h-0">
           <div
             className="
               flex md:justify-center md:items-end
@@ -324,8 +346,9 @@ const HeroSection = () => {
             <PhoneCard image={card2} rotation={4.94} translateY={32} />
           </div>
         </div> */}
-      </div>
-    </section>
+        </div>
+      </section>
+    </React.Fragment>
   );
 };
 
