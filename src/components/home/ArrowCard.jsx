@@ -5,6 +5,8 @@ import ai from '../../assets/ai.svg'
 import b from '../../assets/b.svg'
 import a from '../../assets/a.svg'
 import colorImg from '../../assets/color.svg'
+import DownloadvizMakerForMobilemodal from './DownloadvizMakerForMobilemodal'
+import DownloadvizMakermodal from './DownloadvizMakermodal'
 
 
 const mobile = window.innerWidth < 768
@@ -101,10 +103,18 @@ const ArrowCard = () => {
   const [hoverWorkflow, setHoverWorkflow] = useState(false)
   const [clickWorkflow, setClickWorkflow] = useState(false)
   const [hoveredCardId, setHoveredCardId] = useState(null)
+  const [showDownloadvizMaker, setShowDownloadvizMaker] = useState(false);
   const arrowsActive = hoverWorkflow || clickWorkflow
-
   return (
     <>
+      {mobile ? <DownloadvizMakerForMobilemodal
+        isOpen={showDownloadvizMaker}
+        onClose={() => setShowDownloadvizMaker(false)}
+      /> : <DownloadvizMakermodal
+        isOpen={showDownloadvizMaker}
+        onClose={() => setShowDownloadvizMaker(false)}
+      />
+      }
       <style>{`
         @keyframes spin-beam {
           0%   { transform: translateX(-50%) rotate(0deg);   }
@@ -190,6 +200,7 @@ const ArrowCard = () => {
           <button
             className="flex items-center justify-center gap-[10px] w-full sm:w-[204px] h-[56px] px-[24px] py-[10px] rounded-[50px] text-[18px] font-medium text-[#00FFFF] border-2 border-transparent transition-all duration-300"
             style={{ fontFamily: "Inter, sans-serif", background: `linear-gradient(90deg, rgba(9,49,49,0.2) 0%, rgba(0,255,255,0.2) 122.41%) padding-box, linear-gradient(171.77deg, rgba(255,255,255,0.7) -5.76%, rgba(255,255,255,0.2) 39.41%, rgba(255,255,255,0) 78.14%) border-box` }}
+            onClick={() => setShowDownloadvizMaker(true)}
           >
             Try For Free
           </button>
