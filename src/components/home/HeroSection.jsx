@@ -173,7 +173,7 @@ const HeroSection = () => {
           }}
           transition={{
             duration: 30,
-            repeat: Infinity,
+            // repeat: Infinity,
             ease: [0.45, 0.05, 0.55, 0.95],
           }}
         />
