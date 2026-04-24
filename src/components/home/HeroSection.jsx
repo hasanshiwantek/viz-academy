@@ -158,7 +158,7 @@ const HeroSection = () => {
       `}</style>
 
         {/* Animated Background */}
-        {/* <motion.div
+        <motion.div
           className="absolute inset-0 -z-10"
           style={{
             backgroundImage: `url(${heroBg})`,
@@ -166,17 +166,17 @@ const HeroSection = () => {
             backgroundPosition: "center top",
             backgroundRepeat: "no-repeat",
           }}
-          animate={{
-            scale: [1, 1.08, 1],
-            x: [0, -15, 10, -5, 0],
-            y: [0, 10, -8, 12, 0],
-          }}
+          // animate={{
+          //   scale: [1, 1.08, 1],
+          //   x: [0, -15, 10, -5, 0],
+          //   y: [0, 10, -8, 12, 0],
+          // }}
           transition={{
             duration: 30,
             // repeat: Infinity,
             ease: [0.45, 0.05, 0.55, 0.95],
           }}
-        /> */}
+        />
 
         {/* Navbar App.jsx mein fixed — hero ko top padding taaki content nav ke neeche na chhipe */}
         {/* Main Content */}
