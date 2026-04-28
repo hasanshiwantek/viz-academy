@@ -1,163 +1,12 @@
-// // import { useEffect } from 'react';
-// // import howitsWorkImg from "../../assets/how-its-work.png"
-// // import { motion } from "framer-motion";
-// // import bgNew from "../../assets/bg-new.png";
-
-
-// // const HowItWorksModal = ({ isOpen, onClose }) => {
-// //     useEffect(() => {
-// //         const handleEsc = (e) => {
-// //             if (e.key === 'Escape') onClose();
-// //         };
-// //         if (isOpen) window.addEventListener('keydown', handleEsc);
-// //         return () => window.removeEventListener('keydown', handleEsc);
-// //     }, [isOpen, onClose]);
-
-// //     if (!isOpen) return null;
-
-// //     return (
-// //         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[#091a22] backdrop-blur-xl p-6">
-// //             {/* Modal Card */}
-// //             <div
-// //                 className="relative w-full max-w-[700px] max-h-[55vh] bg-[#0a0f1a] border border-[#00ccff]/30 rounded-3xl overflow-hidden shadow-2xl"
-// //                 style={{
-// //                     backgroundImage: `url(${bgNew})`,
-// //                     // backgroundSize: "cover",
-// //                     // backgroundPosition: "center",
-// //                 }}>
-
-// //                 {/* Dashed Border Effect */}
-// //                 <div className="absolute inset-0 border-2 border-dashed border-[#00ccff]/40 rounded-3xl pointer-events-none" />
-
-// //                 {/* Header */}
-// //                 <div className="pt-8 pb-4 flex justify-center">
-// //                     <motion.h5
-// //                         className="text-[2.5rem] sm:text-6xl md:text-7xl font-semibold leading-tight "
-// //                         initial={{ opacity: 0, y: 30 }}
-// //                         animate={{ opacity: 1, y: 0 }}
-// //                         transition={{ duration: 0.8, delay: 0.3 }}
-// //                     >
-// //                         <motion.span
-// //                             className="block bg-clip-text text-transparent md:mt-5"
-// //                             style={{
-// //                                 backgroundImage:
-// //                                     "linear-gradient(90deg, #00FFFF 0%, #FF7E57 32%, #FFC457 60%, #00B2B2 100%)",
-// //                             }}
-// //                             initial={{ opacity: 0 }}
-// //                             animate={{ opacity: 1 }}
-// //                             transition={{ duration: 0.8, delay: 0.5 }}
-// //                         >
-// //                             How its work
-// //                         </motion.span>
-// //                     </motion.h5>
-// //                     {/* </div> */}
-// //                 </div>
-
-// //                 {/* Image Container */}
-// //                 <div className="px-8 pb-8">
-// //                     <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-// //                         <img
-// //                             src={howitsWorkImg}
-// //                             alt="How it works"
-// //                             className="w-full h-auto object-cover aspect-square"  // Makes it 1:1 like 644x644
-// //                         />
-
-// //                         {/* Small glowing dot on the building (optional, matching your screenshot) */}
-// //                         <div className="absolute top-[38%] left-[48%] w-2 h-2 bg-[#00ffcc] rounded-full shadow-[0_0_12px_#00ffcc]" />
-// //                     </div>
-// //                 </div>
-// //             </div>
-// //         </div>
-// //     );
-// // };
-
-// // export default HowItWorksModal;
-
-// import { useEffect } from 'react';
-// import howitsWorkImg from "../../assets/how-its-work.png"
-// import { motion } from "framer-motion";
-// import bgNew from "../../assets/bg-new.png";
-
-
-// const HowItWorksModal = ({ isOpen, onClose }) => {
-//     useEffect(() => {
-//         const handleEsc = (e) => {
-//             if (e.key === 'Escape') onClose();
-//         };
-//         if (isOpen) window.addEventListener('keydown', handleEsc);
-//         return () => window.removeEventListener('keydown', handleEsc);
-//     }, [isOpen, onClose]);
-
-//     if (!isOpen) return null;
-
-//     return (
-//         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/5 backdrop-blur-xl p-6">   {/* ← Fixed: backdrop-blur-xl */}
-//             <div
-//                 className='rounded-3xl '
-//                 style={{
-//                     // inset: "-100%",
-//                     padding: "1.5px",
-//                     background:
-//                         "conic-gradient(from 0deg, transparent 0deg, #8ef5e8 60deg, #00ffff 90deg, #ff9b7a 150deg, #ffdc7a 210deg, transparent 270deg)",
-//                 }}
-//             >
-//                 <div
-//                     className="relative w-full max-w-[700px] h-[100% ] bg-[#0a0f1a] border border-[#00ccff]/30 rounded-3xl overflow-hidden shadow-2xl"
-
-//                     style={{
-//                         backgroundImage: `url(${bgNew})`,
-//                         backgroundSize: "cover",
-//                         backgroundPosition: "center",
-
-//                     }}>
-//                     {/* Header */}
-//                     <div className="pt-1 pb-1 flex justify-center">
-//                         <motion.h5
-//                             className="text-[2.5rem] sm:text-4xl md:text-4xl font-semibold leading-tight "
-//                             initial={{ opacity: 0, y: 30 }}
-//                             animate={{ opacity: 1, y: 0 }}
-//                             transition={{ duration: 0.8, delay: 0.3 }}
-//                         >
-//                             <motion.span
-//                                 className="block bg-clip-text text-transparent md:mt-5"
-//                                 style={{
-//                                     backgroundImage:
-//                                         "linear-gradient(90deg, #00FFFF 0%, #FF7E57 32%, #FFC457 60%, #00B2B2 100%)",
-//                                 }}
-//                                 initial={{ opacity: 0 }}
-//                                 animate={{ opacity: 1 }}
-//                                 transition={{ duration: 0.8, delay: 0.5 }}
-//                             >
-//                                 How its work
-//                             </motion.span>
-//                         </motion.h5>
-//                     </div>
-
-//                     {/* Image Container */}
-//                     <div className="px-8 pb-8">
-//                         <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-//                             <img
-//                                 src={howitsWorkImg}
-//                                 alt="How it works"
-//                                 className="w-full h-auto object-cover aspect-square"
-//                             />
-//                             {/* Small glowing dot on the building */}
-//                             {/* <div className="absolute top-[38%] left-[48%] w-2 h-2 bg-[#00ffcc] rounded-full shadow-[0_0_12px_#00ffcc]" /> */}
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default HowItWorksModal;
-
 import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import howitsWorkImg from "../../assets/how-its-work.png"
 import { motion } from "framer-motion";
 import bgNew from "../../assets/bg-new.png";
+
+
+
+const mobile = window.innerWidth < 768
 
 const HowItWorksModal = ({ isOpen, onClose }) => {
     useEffect(() => {
@@ -214,23 +63,36 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
                     }}
                 >
                     {/* Close Button */}
-                    {/* <button
+                    {/* ✅ X Close Button */}
+                    {mobile && <button
                         onClick={onClose}
                         style={{
                             position: 'absolute',
                             top: '14px',
-                            right: '18px',
-                            color: 'rgba(255,255,255,0.5)',
-                            background: 'none',
-                            border: 'none',
-                            fontSize: '20px',
-                            cursor: 'pointer',
+                            right: '14px',
                             zIndex: 10,
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255,255,255,0.15)',
+                            background: 'rgba(255,255,255,0.08)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            backdropFilter: 'blur(4px)',
+                            transition: 'background 0.2s',
                         }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                        aria-label="Close"
                     >
-                        ✕
-                    </button> */}
-
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                    }
                     {/* Title */}
                     <div style={{
                         paddingTop: '24px',

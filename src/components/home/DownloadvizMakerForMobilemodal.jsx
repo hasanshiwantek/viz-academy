@@ -99,6 +99,35 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                         position: "relative",
                     }}
                 >
+                    {/* ✅ X Close Button */}
+                    <button
+                        onClick={onClose}
+                        style={{
+                            position: 'absolute',
+                            top: '14px',
+                            right: '14px',
+                            zIndex: 10,
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255,255,255,0.15)',
+                            background: 'rgba(255,255,255,0.08)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            backdropFilter: 'blur(4px)',
+                            transition: 'background 0.2s',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                        aria-label="Close"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
                     {/* LAYOUT: mobile=column, desktop=row */}
                     <div className="flex flex-col sm:flex-row items-center sm:items-stretch">
 
@@ -215,7 +244,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                                     width: '100%',
                                     height: "52px",
                                 }}
-                               whileHover={!loading ? { scale: 1.05 } : {}}
+                                whileHover={!loading ? { scale: 1.05 } : {}}
                                 whileTap={!loading ? { scale: 0.95 } : {}}
                                 onClick={handleGetApp}
                                 disabled={loading}
@@ -231,7 +260,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                                         pointerEvents: "none",
                                     }}
                                 />
-                                {loading ? "loading..." :"Get the app"}
+                                {loading ? "loading..." : "Get the app"}
                             </motion.button>
                             {zapStatus && (
                                 <motion.div
