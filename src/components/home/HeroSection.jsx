@@ -252,15 +252,15 @@ const HeroSection = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.7 }}
           >
-            <motion.button
-              className="relative w-80 sm:w-auto flex items-center justify-center gap-2 text-white px-7 py-3.5 rounded-full font-medium text-sm md:text-lg transition-all duration-200 shadow-lg shadow-cyan-500/30 overflow-hidden"
+            <button
+              className="relative w-80 sm:w-auto flex items-center justify-center gap-2 text-white px-7 py-3.5 rounded-full font-medium text-sm md:text-lg shadow-lg shadow-cyan-500/30 overflow-hidden
+  transition-transform duration-200 ease-out
+  hover:scale-105 active:scale-95"
               style={{
-                background:
-                  "linear-gradient(89.69deg, #00FFFF -1.81%, #003131 95.62%)",
+                background: "linear-gradient(89.69deg, #00FFFF -1.81%, #003131 95.62%)",
+                willChange: "transform",
               }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowDownloadvizMaker(true)}
+              onClick={() => requestAnimationFrame(() => setShowDownloadvizMaker(true))}
             >
               <span
                 className="absolute inset-0 rounded-full"
@@ -288,7 +288,7 @@ const HeroSection = () => {
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
               Download VizMaker
-            </motion.button>
+            </button>
 
             <motion.button
               className="relative flex items-center justify-center gap-2 text-cyan-300 px-7 py-3.5 w-80 sm:w-auto rounded-full font-medium text-sm md:text-lg transition-all duration-200 overflow-hidden"
