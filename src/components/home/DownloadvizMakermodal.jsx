@@ -40,8 +40,21 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
             setZapStatus(null);
         }
     }, [isOpen]);
+    useEffect(() => {
+        if (isOpen) {
+            // Modal open hone par history entry push karo
+            window.history.pushState({ modalOpen: true }, '');
 
-    if (!isOpen) return null;
+            const handlePopState = () => {
+                onClose();
+            };
+
+            window.addEventListener('popstate', handlePopState);
+            return () => {
+                window.removeEventListener('popstate', handlePopState);
+            };
+        }
+    }, [isOpen, onClose]);
     const handleGetApp = async () => {
         if (!email.trim()) { setError('Please enter your email.'); return; }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,6 +89,7 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
             setLoading(false);
         }
     };
+    if (!isOpen) return null;
     return ReactDOM.createPortal(
         <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-6"
@@ -263,7 +277,7 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                                 }}
                             />
 
-                                                          {loading ? "loading..." :"Get the app"}
+                            {loading ? "loading..." : "Get the app"}
                         </motion.button>
                         {zapStatus && (
                             <motion.div

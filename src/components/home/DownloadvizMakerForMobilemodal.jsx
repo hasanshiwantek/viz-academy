@@ -34,7 +34,21 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
             setZapStatus(null);
         }
     }, [isOpen]);
-    if (!isOpen) return null;
+    useEffect(() => {
+        if (isOpen) {
+            // Modal open hone par history entry push karo
+            window.history.pushState({ modalOpen: true }, '');
+
+            const handlePopState = () => {
+                onClose();
+            };
+
+            window.addEventListener('popstate', handlePopState);
+            return () => {
+                window.removeEventListener('popstate', handlePopState);
+            };
+        }
+    }, [isOpen, onClose]);
     const handleGetApp = async () => {
         if (!email.trim()) { setError('Please enter your email.'); return; }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,6 +82,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
             setLoading(false);
         }
     };
+    if (!isOpen) return null;
     return ReactDOM.createPortal(
         <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6"
