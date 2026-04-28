@@ -166,11 +166,11 @@ const HeroSection = () => {
             backgroundPosition: "center top",
             backgroundRepeat: "no-repeat",
           }}
-          animate={{
-            scale: [1, 1.08, 1],
-            x: [0, -15, 10, -5, 0],
-            y: [0, 10, -8, 12, 0],
-          }}
+          // animate={{
+          //   scale: [1, 1.08, 1],
+          //   x: [0, -15, 10, -5, 0],
+          //   y: [0, 10, -8, 12, 0],
+          // }}
           transition={{
             duration: 30,
             // repeat: Infinity,
