@@ -22,7 +22,21 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
             document.body.style.overflow = '';
         };
     }, [isOpen, onClose]);
+    useEffect(() => {
+        if (isOpen) {
+            // Modal open hone par history entry push karo
+            window.history.pushState({ modalOpen: true }, '');
 
+            const handlePopState = () => {
+                onClose();
+            };
+
+            window.addEventListener('popstate', handlePopState);
+            return () => {
+                window.removeEventListener('popstate', handlePopState);
+            };
+        }
+    }, [isOpen, onClose]);
     if (!isOpen) return null;
 
     return ReactDOM.createPortal(
