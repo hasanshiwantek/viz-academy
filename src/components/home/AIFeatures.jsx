@@ -13,63 +13,63 @@ import img9 from "../../assets/hero-section/ai-img9.png";
 const features = [
   {
     id: 1,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M14 3h7v7"/><path d="M14 10 21 3"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M14 3h7v7" /><path d="M14 10 21 3" /></svg>),
     title: "Screen-to-Render",
     description: "Transform screenshots from 3DS Max, SketchUp, Revit, or any 3D software into stunning photorealistic renders instantly.",
     image: img1,
   },
   {
     id: 2,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M8 10h.01M12 10h.01M16 10h.01" /></svg>),
     title: "AI Upscaling",
     description: "Industry-leading upscaling powered by Magnific Creative and Magnific Precision V2. Transform low-res images into ultra-sharp, professional quality.",
     image: img2,
   },
   {
     id: 3,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>),
     title: "AI Animations",
     description: "Bring your renders to life with cutting-edge video engines: Veo, Kling, Seedance, and Sora. Create cinematic walkthroughs in seconds.",
     image: img3,
   },
   {
     id: 4,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5" /><path d="M2 12l10 5 10-5" /></svg>),
     title: "3D Model Generation",
     description: "Generate 3D models with Meshy AI and Tripo3D integration. Preview, refine, and export directly to your favorite 3D software.",
     image: img4,
   },
   {
     id: 5,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32" /></svg>),
     title: "Smart Inpainting",
     description: "Paint exactly where you want changes. Our AI intelligently understands your intent and seamlessly modifies specific areas.",
     image: img5,
   },
   {
     id: 6,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>),
     title: "Image Composition",
     description: "Paste and position any image onto your canvas. Perfect for adding furniture, people, or decorative elements with natural blending.",
     image: img6,
   },
   {
     id: 7,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /></svg>),
     title: "Multi-Image Merge",
     description: "Combine multiple images to add specific objects, textures, or elements. Create complex scenes from simple components.",
     image: img7,
   },
   {
     id: 8,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>),
     title: "Custom Prompt Presets",
     description: "Save your favorite prompts and styles. Build a library of tailored presets for consistent, brand-aligned results every time.",
     image: img8,
   },
   {
     id: 9,
-    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>),
+    icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>),
     title: "Text-to-Image",
     description: "Create any image from scratch using the world's top AI engines. Describe your vision and watch it materialize in seconds.",
     image: img9,
@@ -86,17 +86,17 @@ const cardVariants = {
 
 // ── Mobile/below-xl ──────────────────────────────────────────────────────────
 const MOB_CENTER = { width: 280, height: 479 };
-const MOB_SIDE   = { width: 270, height: 366 };
-const MOB_SLOT   = 280;
-const MOB_GAP    = 8;
+const MOB_SIDE = { width: 270, height: 366 };
+const MOB_SLOT = 280;
+const MOB_GAP = 8;
 
 // ── xl+ (Figma 1600px) ───────────────────────────────────────────────────────
 // Slot = 280 (= side card width). Center card (453) centers within the 280 slot
 // and overflows ±86px — clipped by the outer overflow-hidden at screen edges.
 const XL_CENTER = { width: 453, height: 567 };
-const XL_SIDE   = { width: 280, height: 436 };
-const XL_SLOT   = 280;
-const XL_GAP    = 16;
+const XL_SIDE = { width: 280, height: 436 };
+const XL_SLOT = 280;
+const XL_GAP = 16;
 
 // ─── FeatureCard ──────────────────────────────────────────────────────────────
 const FeatureCard = ({ feature, index, isSliderCard = false, isSliderActive = false, sizeOverride = null, onSelect = null, disableClick = false }) => {
@@ -257,7 +257,7 @@ const AIFeatures = () => {
 
   useEffect(() => {
     const attach = (ref, setter) => {
-      if (!ref.current) return () => {};
+      if (!ref.current) return () => { };
       const update = () => setter(ref.current.offsetWidth);
       update();
       const ro = new ResizeObserver(update);
@@ -265,15 +265,15 @@ const AIFeatures = () => {
       return () => ro.disconnect();
     };
     const d1 = attach(mobRef, setMobW);
-    const d2 = attach(xlRef,  setXlW);
+    const d2 = attach(xlRef, setXlW);
     return () => { d1(); d2(); };
   }, []);
 
   const mobTrackW = features.length * MOB_SLOT + (features.length - 1) * MOB_GAP;
-  const xlTrackW  = features.length * XL_SLOT  + (features.length - 1) * XL_GAP;
+  const xlTrackW = features.length * XL_SLOT + (features.length - 1) * XL_GAP;
 
   const mobX = mobW > 0 ? (mobW - MOB_SLOT) / 2 - activeIndex * (MOB_SLOT + MOB_GAP) : 0;
-  const xlX  = xlW  > 0 ? (xlW  - XL_SLOT)  / 2 - activeIndex * (XL_SLOT  + XL_GAP)  : 0;
+  const xlX = xlW > 0 ? (xlW - XL_SLOT) / 2 - activeIndex * (XL_SLOT + XL_GAP) : 0;
 
   const clampIndex = (i) => Math.max(0, Math.min(features.length - 1, i));
   const mobIndexFromX = (x) => {
@@ -325,10 +325,26 @@ const AIFeatures = () => {
             dragElastic={0.08}
             dragMomentum={false}
             onDragStart={() => setIsDragging(true)}
+            // onDragEnd={(_, info) => {
+            //   setIsDragging(false);
+            //   if (Math.abs(info.offset.x) < 8) return;
+            //   const next = mobIndexFromX(mobX + info.offset.x);
+            //   setActiveIndex(next);
+            // }}
             onDragEnd={(_, info) => {
               setIsDragging(false);
-              if (Math.abs(info.offset.x) < 8) return;
-              const next = mobIndexFromX(mobX + info.offset.x);
+              const { offset, velocity } = info;
+
+              // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+              if (Math.abs(velocity.x) > 300) {
+                const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+                setActiveIndex(clampIndex(next));
+                return;
+              }
+
+              // Slow drag — offset se detect karo
+              if (Math.abs(offset.x) < 8) return;
+              const next = mobIndexFromX(mobX + offset.x);
               setActiveIndex(next);
             }}
           >
