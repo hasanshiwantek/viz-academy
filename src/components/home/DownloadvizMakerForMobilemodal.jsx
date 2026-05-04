@@ -11,7 +11,13 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState('');
     const [zapStatus, setZapStatus] = useState(null); // null | "success" | "error"
-
+    useEffect(() => {
+        const imgs = [bgNew, cubeImg];
+        imgs.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+        });
+    }, []);
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === 'Escape') onClose();
@@ -92,8 +98,8 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
             <motion.div
                 onClick={(e) => e.stopPropagation()}
                 // initial={{ opacity: 0, scale: 0.93 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.35 }}
+                // animate={{ opacity: 1, scale: 1 }}
+                // transition={{ duration: 0.35 }}
                 style={{
                     padding: "1.5px",
                     borderRadius: "20px",
@@ -112,6 +118,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                         backgroundColor: "#060f18",
                         overflow: "hidden",
                         position: "relative",
+                        willChange: "transform",
                     }}
                 >
                     {/* ✅ X Close Button */}
@@ -164,12 +171,12 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                                 minHeight: '200px',   // ← mobile pe cube visible rahe
                             }}>
                                 {/* Cube */}
-                                <motion.img
+                                <img
                                     src={cubeImg}
                                     alt="3D Cube"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.2 }}
+                                    // initial={{ opacity: 0, x: -20 }}
+                                    // animate={{ opacity: 1, x: 0 }}
+                                    // transition={{ duration: 0.5, delay: 0.2 }}
                                     className="w-full sm:w-auto"
                                     style={{
                                         maxWidth: '100%',
@@ -198,9 +205,9 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                         >
                             {/* Title */}
                             <motion.div
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.15 }}
+                                // initial={{ opacity: 0, y: 15 }}
+                                // animate={{ opacity: 1, y: 0 }}
+                                // transition={{ duration: 0.5, delay: 0.15 }}
                                 style={{ width: '100%' }}
                             >
                                 <h3
@@ -234,9 +241,9 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                                 placeholder="Enter your email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.4, delay: 0.25 }}
+                                // initial={{ opacity: 0, y: 10 }}
+                                // animate={{ opacity: 1, y: 0 }}
+                                // transition={{ duration: 0.4, delay: 0.25 }}
                                 style={{
                                     background: 'rgba(255,255,255,0.05)',
                                     border: '1px solid rgba(255,255,255,0.15)',
