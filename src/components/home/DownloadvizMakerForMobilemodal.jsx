@@ -91,7 +91,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
         >
             <motion.div
                 onClick={(e) => e.stopPropagation()}
-                initial={{ opacity: 0, scale: 0.93 }}
+                // initial={{ opacity: 0, scale: 0.93 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.35 }}
                 style={{
