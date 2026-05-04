@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 const MOB_CENTER = { width: 280, height: 430 }
-const MOB_SIDE   = { width: 210, height: 360 }
+const MOB_SIDE = { width: 210, height: 360 }
 const MD_BREAKPOINT = 768
 
 const FavoriteApp = () => {
@@ -72,7 +72,7 @@ const FavoriteApp = () => {
         activeEl.pause()
         activeEl.currentTime = 0
         const p = activeEl.play()
-        if (p && typeof p.catch === 'function') p.catch(() => {})
+        if (p && typeof p.catch === 'function') p.catch(() => { })
       } catch {
         // ignore
       }
@@ -176,12 +176,12 @@ const FavoriteApp = () => {
             {(() => {
               const isMd = sliderWidth >= MD_BREAKPOINT
               const cw = isMd ? Math.round(sliderWidth * 0.55) : MOB_CENTER.width
-              const ch = isMd ? Math.round(cw * (570 / 700))  : MOB_CENTER.height
+              const ch = isMd ? Math.round(cw * (570 / 700)) : MOB_CENTER.height
               const sw = isMd ? Math.round(sliderWidth * 0.35) : MOB_SIDE.width
-              const sh = isMd ? Math.round(sw * (420 / 483))  : MOB_SIDE.height
+              const sh = isMd ? Math.round(sw * (420 / 483)) : MOB_SIDE.height
 
               const CENTER = { width: cw, height: ch }
-              const SIDE   = { width: sw, height: sh }
+              const SIDE = { width: sw, height: sh }
 
               const trackW = CENTER.width + (mobileCards.length - 1) * SIDE.width
               const xVal =
@@ -197,8 +197,8 @@ const FavoriteApp = () => {
 
               return (
                 <motion.div
-                className="flex items-center"
-                style={{ width: trackW, gap: 0, height: CENTER.height }}
+                  className="flex items-center"
+                  style={{ width: trackW, gap: 0, height: CENTER.height }}
                   animate={{ x: xVal }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   drag="x"
@@ -206,11 +206,35 @@ const FavoriteApp = () => {
                   dragElastic={0.08}
                   dragMomentum={false}
                   onDragStart={() => setIsDragging(true)}
+                  // onDragEnd={(_, info) => {
+                  //   setIsDragging(false)
+                  //   if (Math.abs(info.offset.x) < 8) return
+                  //   const next = indexFromX(xVal + info.offset.x)
+                  //   setActiveIndex(next)
+                  // }}
                   onDragEnd={(_, info) => {
-                    setIsDragging(false)
-                    if (Math.abs(info.offset.x) < 8) return
-                    const next = indexFromX(xVal + info.offset.x)
-                    setActiveIndex(next)
+                    const mobile = window.innerWidth < 768
+                    if (mobile) {
+                      setIsDragging(false);
+                      const { offset, velocity } = info;
+
+                      // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+                      if (Math.abs(velocity.x) > 300) {
+                        const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+                        setActiveIndex(clampIndex(next));
+                        return;
+                      }
+
+                      // Slow drag — offset se detect karo
+                      if (Math.abs(offset.x) < 8) return;
+                      const next = mobIndexFromX(mobX + offset.x);
+                      setActiveIndex(next);
+                    } else {
+                      setIsDragging(false)
+                      if (Math.abs(info.offset.x) < 8) return
+                      const next = indexFromX(xVal + info.offset.x)
+                      setActiveIndex(next)
+                    }
                   }}
                 >
                   {mobileCards.map((card, idx) => {

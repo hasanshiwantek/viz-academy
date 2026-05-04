@@ -453,10 +453,26 @@ const PricingPlan = () => {
             dragElastic={0.08}
             dragMomentum={false}
             onDragStart={() => setIsDragging(true)}
+            // onDragEnd={(_, info) => {
+            //   setIsDragging(false);
+            //   if (Math.abs(info.offset.x) < 8) return;
+            //   const next = mobileIndexFromX(mobileXVal + info.offset.x);
+            //   setActiveIndex(next);
+            // }}
             onDragEnd={(_, info) => {
               setIsDragging(false);
-              if (Math.abs(info.offset.x) < 8) return;
-              const next = mobileIndexFromX(mobileXVal + info.offset.x);
+              const { offset, velocity } = info;
+
+              // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+              if (Math.abs(velocity.x) > 300) {
+                const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+                setActiveIndex(clampIndex(next));
+                return;
+              }
+
+              // Slow drag — offset se detect karo
+              if (Math.abs(offset.x) < 8) return;
+              const next = mobIndexFromX(mobX + offset.x);
               setActiveIndex(next);
             }}
           >

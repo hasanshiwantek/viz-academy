@@ -98,7 +98,7 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
         >
             <motion.div
                 onClick={(e) => e.stopPropagation()}
-                initial={{ opacity: 0, scale: 0.93 }}
+            //   initial={{ opacity: 0, scale: 0.93 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.35 }}
                 style={{
@@ -146,9 +146,6 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.5, delay: 0.2 }}
-                                style={{
-
-                                }}
                             />
 
                             {/* Cursor Icon — top right */}
