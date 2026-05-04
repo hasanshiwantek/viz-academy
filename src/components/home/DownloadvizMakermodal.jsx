@@ -17,6 +17,13 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
     const [zapStatus, setZapStatus] = useState(null); // null | "success" | "error"
 
     useEffect(() => {
+        const imgs = [bgNew, cubeImg];
+        imgs.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+        });
+    }, []);
+    useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === 'Escape') onClose();
         };
@@ -97,10 +104,10 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
             onClick={onClose}
         >
             <motion.div
-                onClick={(e) => e.stopPropagation()}
-            //   initial={{ opacity: 0, scale: 0.93 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.35 }}
+                // onClick={(e) => e.stopPropagation()}
+                //   initial={{ opacity: 0, scale: 0.93 }}
+                // animate={{ opacity: 1, scale: 1 }}
+                // transition={{ duration: 0.35 }}
                 style={{
                     padding: "1.5px",
                     borderRadius: "20px",
@@ -140,7 +147,7 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                             overflow: 'hidden',          // ← cube edges se bahar na jaye
                         }}>
                             {/* Cube — full fill, bottom aligned */}
-                            <motion.img
+                            <img
                                 src={cubeImg}
                                 alt="3D Cube"
                                 initial={{ opacity: 0, x: -20 }}
@@ -149,12 +156,12 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                             />
 
                             {/* Cursor Icon — top right */}
-                            <motion.img
+                            <img
                                 src={cursorIcon}
                                 alt="cursor"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.4, delay: 0.45 }}
+                                // initial={{ opacity: 0, scale: 0.8 }}
+                                // animate={{ opacity: 1, scale: 1 }}
+                                // transition={{ duration: 0.4, delay: 0.45 }}
                                 style={{
                                     position: 'absolute',
                                     top: '130px',
@@ -166,12 +173,12 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                             />
 
                             {/* Switch/Toggle — bottom right, cursor ke neeche */}
-                            <motion.img
+                            <img
                                 src={switchImg}
                                 alt="switchImg"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
+                                // initial={{ opacity: 0, y: 10 }}
+                                // animate={{ opacity: 1, y: 0 }}
+                                // transition={{ duration: 0.5, delay: 0.3 }}
                                 style={{
                                     position: 'absolute',
                                     bottom: '14px',
@@ -227,9 +234,9 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                             placeholder="Enter your email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.25 }}
+                            // initial={{ opacity: 0, y: 10 }}
+                            // animate={{ opacity: 1, y: 0 }}
+                            // transition={{ duration: 0.4, delay: 0.25 }}
                             style={{
                                 background: 'rgba(255,255,255,0.05)',
                                 border: '1px solid rgba(255,255,255,0.15)',
