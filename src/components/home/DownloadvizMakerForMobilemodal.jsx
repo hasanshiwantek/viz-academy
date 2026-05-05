@@ -92,7 +92,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
     return ReactDOM.createPortal(
         <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6"
-            style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
+            style={{ display: isOpen ? 'flex' : 'none', backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
             onClick={onClose}
         >
             <motion.div

@@ -11,8 +11,7 @@ const mobile = window.innerWidth < 768
 const HowItWorksModal = ({ isOpen, onClose }) => {
 
     useEffect(() => {
-        const imgs = [bgNew, howitsWorkImg];
-        imgs.forEach((src) => {
+        [bgNew, howitsWorkImg].forEach((src) => {
             const img = new Image();
             img.src = src;
         });
@@ -51,7 +50,7 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
     return ReactDOM.createPortal(
         <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-6"
-            style={{ backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(1px)' }}
+            style={{ display: isOpen ? 'flex' : 'none', backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(1px)' }}
             onClick={onClose}
         >
             {/* Gradient Border Wrapper */}
@@ -126,9 +125,9 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
                     }}>
                         <motion.h5
                             style={{ margin: 0, fontSize: '1.8rem', fontWeight: 600, lineHeight: 1.2 }}
-                            // initial={{ opacity: 0, y: 20 }}
-                            // animate={{ opacity: 1, y: 0 }}
-                            // transition={{ duration: 0.6, delay: 0.2 }}
+                        // initial={{ opacity: 0, y: 20 }}
+                        // animate={{ opacity: 1, y: 0 }}
+                        // transition={{ duration: 0.6, delay: 0.2 }}
                         >
                             <span
                                 style={{
@@ -154,9 +153,9 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
                                 boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                                 height: '100%',
                             }}
-                            // initial={{ opacity: 0, scale: 0.97 }}
-                            // animate={{ opacity: 1, scale: 1 }}
-                            // transition={{ duration: 0.6, delay: 0.3 }}
+                        // initial={{ opacity: 0, scale: 0.97 }}
+                        // animate={{ opacity: 1, scale: 1 }}
+                        // transition={{ duration: 0.6, delay: 0.3 }}
                         >
                             <img
                                 src={howitsWorkImg}

@@ -100,7 +100,7 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
     return ReactDOM.createPortal(
         <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-6"
-            style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
+            style={{ display: isOpen ? 'flex' : 'none', backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
             onClick={onClose}
         >
             <motion.div
@@ -150,9 +150,9 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                             <img
                                 src={cubeImg}
                                 alt="3D Cube"
-                                // initial={{ opacity: 0, x: -20 }}
-                                // animate={{ opacity: 1, x: 0 }}
-                                // transition={{ duration: 0.5, delay: 0.2 }}
+                            // initial={{ opacity: 0, x: -20 }}
+                            // animate={{ opacity: 1, x: 0 }}
+                            // transition={{ duration: 0.5, delay: 0.2 }}
                             />
 
                             {/* Cursor Icon — top right */}
