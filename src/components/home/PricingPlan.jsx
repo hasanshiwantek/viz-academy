@@ -459,21 +459,37 @@ const PricingPlan = () => {
             //   const next = mobileIndexFromX(mobileXVal + info.offset.x);
             //   setActiveIndex(next);
             // }}
+            // onDragEnd={(_, info) => {
+            //   setIsDragging(false);
+            //   const { offset, velocity } = info;
+
+            //   // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+            //   if (Math.abs(velocity.x) > 300) {
+            //     const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+            //     setActiveIndex(clampIndex(next));
+            //     return;
+            //   }
+
+            //   // Slow drag — offset se detect karo
+            //   if (Math.abs(offset.x) < 8) return;
+            //   const next = mobIndexFromX(mobX + offset.x);
+            //   setActiveIndex(next);
+            // }}
             onDragEnd={(_, info) => {
               setIsDragging(false);
               const { offset, velocity } = info;
 
-              // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+              // Fast flick — velocity se detect karo
               if (Math.abs(velocity.x) > 300) {
                 const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
                 setActiveIndex(clampIndex(next));
                 return;
               }
 
-              // Slow drag — offset se detect karo
+              // Slow drag — sirf offset.x se relative index change karo
               if (Math.abs(offset.x) < 8) return;
-              const next = mobIndexFromX(mobX + offset.x);
-              setActiveIndex(next);
+              const steps = Math.round(-offset.x / (SLIDER_CARD_SIDE.width + SLIDER_GAP || SLIDER_CARD_SIDE.width));
+              setActiveIndex(clampIndex(activeIndex + steps));
             }}
           >
             {visiblePlans.map((plan, index) => {
