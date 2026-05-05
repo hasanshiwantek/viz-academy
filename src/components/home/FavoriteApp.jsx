@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 const MOB_CENTER = { width: 280, height: 430 }
 const MOB_SIDE = { width: 210, height: 360 }
 const MD_BREAKPOINT = 768
+const mobile = window.innerWidth < 768
+
 
 const FavoriteApp = () => {
   const [active, setActive] = useState(0)
@@ -143,7 +145,7 @@ const FavoriteApp = () => {
         <div className="flex w-full flex-col overflow-hidden py-5">
 
           {/* Tabs */}
-          <div className="flex gap-2 overflow-x-auto pb-5 justify-start sm:justify-center scrollbar-hide">
+          {/* <div className="flex gap-2 overflow-x-auto pb-5 justify-start sm:justify-center scrollbar-hide">
             {mobileCards.map((card, i) => {
               const isActive = activeIndex === i
               const isHovered = hoveredTabIndex === i
@@ -169,11 +171,37 @@ const FavoriteApp = () => {
                 </button>
               )
             })}
-          </div>
+          </div> */}
+          <TabBar
+            items={mobileCards}
+            activeIndex={activeIndex}
+            onSelect={setActiveIndex}
+            labelKey="title"
+          />
 
           {/* Slider */}
           <div ref={sliderRef} className="relative w-full overflow-hidden">
             {(() => {
+              // const isMd = sliderWidth >= MD_BREAKPOINT
+              // const cw = isMd ? Math.round(sliderWidth * 0.55) : MOB_CENTER.width
+              // const ch = isMd ? Math.round(cw * (570 / 700)) : MOB_CENTER.height
+              // const sw = isMd ? Math.round(sliderWidth * 0.35) : MOB_SIDE.width
+              // const sh = isMd ? Math.round(sw * (420 / 483)) : MOB_SIDE.height
+
+              // const CENTER = { width: cw, height: ch }
+              // const SIDE = { width: sw, height: sh }
+
+              // const trackW = CENTER.width + (mobileCards.length - 1) * SIDE.width
+              // const xVal =
+              //   sliderWidth > 0
+              //     ? (sliderWidth - CENTER.width) / 2 - activeIndex * SIDE.width
+              //     : 0
+              // const clampIndex = (i) => Math.max(0, Math.min(mobileCards.length - 1, i))
+              // const indexFromX = (x) => {
+              //   if (sliderWidth <= 0) return activeIndex
+              //   const i = ((sliderWidth - CENTER.width) / 2 - x) / SIDE.width
+              //   return clampIndex(Math.round(i))
+              // }
               const isMd = sliderWidth >= MD_BREAKPOINT
               const cw = isMd ? Math.round(sliderWidth * 0.55) : MOB_CENTER.width
               const ch = isMd ? Math.round(cw * (570 / 700)) : MOB_CENTER.height
@@ -184,14 +212,22 @@ const FavoriteApp = () => {
               const SIDE = { width: sw, height: sh }
 
               const trackW = CENTER.width + (mobileCards.length - 1) * SIDE.width
+
+              const getCardLeft = (i) => SIDE.width * i;
+
               const xVal =
                 sliderWidth > 0
-                  ? (sliderWidth - CENTER.width) / 2 - activeIndex * SIDE.width
-                  : 0
+                  ? sliderWidth / 2 - (getCardLeft(activeIndex) + CENTER.width / 2)
+                  : 0;
+
+              const lastCardLeft = getCardLeft(mobileCards.length - 1);
+              const dragLeftLimit = -(lastCardLeft + CENTER.width / 2 - sliderWidth / 2);
+              const dragRightLimit = sliderWidth / 2 - CENTER.width / 2;
+
               const clampIndex = (i) => Math.max(0, Math.min(mobileCards.length - 1, i))
               const indexFromX = (x) => {
                 if (sliderWidth <= 0) return activeIndex
-                const i = ((sliderWidth - CENTER.width) / 2 - x) / SIDE.width
+                const i = (sliderWidth / 2 - CENTER.width / 2 - x) / SIDE.width
                 return clampIndex(Math.round(i))
               }
 
@@ -202,7 +238,12 @@ const FavoriteApp = () => {
                   animate={{ x: xVal }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   drag="x"
-                  dragConstraints={sliderWidth > 0 ? { left: sliderWidth - trackW, right: 0 } : undefined}
+                  // dragConstraints={sliderWidth > 0 ? { left: sliderWidth - trackW, right: 0 } : undefined}
+                  dragConstraints={
+                    sliderWidth > 0
+                      ? { left: dragLeftLimit, right: dragRightLimit }
+                      : undefined
+                  }
                   dragElastic={0.08}
                   dragMomentum={false}
                   onDragStart={() => setIsDragging(true)}
@@ -212,29 +253,44 @@ const FavoriteApp = () => {
                   //   const next = indexFromX(xVal + info.offset.x)
                   //   setActiveIndex(next)
                   // }}
+                  // onDragEnd={(_, info) => {
+                  //   if (mobile) {
+                  //     setIsDragging(false);
+                  //     const { offset, velocity } = info;
+
+                  //     // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+                  //     if (Math.abs(velocity.x) > 300) {
+                  //       const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+                  //       setActiveIndex(clampIndex(next));
+                  //       return;
+                  //     }
+
+                  //     // Slow drag — offset se detect karo
+                  //     if (Math.abs(offset.x) < 8) return;
+                  //     const next = mobIndexFromX(mobX + offset.x);
+                  //     setActiveIndex(next);
+                  //   } else {
+                  //     setIsDragging(false)
+                  //     if (Math.abs(info.offset.x) < 8) return
+                  //     const next = indexFromX(xVal + info.offset.x)
+                  //     setActiveIndex(next)
+                  //   }
+                  // }}
                   onDragEnd={(_, info) => {
-                    const mobile = window.innerWidth < 768
-                    if (mobile) {
-                      setIsDragging(false);
-                      const { offset, velocity } = info;
+                    setIsDragging(false);
+                    const { offset, velocity } = info;
 
-                      // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
-                      if (Math.abs(velocity.x) > 300) {
-                        const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
-                        setActiveIndex(clampIndex(next));
-                        return;
-                      }
-
-                      // Slow drag — offset se detect karo
-                      if (Math.abs(offset.x) < 8) return;
-                      const next = mobIndexFromX(mobX + offset.x);
-                      setActiveIndex(next);
-                    } else {
-                      setIsDragging(false)
-                      if (Math.abs(info.offset.x) < 8) return
-                      const next = indexFromX(xVal + info.offset.x)
-                      setActiveIndex(next)
+                    // Fast flick
+                    if (Math.abs(velocity.x) > 300) {
+                      const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+                      setActiveIndex(clampIndex(next));
+                      return;
                     }
+
+                    if (Math.abs(offset.x) < 8) return;
+
+                    const steps = Math.round(-offset.x / SIDE.width);
+                    setActiveIndex(clampIndex(activeIndex + steps));
                   }}
                 >
                   {mobileCards.map((card, idx) => {
@@ -343,5 +399,51 @@ const FavoriteApp = () => {
     </div>
   )
 }
+const TabBar = ({ items, activeIndex, onSelect, labelKey = "name" }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const tabRefs = useRef([]);
+  const containerRef = useRef(null);
 
+  useEffect(() => {
+    const tab = tabRefs.current[activeIndex];
+    const container = containerRef.current;
+    if (!tab || !container) return;
+    const targetScroll = tab.offsetLeft + tab.offsetWidth / 2 - container.offsetWidth / 2;
+    container.scrollTo({ left: targetScroll, behavior: "smooth" });
+  }, [activeIndex]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="flex gap-2 overflow-x-auto pb-5 justify-start sm:justify-center scrollbar-hide"
+    >
+      {items.map((item, i) => {
+        const isActive = activeIndex === i;
+        const isHovered = hoveredIndex === i;
+        return (
+          <button
+            key={item.id ?? i}
+            ref={(el) => (tabRefs.current[i] = el)}
+            type="button"
+            onClick={() => onSelect(i)}
+            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseLeave={() => setHoveredIndex(null)}
+            className="flex-shrink-0 rounded-lg text-sm font-medium whitespace-nowrap"
+          >
+            <span
+              className="block px-3 py-2 rounded-[6px] transition-colors duration-200"
+              style={{
+                color: isActive ? "var(--text-color)" : isHovered ? "rgba(220,224,235,1)" : "rgba(152,162,179,1)",
+                background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              {item[labelKey]}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 export default FavoriteApp

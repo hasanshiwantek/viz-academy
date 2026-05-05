@@ -150,9 +150,9 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                             <img
                                 src={cubeImg}
                                 alt="3D Cube"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
+                                // initial={{ opacity: 0, x: -20 }}
+                                // animate={{ opacity: 1, x: 0 }}
+                                // transition={{ duration: 0.5, delay: 0.2 }}
                             />
 
                             {/* Cursor Icon — top right */}
@@ -203,9 +203,9 @@ const DownloadvizMakermodal = ({ isOpen, onClose }) => {
                         boxSizing: 'border-box',
                     }}>
                         <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.15 }}
+                            // initial={{ opacity: 0, y: 15 }}
+                            // animate={{ opacity: 1, y: 0 }}
+                            // transition={{ duration: 0.5, delay: 0.15 }}
                             style={{ width: '100%' }}
                         >
                             <h3 style={{
