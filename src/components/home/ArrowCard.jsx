@@ -51,7 +51,7 @@ const CANVAS_H = 920
 const WorkflowCanvas = ({ arrows, arrowsActive, hoveredCardId, onHoverCard }) => (
   <div
     className={`relative overflow-hidden ${arrowsActive ? 'workflow-arrows-active' : ''}`}
-    style={{ width: "100%", height: CANVAS_H }}
+    style={{ width: CANVAS_W, height: CANVAS_H }}
   >
     <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden" viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}>
       <defs>
