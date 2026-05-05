@@ -232,6 +232,59 @@ const TabBar = ({ activeIndex, onSelect, className = "" }) => {
   );
 };
 
+const TabBarForMobile = ({ activeIndex, onSelect, className = "" }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const tabRefs = useRef([]);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const tab = tabRefs.current[activeIndex];
+    const container = containerRef.current;
+    if (!tab || !container) return;
+
+    const tabLeft = tab.offsetLeft;
+    const tabWidth = tab.offsetWidth;
+    const containerWidth = container.offsetWidth;
+    const targetScroll = tabLeft + tabWidth / 2 - containerWidth / 2;
+
+    container.scrollTo({ left: targetScroll, behavior: "smooth" });
+  }, [activeIndex]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={`flex gap-2 overflow-x-auto pb-10 scrollbar-hide ${className}`}
+    >
+      {features.map((f, i) => {
+        const isActive = activeIndex === i;
+        const isHovered = hoveredIndex === i;
+
+        return (
+          <button
+            key={f.id}
+            ref={(el) => (tabRefs.current[i] = el)}
+            type="button"
+            onClick={() => onSelect(i)}
+            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseLeave={() => setHoveredIndex(null)}
+            className="flex-shrink-0 rounded-lg text-sm font-medium whitespace-nowrap"
+          >
+            <span
+              className="block px-3 py-2 rounded-[6px] transition-colors duration-200"
+              style={{
+                color: isActive ? "var(--text-color)" : isHovered ? "rgba(220,224,235,1)" : "rgba(152,162,179,1)",
+                background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              {f.title}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 // ─── Shared Dots ──────────────────────────────────────────────────────────────
 const Dots = ({ activeIndex, onSelect }) => (
   <div className="flex justify-center gap-2 mt-5">
@@ -312,7 +365,7 @@ const AIFeatures = () => {
 
       {/* ── BELOW XL: original mobile slider ────────────────────────────── */}
       <div className="w-full xl:hidden px-6">
-        <TabBar activeIndex={activeIndex} onSelect={setActiveIndex} className="justify-start sm:justify-center" />
+        <TabBarForMobile activeIndex={activeIndex} onSelect={setActiveIndex} className="justify-start sm:justify-center" />
 
         <div ref={mobRef} className="relative w-full overflow-hidden">
           <motion.div

@@ -19,6 +19,7 @@ const engines = [
   { id: 7, name: "Tripo3D", category: "3D Modeling", icon: img7 },
   { id: 8, name: "Sora", category: "Video AI", icon: img8 },
 ];
+const mobile = window.innerWidth < 768;
 
 const SLIDER_CARD_CENTER = { width: 200, height: 200 };
 const SLIDER_CARD_SIDE = { width: 139, height: 142 };
@@ -199,13 +200,29 @@ const AIEngines = () => {
     (engines.length - 1) * SLIDER_CARD_SIDE.width +
     (engines.length - 1) * SLIDER_GAP;
   const xlLeftOffset = activeIndex * XL_SIDE.width;
+  // const xVal =
+  //   sliderWidth > 0
+  //     ? xlMode
+  //       ? sliderWidth / 2 - (xlLeftOffset + XL_CENTER.width / 2)
+  //       : (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
+  //       activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+  //     : 0;
+  const getCardLeft = (i) => {
+    if (i === 0) return 0;
+    return SLIDER_CARD_SIDE.width * i + SLIDER_GAP * i;
+  };
+
   const xVal =
     sliderWidth > 0
       ? xlMode
         ? sliderWidth / 2 - (xlLeftOffset + XL_CENTER.width / 2)
-        : (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
-        activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+        : sliderWidth / 2 - (getCardLeft(activeIndex) + SLIDER_CARD_CENTER.width / 2)
       : 0;
+
+  const lastCardLeft = getCardLeft(engines.length - 1);
+  const dragLeftLimit = -(lastCardLeft + SLIDER_CARD_CENTER.width / 2 - sliderWidth / 2);
+  const dragRightLimit = sliderWidth / 2 - SLIDER_CARD_CENTER.width / 2;
+
   const indexFromX = (x) => {
     if (sliderWidth <= 0) return activeIndex;
     if (xlMode) {
@@ -265,7 +282,7 @@ const AIEngines = () => {
 
         {/* Tabs + slider + dots: below sm same; big screen same slider, xl = 2+1+2 */}
         <div className="w-full max-w-full mx-auto">
-          <div className="flex gap-2 overflow-x-auto pb-6 justify-start sm:justify-center scrollbar-hide">
+          {/* <div className="flex gap-2 overflow-x-auto pb-6 justify-start sm:justify-center scrollbar-hide">
             {engines.map((e, i) => {
               const isActive = activeIndex === i;
               const isHovered = hoveredTabIndex === i;
@@ -291,7 +308,12 @@ const AIEngines = () => {
                 </button>
               );
             })}
-          </div>
+          </div> */}
+          <TabBar
+            items={engines}         // array — har item mein id aur name hona chahiye
+            activeIndex={activeIndex}
+            onSelect={setActiveIndex}
+          />
           {/* Slider: below xl = 200 center / 139 sides; xl+ = 2+1+2, center 432×306, sides 210×180, gap */}
           <div ref={sliderRef} className="relative w-full overflow-hidden pt-2">
             <motion.div
@@ -300,28 +322,62 @@ const AIEngines = () => {
               animate={{ x: xVal }}
               transition={{ type: "tween", duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               drag="x"
-              dragConstraints={sliderWidth > 0 ? { left: sliderWidth - trackW, right: 0 } : undefined}
+              // dragConstraints={sliderWidth > 0 ? { left: sliderWidth - trackW, right: 0 } : undefined}
+              dragConstraints={
+                sliderWidth > 0
+                  ? { left: dragLeftLimit, right: dragRightLimit }
+                  : undefined
+              }
               dragElastic={xlMode ? 0.06 : 0.08}
               dragMomentum={false}
               onDragStart={() => setIsDragging(true)}
-              onDragEnd={(_, info) => {
-                const mobile = window.innerWidth < 768
+              // onDragEnd={(_, info) => {
+              //   const mobile = window.innerWidth < 768
 
+              //   if (mobile) {
+              //     setIsDragging(false);
+              //     const { offset, velocity } = info;
+
+              //     // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+              //     if (Math.abs(velocity.x) > 300) {
+              //       const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+              //       setActiveIndex(clampIndex(next));
+              //       return;
+              //     }
+
+              //     // Slow drag — offset se detect karo
+              //     if (Math.abs(offset.x) < 8) return;
+              //     const next = mobIndexFromX(mobX + offset.x);
+              //     setActiveIndex(next);
+              //   } else {
+              //     setIsDragging(false);
+              //     if (Math.abs(info.offset.x) < 8) return;
+              //     const next = indexFromX(xVal + info.offset.x);
+              //     setActiveIndex(next);
+              //   }
+              // }}
+              onDragEnd={(_, info) => {
+                setIsDragging(false);
                 if (mobile) {
-                  setIsDragging(false);
+
                   const { offset, velocity } = info;
 
-                  // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+                  // Fast flick
                   if (Math.abs(velocity.x) > 300) {
                     const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
                     setActiveIndex(clampIndex(next));
                     return;
                   }
 
-                  // Slow drag — offset se detect karo
                   if (Math.abs(offset.x) < 8) return;
-                  const next = mobIndexFromX(mobX + offset.x);
-                  setActiveIndex(next);
+
+                  if (xlMode) {
+                    const steps = Math.round(-offset.x / XL_SIDE.width);
+                    setActiveIndex(clampIndex(activeIndex + steps));
+                  } else {
+                    const steps = Math.round(-offset.x / (SLIDER_CARD_SIDE.width + SLIDER_GAP || SLIDER_CARD_SIDE.width));
+                    setActiveIndex(clampIndex(activeIndex + steps));
+                  }
                 } else {
                   setIsDragging(false);
                   if (Math.abs(info.offset.x) < 8) return;
@@ -329,22 +385,6 @@ const AIEngines = () => {
                   setActiveIndex(next);
                 }
               }}
-            // onDragEnd={(_, info) => {
-            //   setIsDragging(false);
-            //   const { offset, velocity } = info;
-
-            //   // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
-            //   if (Math.abs(velocity.x) > 300) {
-            //     const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
-            //     setActiveIndex(clampIndex(next));
-            //     return;
-            //   }
-
-            //   // Slow drag — offset se detect karo
-            //   if (Math.abs(offset.x) < 8) return;
-            //   const next = mobIndexFromX(mobX + offset.x);
-            //   setActiveIndex(next);
-            // }}
             >
               {engines.map((engine, index) => (
                 <div
@@ -402,5 +442,52 @@ const AIEngines = () => {
     </section>
   );
 };
+const TabBar = ({ items, activeIndex, onSelect }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const tabRefs = useRef([]);
+  const containerRef = useRef(null);
 
+  useEffect(() => {
+    const tab = tabRefs.current[activeIndex];
+    const container = containerRef.current;
+    if (!tab || !container) return;
+
+    const targetScroll = tab.offsetLeft + tab.offsetWidth / 2 - container.offsetWidth / 2;
+    container.scrollTo({ left: targetScroll, behavior: "smooth" });
+  }, [activeIndex]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="flex gap-2 overflow-x-auto pb-6 justify-start sm:justify-center scrollbar-hide"
+    >
+      {items.map((item, i) => {
+        const isActive = activeIndex === i;
+        const isHovered = hoveredIndex === i;
+        return (
+          <button
+            key={item.id}
+            ref={(el) => (tabRefs.current[i] = el)}
+            type="button"
+            onClick={() => onSelect(i)}
+            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseLeave={() => setHoveredIndex(null)}
+            className="flex-shrink-0 rounded-lg text-sm font-medium whitespace-nowrap"
+          >
+            <span
+              className="block px-3 py-2 rounded-[6px] transition-colors duration-200"
+              style={{
+                color: isActive ? "var(--text-color)" : isHovered ? "rgba(220,224,235,1)" : "rgba(152,162,179,1)",
+                background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              {item.name}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 export default AIEngines;
