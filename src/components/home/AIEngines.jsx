@@ -196,15 +196,15 @@ const AIEngines = () => {
   const trackW = xlMode
     ? (engines.length - 1) * XL_SIDE.width + XL_CENTER.width
     : SLIDER_CARD_CENTER.width +
-      (engines.length - 1) * SLIDER_CARD_SIDE.width +
-      (engines.length - 1) * SLIDER_GAP;
+    (engines.length - 1) * SLIDER_CARD_SIDE.width +
+    (engines.length - 1) * SLIDER_GAP;
   const xlLeftOffset = activeIndex * XL_SIDE.width;
   const xVal =
     sliderWidth > 0
       ? xlMode
         ? sliderWidth / 2 - (xlLeftOffset + XL_CENTER.width / 2)
         : (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
-          activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+        activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
       : 0;
   const indexFromX = (x) => {
     if (sliderWidth <= 0) return activeIndex;
@@ -228,7 +228,7 @@ const AIEngines = () => {
 
   return (
     <section className="py-20 px-6 flex justify-center flex-col items-center">
-    <div className="w-full rounded-2xl">
+      <div className="w-full rounded-2xl">
         {/* Header */}
         <motion.div
           className="text-center mb-12"
@@ -305,11 +305,46 @@ const AIEngines = () => {
               dragMomentum={false}
               onDragStart={() => setIsDragging(true)}
               onDragEnd={(_, info) => {
-                setIsDragging(false);
-                if (Math.abs(info.offset.x) < 8) return;
-                const next = indexFromX(xVal + info.offset.x);
-                setActiveIndex(next);
+                const mobile = window.innerWidth < 768
+
+                if (mobile) {
+                  setIsDragging(false);
+                  const { offset, velocity } = info;
+
+                  // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+                  if (Math.abs(velocity.x) > 300) {
+                    const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+                    setActiveIndex(clampIndex(next));
+                    return;
+                  }
+
+                  // Slow drag — offset se detect karo
+                  if (Math.abs(offset.x) < 8) return;
+                  const next = mobIndexFromX(mobX + offset.x);
+                  setActiveIndex(next);
+                } else {
+                  setIsDragging(false);
+                  if (Math.abs(info.offset.x) < 8) return;
+                  const next = indexFromX(xVal + info.offset.x);
+                  setActiveIndex(next);
+                }
               }}
+            // onDragEnd={(_, info) => {
+            //   setIsDragging(false);
+            //   const { offset, velocity } = info;
+
+            //   // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+            //   if (Math.abs(velocity.x) > 300) {
+            //     const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+            //     setActiveIndex(clampIndex(next));
+            //     return;
+            //   }
+
+            //   // Slow drag — offset se detect karo
+            //   if (Math.abs(offset.x) < 8) return;
+            //   const next = mobIndexFromX(mobX + offset.x);
+            //   setActiveIndex(next);
+            // }}
             >
               {engines.map((engine, index) => (
                 <div
