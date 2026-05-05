@@ -10,10 +10,17 @@ const mobile = window.innerWidth < 768
 
 const HowItWorksModal = ({ isOpen, onClose }) => {
 
+    // useEffect(() => {
+    //     [bgNew, howitsWorkImg].forEach((src) => {
+    //         const img = new Image();
+    //         img.src = src;
+    //     });
+    // }, []);
     useEffect(() => {
         [bgNew, howitsWorkImg].forEach((src) => {
             const img = new Image();
             img.src = src;
+            img.decode?.(); // ← browser ko force karo decode karne ke liye
         });
     }, []);
 
@@ -49,7 +56,7 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
     return ReactDOM.createPortal(
         <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-6"
-            style={{ display: isOpen ? 'flex' : 'none', backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(1px)' }}
+            style={{ backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(1px)' }}
             onClick={onClose}
         >
             {/* Gradient Border Wrapper */}
@@ -143,7 +150,7 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
                     </div>
 
                     {/* Image — flex-1 + overflow hidden so it fills remaining space */}
-                    <div style={{ padding: '0 20px 20px 20px', flex: 1, overflow: 'hidden' }}>
+                    <div style={{ padding: '0 20px 20px 20px', flex: 1, overflow: 'hidden', minHeight: mobile ? '300px' : '400px', }}>
                         <motion.div
                             style={{
                                 borderRadius: '14px',
@@ -164,6 +171,7 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
                                     height: '100%',
                                     objectFit: 'cover',
                                     display: 'block',
+                                      minHeight: '300px',
                                     maxHeight: 'calc(90vh - 100px)', // ← title height minus karo
                                 }}
                             />

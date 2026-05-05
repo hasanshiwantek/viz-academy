@@ -30,14 +30,14 @@ const Navbar = () => {
         onClose={() => setShowHowItWorks(false)}
       />}
       {/* Desktop Modal */}
-      
+
       {mobile ? <DownloadvizMakerForMobilemodal
-            isOpen={showDownloadvizMaker}
-            onClose={() => setShowDownloadvizMaker(false)}
-          /> : <DownloadvizMakermodal
-            isOpen={showDownloadvizMaker}
-            onClose={() => setShowDownloadvizMaker(false)}
-          />
+        isOpen={showDownloadvizMaker}
+        onClose={() => setShowDownloadvizMaker(false)}
+      /> : <DownloadvizMakermodal
+        isOpen={showDownloadvizMaker}
+        onClose={() => setShowDownloadvizMaker(false)}
+      />
       }
 
       <nav

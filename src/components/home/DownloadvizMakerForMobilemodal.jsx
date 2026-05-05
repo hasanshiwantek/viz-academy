@@ -16,6 +16,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
         imgs.forEach((src) => {
             const img = new Image();
             img.src = src;
+            img.decode?.();
         });
     }, []);
     useEffect(() => {
@@ -88,7 +89,6 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
             setLoading(false);
         }
     };
-    if (!isOpen) return null;
     return ReactDOM.createPortal(
         <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6"
