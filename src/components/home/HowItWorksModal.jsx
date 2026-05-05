@@ -45,7 +45,6 @@ const HowItWorksModal = ({ isOpen, onClose }) => {
             };
         }
     }, [isOpen, onClose]);
-    if (!isOpen) return null;
 
     return ReactDOM.createPortal(
         <div
