@@ -16,7 +16,6 @@ import Footer from "./components/home/Footer";
 import QualityPreview from "./components/home/QualityPreview";
 import SecureWorkflows from "./components/home/SecureWorkflows";
 
-
 function App() {
   return (
     <>
