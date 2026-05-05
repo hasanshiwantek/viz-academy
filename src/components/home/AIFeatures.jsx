@@ -325,7 +325,8 @@ const AIFeatures = () => {
   const mobTrackW = features.length * MOB_SLOT + (features.length - 1) * MOB_GAP;
   const xlTrackW = features.length * XL_SLOT + (features.length - 1) * XL_GAP;
 
-  const mobX = mobW > 0 ? (mobW - MOB_SLOT) / 2 - activeIndex * (MOB_SLOT + MOB_GAP) : 0;
+  const mobX = mobW > 0 ? mobW / 2 - (activeIndex * (MOB_SLOT + MOB_GAP) + MOB_SLOT / 2) : 0;
+  // const mobX = mobW > 0 ? (mobW - MOB_SLOT) / 2 - activeIndex * (MOB_SLOT + MOB_GAP) : 0;
   const xlX = xlW > 0 ? (xlW - XL_SLOT) / 2 - activeIndex * (XL_SLOT + XL_GAP) : 0;
 
   const clampIndex = (i) => Math.max(0, Math.min(features.length - 1, i));
@@ -374,7 +375,15 @@ const AIFeatures = () => {
             animate={{ x: mobX }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             drag="x"
-            dragConstraints={mobW > 0 ? { left: mobW - mobTrackW, right: 0 } : undefined}
+            // dragConstraints={mobW > 0 ? { left: mobW - mobTrackW, right: 0 } : undefined}
+            dragConstraints={
+              mobW > 0
+                ? {
+                  left: -(((features.length - 1) * (MOB_SLOT + MOB_GAP)) - (mobW - MOB_SLOT) / 2),
+                  right: (mobW - MOB_SLOT) / 2,
+                }
+                : undefined
+            }
             dragElastic={0.08}
             dragMomentum={false}
             onDragStart={() => setIsDragging(true)}
@@ -384,21 +393,35 @@ const AIFeatures = () => {
             //   const next = mobIndexFromX(mobX + info.offset.x);
             //   setActiveIndex(next);
             // }}
+            // onDragEnd={(_, info) => {
+            //   setIsDragging(false);
+            //   const { offset, velocity } = info;
+
+            //   // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
+            //   if (Math.abs(velocity.x) > 300) {
+            //     const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
+            //     setActiveIndex(clampIndex(next));
+            //     return;
+            //   }
+
+            //   // Slow drag — offset se detect karo
+            //   if (Math.abs(offset.x) < 8) return;
+            //   const next = mobIndexFromX(mobX + offset.x);
+            //   setActiveIndex(next);
+            // }}
             onDragEnd={(_, info) => {
               setIsDragging(false);
               const { offset, velocity } = info;
 
-              // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
               if (Math.abs(velocity.x) > 300) {
                 const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
                 setActiveIndex(clampIndex(next));
                 return;
               }
 
-              // Slow drag — offset se detect karo
               if (Math.abs(offset.x) < 8) return;
-              const next = mobIndexFromX(mobX + offset.x);
-              setActiveIndex(next);
+              const steps = Math.round(-offset.x / (MOB_SLOT + MOB_GAP));
+              setActiveIndex(clampIndex(activeIndex + steps));
             }}
           >
             {features.map((feature, index) => (

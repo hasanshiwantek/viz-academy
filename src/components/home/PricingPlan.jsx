@@ -342,10 +342,17 @@ const PricingPlan = () => {
   const mobileTrackW =
     SLIDER_CARD_CENTER.width +
     (visiblePlans.length - 1) * (SLIDER_CARD_SIDE.width + SLIDER_GAP);
+  // const mobileXVal =
+  //   sliderWidth > 0
+  //     ? (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
+  //     activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+  //     : 0;
   const mobileXVal =
     sliderWidth > 0
-      ? (sliderWidth - SLIDER_CARD_CENTER.width) / 2 -
-      activeIndex * (SLIDER_CARD_SIDE.width + SLIDER_GAP)
+      ? sliderWidth / 2 -
+      (activeIndex * SLIDER_CARD_SIDE.width +
+        activeIndex * SLIDER_GAP +
+        SLIDER_CARD_CENTER.width / 2)
       : 0;
   const mobileIndexFromX = (x) => {
     if (sliderWidth <= 0) return activeIndex;
@@ -449,32 +456,22 @@ const PricingPlan = () => {
             }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             drag="x"
-            dragConstraints={sliderWidth > 0 ? { left: sliderWidth - mobileTrackW, right: 0 } : undefined}
+            // dragConstraints={sliderWidth > 0 ? { left: sliderWidth - mobileTrackW, right: 0 } : undefined}
+            dragConstraints={
+              sliderWidth > 0
+                ? {
+                  right: sliderWidth / 2 - SLIDER_CARD_CENTER.width / 2,
+                  left: -(
+                    (visiblePlans.length - 1) * SLIDER_CARD_SIDE.width +
+                    (visiblePlans.length - 1) * SLIDER_GAP -
+                    (sliderWidth / 2 - SLIDER_CARD_CENTER.width / 2)
+                  ),
+                }
+                : undefined
+            }
             dragElastic={0.08}
             dragMomentum={false}
             onDragStart={() => setIsDragging(true)}
-            // onDragEnd={(_, info) => {
-            //   setIsDragging(false);
-            //   if (Math.abs(info.offset.x) < 8) return;
-            //   const next = mobileIndexFromX(mobileXVal + info.offset.x);
-            //   setActiveIndex(next);
-            // }}
-            // onDragEnd={(_, info) => {
-            //   setIsDragging(false);
-            //   const { offset, velocity } = info;
-
-            //   // Fast flick — velocity se detect karo (offset chhota hota hai fast swipe mein)
-            //   if (Math.abs(velocity.x) > 300) {
-            //     const next = velocity.x < 0 ? activeIndex + 1 : activeIndex - 1;
-            //     setActiveIndex(clampIndex(next));
-            //     return;
-            //   }
-
-            //   // Slow drag — offset se detect karo
-            //   if (Math.abs(offset.x) < 8) return;
-            //   const next = mobIndexFromX(mobX + offset.x);
-            //   setActiveIndex(next);
-            // }}
             onDragEnd={(_, info) => {
               setIsDragging(false);
               const { offset, velocity } = info;
