@@ -45,7 +45,7 @@ const arrowDefs = () => {
   ]
 }
 
-const CANVAS_W = 960
+const CANVAS_W = mobile ? window.innerWidth + 325 : 960
 const CANVAS_H = 920
 
 const WorkflowCanvas = ({ arrows, arrowsActive, hoveredCardId, onHoverCard }) => (
