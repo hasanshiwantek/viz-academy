@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import DownloadvizMakermodal from "./DownloadvizMakermodal";
 import DownloadvizMakerForMobilemodal from "./DownloadvizMakerForMobilemodal";
 
-const SLIDER_CARD_CENTER = { width: 270, height: 554 };
+const mobile = window.innerWidth < 768
+const SLIDER_CARD_CENTER = { width: 270, height: mobile ? 587 : 554 };
 const SLIDER_CARD_SIDE = { width: 230, height: 455 };
 const SLIDER_GAP = 0;
-const mobile = window.innerWidth < 768
 const plans = [
   {
     id: "free",
@@ -251,7 +251,7 @@ const PricingCard = ({
 
           {/* Features list */}
           <ul
-            className="flex flex-col flex-grow overflow-y-auto"
+            className="flex flex-col flex-grow "
             style={{
               gap: isSliderCard && !isSliderActive ? 6 : 16,
               marginBottom: isSliderCard && !isSliderActive ? 8 : 32,
