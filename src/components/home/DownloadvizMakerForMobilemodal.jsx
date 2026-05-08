@@ -160,7 +160,7 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                             style={{
                                 flex: '0 0 40%',
                                 alignSelf: 'stretch',
-                                paddingBottom: "30px",
+                                paddingBottom: "0px",
                                 paddingLeft: "20px",
                             }}
                         >
@@ -180,9 +180,10 @@ const DownloadvizMakerForMobilemodal = ({ isOpen, onClose }) => {
                                     className="w-full sm:w-auto"
                                     style={{
                                         maxWidth: '100%',
-                                        height: '100%',
+                                        // height: '80%',
+                                        height: '300px',
                                         objectFit: 'contain',
-                                        objectPosition: 'bottom left',
+                                        // objectPosition: 'bottom left',
                                     }}
                                 />
                             </div>
